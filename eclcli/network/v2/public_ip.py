@@ -1,0 +1,146 @@
+from eclcli.common import command
+from eclcli.common import utils
+from ..networkclient.common import utils as to_obj
+
+
+class ListPubicIP(command.Lister):
+    def get_parser(self, prog_name):
+        parser = super(ListPubicIP, self).get_parser(prog_name)
+        return parser
+
+    def take_action(self, parsed_args):
+        network_client = self.app.client_manager.network
+
+        columns = (
+            'id',
+            'name',
+            'status',
+        )
+        column_headers = (
+            'ID',
+            'Name',
+            'Status',
+        )
+
+        data = [to_obj.PubicIP(public_ip)
+                for public_ip in network_client.list_public_ips().get('public_ips')]
+
+        return (column_headers,
+                (utils.get_item_properties(
+                    s, columns,
+                ) for s in data))
+
+
+class ShowPubicIP(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(ShowPubicIP, self).get_parser(prog_name)
+        parser.add_argument(
+            'public_ip_id',
+            metavar="PUBLIC_IP_ID",
+            help="ID of Pubic IP to show."
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        network_client = self.app.client_manager.network
+
+        public_ip_id = parsed_args.public_ip_id
+
+        dic = network_client.show_public_ip(public_ip_id).get('public_ip')
+        columns = utils.get_columns(dic)
+        obj = to_obj.PubicIP(dic)
+        data = utils.get_item_properties(
+            obj, columns,)
+        return columns, data
+
+
+class CreatePubicIP(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(CreatePubicIP, self).get_parser(prog_name)
+        parser.add_argument(
+            '--name',
+            metavar='<string>',
+            help='Name of  public ip to create.')
+        parser.add_argument(
+            '--description',
+            metavar='<string>',
+            help='Description of  public ip to create.')
+        parser.add_argument(
+            '--internet_gw_id',
+            metavar='INTERNET_GATEWAY_ID',
+            required=True,
+            help='Internet Gateway ID of public ip to create')
+        parser.add_argument(
+            '--submask_length',
+            metavar='SUBNET_MASK_LENGTH',
+            required=True,
+            type=int,
+            help='Submask length of  public ip to create.')
+        return parser
+
+    def take_action(self, parsed_args):
+        network_client = self.app.client_manager.network
+
+        body = {'public_ip': {}}
+        utils.update_dict(
+            parsed_args,
+            body['public_ip'],
+            ['name', 'description',
+             'internet_gw_id', 'submask_length'])
+
+        dic = network_client.create_public_ip(body).get('public_ip')
+        columns = utils.get_columns(dic)
+        obj = to_obj.PubicIP(dic)
+        data = utils.get_item_properties(
+            obj, columns,)
+        return columns, data
+
+
+class SetPubicIP(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(SetPubicIP, self).get_parser(prog_name)
+        parser.add_argument(
+            'public_ip_id',
+            metavar='PUBLIC_IP_ID',
+            help='ID of Public IP to update.')
+        parser.add_argument(
+            '--description',
+            metavar='<string>',
+            help='Description of public ip to update.')
+        return parser
+
+    def take_action(self, parsed_args):
+        network_client = self.app.client_manager.network
+
+        body = {'public_ip': {}}
+        public_ip_id = parsed_args.public_ip_id
+        utils.update_dict(
+            parsed_args,
+            body['public_ip'],
+            ['description', ])
+
+        dic = network_client.update_public_ip(
+            public_ip_id, body).get('public_ip')
+        columns = utils.get_columns(dic)
+        obj = to_obj.PubicIP(dic)
+        data = utils.get_item_properties(
+            obj, columns,)
+        return columns, data
+
+
+class DeletePubicIP(command.Command):
+    def get_parser(self, prog_name):
+        parser = super(DeletePubicIP, self).get_parser(prog_name)
+        parser.add_argument(
+            'public_ip_id',
+            metavar="PUBLIC_IP_ID",
+            nargs="+",
+            help="ID(s) of Public IP to delete."
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        network_client = self.app.client_manager.network
+
+        for giid in parsed_args.public_ip_id:
+            network_client.delete_public_ip(giid)
