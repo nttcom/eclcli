@@ -13,8 +13,8 @@
 #   under the License.
 #
 
-from eclclient.common import command
-from eclclient.common import utils
+from eclcli.common import command
+from eclcli.common import utils
 from .. import monitoring_utils
 
 class ListResource(command.Lister):

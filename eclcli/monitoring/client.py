@@ -15,8 +15,8 @@
 
 import logging
 
-from eclclient.common import exceptions
-from eclclient.common import utils
+from eclcli.common import exceptions
+from eclcli.common import utils
 
 LOG = logging.getLogger(__name__)
 

@@ -13,9 +13,9 @@
 #   under the License.
 #
 
-from eclclient.common import command
-from eclclient.common import utils
-from eclclient.common import exceptions
+from eclcli.common import command
+from eclcli.common import utils
+from eclcli.common import exceptions
 from .. import monitoring_utils
 import six
 
