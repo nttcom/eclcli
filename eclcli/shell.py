@@ -29,9 +29,8 @@ osprofiler_profiler = importutils.try_import("osprofiler.profiler")
 
 DEFAULT_DOMAIN = 'default'
 
-APPDIRS = appdirs.AppDirs('ecl', 'EnterpriseCloud', multipath='/etc')
+APPDIRS = appdirs.AppDirs('ecl', 'EnterpriseCloud', multipath=True)
 CONFIG_HOME = APPDIRS.user_config_dir
-CACHE_PATH = APPDIRS.user_cache_dir
 
 UNIX_CONFIG_HOME = os.path.join(
     os.path.expanduser(os.path.join('~', '.config')), 'ecl')
