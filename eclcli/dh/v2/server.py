@@ -206,7 +206,7 @@ class CreateServer(command.ShowOne):
 
         rows = [
             'ID',
-            'Links'
+            'Links',
             'adminPass'
         ]
         row_headers = rows
