@@ -211,12 +211,14 @@ class CreateServer(command.ShowOne):
         ]
         row_headers = rows
 
+        mixed_case_fields = ['adminPass']
+
         data = dh_client.servers.create(name=parsed_args.name, networks=nics, image_id=parsed_args.imageRef, flavor_id=parsed_args.flavorRef,
                admin_pass=parsed_args.adminPass, metadata=parsed_args.metadata, availability_zone=parsed_args.availability_zone, description=parsed_args.description)
 
         return (row_headers,
                 utils.get_item_properties(
-                    data, rows, 
+                    data, rows, mixed_case_fields=mixed_case_fields
                     ))
 
 
