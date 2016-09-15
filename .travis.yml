@@ -1,6 +1,6 @@
 language: python
 install:
-- pip install -e . --use-mirrors
+- pip install -e .
 script:
 - python setup.py test
 python:
