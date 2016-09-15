@@ -15,4 +15,3 @@ deploy:
     branch: master
     distributions: sdist --formats=gztar,zip
     python: 2.7
-    tags: true
