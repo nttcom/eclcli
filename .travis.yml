@@ -1,6 +1,7 @@
 language: python
 install:
 - pip install -e .
+script:
 python:
 - '2.7'
 deploy:
