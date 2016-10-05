@@ -4,6 +4,8 @@ import getpass
 import logging
 import sys
 import traceback
+import os
+import appdirs
 
 from cliff import app
 from cliff import command
@@ -26,6 +28,28 @@ osprofiler_profiler = importutils.try_import("osprofiler.profiler")
 
 
 DEFAULT_DOMAIN = 'default'
+
+APPDIRS = appdirs.AppDirs('ecl', 'EnterpriseCloud', multipath=True)
+CONFIG_HOME = APPDIRS.user_config_dir
+
+UNIX_CONFIG_HOME = os.path.join(
+    os.path.expanduser(os.path.join('~', '.config')), 'ecl')
+UNIX_SITE_CONFIG_HOME = '/etc/ecl'
+
+SITE_CONFIG_HOME = APPDIRS.site_config_dir
+
+CONFIG_SEARCH_PATH = [
+    os.getcwd(),
+    CONFIG_HOME, UNIX_CONFIG_HOME,
+    SITE_CONFIG_HOME, UNIX_SITE_CONFIG_HOME
+]
+YAML_SUFFIXES = ('.yaml', '.yml')
+JSON_SUFFIXES = ('.json',)
+CONFIG_FILES = [
+    os.path.join(d, 'clouds' + s)
+    for d in CONFIG_SEARCH_PATH
+    for s in YAML_SUFFIXES + JSON_SUFFIXES
+]
 
 
 def prompt_for_password(prompt=None):
@@ -156,13 +180,13 @@ class ECLClient(app.App):
             version)
 
         # service token auth argument
-        # parser.add_argument(
-        #     '--os-cloud',
-        #     metavar='<cloud-config-name>',
-        #     dest='cloud',
-        #     default=utils.env('OS_CLOUD'),
-        #     help='Cloud name in clouds.yaml (Env: OS_CLOUD)',
-        # )
+        parser.add_argument(
+            '--os-cloud',
+            metavar='<cloud-config-name>',
+            dest='cloud',
+            default=utils.env('OS_CLOUD'),
+            help='Cloud name in clouds.yaml (Env: OS_CLOUD)',
+        )
         # Global arguments
         # parser.add_argument(
         #     '--os-region-name',
@@ -275,6 +299,7 @@ class ECLClient(app.App):
         # will it be used.
         try:
             cc = cloud_config.OpenStackConfig(
+                config_files=CONFIG_FILES,
                 override_defaults={
                     'interface': None,
                     'auth_type': auth_type,
@@ -290,8 +315,7 @@ class ECLClient(app.App):
         if not self.options.debug:
             self.options.debug = None
         self.cloud = cc.get_one_cloud(
-            # cloud=self.options.cloud,
-            cloud='',
+            cloud=self.options.cloud,
             argparse=self.options,
         )
 

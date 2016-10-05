@@ -1,0 +1,17 @@
+language: python
+install:
+- pip install -e .
+script:
+- pip freeze
+python:
+- '2.7'
+deploy:
+  provider: pypi
+  user: ecl-cli-sdk
+  password:
+    secure: uzHuUsJ4utd12vym8MCgHbxmOLoo02AAULl+G1/v83m8PjS+HDUrQD4D0pc5tgn2Rl8VfrXvNazmBZcFNiDygnpRotr7sykfBPjZIURl4yvSnRXA4ZGZiN/W0mPUOA/RrbLIEzaDOIFhMgHIRx4hb9Z78NErix0WED6nFSv1Jpl3jZDi2RVdQEzYNvc3//U6ga62bY0tU9Mu6k2cnbk/GzQORL2PIqjlxwelFtC/9c+HgLHj0CIWb1jzCgPQlFADbxQysdG+kbgVsPYQbcMeC1BajwC4qU8b7PUZ1nx5zEKnzST9Q9ixWTKEK9NblTajtXkEy6LKsTjHKknl1sxUr1PS3+XJdsocP0K9rYGwQM1K5CWjwwXLUyG1mDrghX7u0RIGeA7yHSiW+oFez4Nfeh22tR+90XIwjweXQbZQUdi3WjzhL7QWqJKzk3GByyVTqm+8u/shnHgL6rfbIyCzX+5dUob3fe7SEIn/hSkBt0dOYP5EK2+rx3eOEVT8DZcYN0qVL8OCr8prlXFJHmtiKaIBJUF8DZTzneM9bVhpzcj1nU5vpGcZxpMSOC6thJUxKTaFQM909c1ZCbdEBvRMUK+1TokPimqWoCROaCHtLi3aJiBEPC1labRuzRaigVrL7cJxenLevYwRxrfHzpz2v2p3IDs7jrME5oy/ldDrces=
+  on:
+    repo: nttcom/eclcli
+    branch: master
+    distributions: sdist --formats=gztar,zip
+    python: 2.7
