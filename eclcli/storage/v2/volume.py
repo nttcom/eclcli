@@ -123,9 +123,11 @@ class CreateVolume(command.ShowOne):
 
         parser.add_argument(
             '--initiator_iqns',
-            metavar='<string>',
+            metavar='<array>',
+            action='append',
             default=None,
-            help='Initial iqns of iscsi type. Default=None.')
+            help='Initial iqns of iscsi type. Default=None.'
+                 'You can repeat this option.')
 
         return parser
 
@@ -169,9 +171,11 @@ class UpdateVolume(command.ShowOne):
 
         parser.add_argument(
             '--initiator_iqns',
-            metavar='<string>',
+            metavar='<array>',
+            action='append',
             default=None,
-            help='Initial iqns of volume to update. Default=None.')
+            help='Initial iqns of volume to update. Default=None.'
+                 'You can repeat this option.')
         return parser
 
     def take_action(self, parsed_args):
