@@ -1,6 +1,12 @@
 #Functions used to do the format work
 import json
 
+def _format_zone_state(state):
+    if isinstance(state, dict) and "available" in state:
+        return "Available" if state['available'] else "Unavailable"
+    else:
+        return state
+
 def _format_subdict(dict_x, list_it = True):
     if dict_x == None:
         return None
