@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import json
 from eclcli.common import command
 from eclcli.common import exceptions
 from eclcli.common import utils
@@ -178,5 +179,12 @@ class ShowBilling(command.ShowOne):
         billing = sss_client.show_billing(contract_id, target_month)
         columns = utils.get_columns(billing)
         obj = objectify(billing)
+
+        try:
+            obj.charge_data=json.dumps(obj.charge_data, indent=2)
+        except:
+            # Ignore prettify if exception raised
+            pass
+            
         data = utils.get_item_properties(obj, columns)
         return (columns, data)
