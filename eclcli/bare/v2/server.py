@@ -250,8 +250,8 @@ class ListServer(command.Lister):
                             _format_servers_list_power_state,
                         'Networks': _format_servers_list_networks,
                         'Metadata': utils.format_dict,
-                        'Filesystems': bare_utils._format_show_dicts_list,
-                        'Chassis-Status':bare_utils._format_show_dicts_list,
+                        'Filesystems': bare_utils._format_dicts_list_generic,
+                        'Chassis-Status':bare_utils._format_dicts_list_generic,
                     },
                 ) for s in data))
 
@@ -330,12 +330,11 @@ class ShowServer(command.ShowOne):
                 'flavor' : bare_utils._format_imageORflavor,
                 'Image' : bare_utils._format_imageORflavor,
                 'Links' : bare_utils._format_links,
-                'Metadata' : bare_utils._format_show_dicts_list,
-                'Raid Arrays' : bare_utils._format_show_dicts_list,
-                'Nic Physical Ports': bare_utils._format_nic_physical_ports,
-                'Raid Arrays': bare_utils._format_raid_arrays,
-                'Filesystems': bare_utils._format_show_dicts_list,
-                'Chassis-Status' : bare_utils._format_show_dicts_list
+                'Metadata' : bare_utils._format_dicts_list_generic,
+                'Raid Arrays' : bare_utils._format_dicts_list_generic,
+                'Nic Physical Ports': bare_utils._format_dicts_list_generic,
+                'Filesystems': bare_utils._format_dicts_list_generic,
+                'Chassis-Status' : bare_utils._format_dicts_list_generic
             })
 
 class CreateServer(command.ShowOne):
@@ -467,12 +466,12 @@ class CreateServer(command.ShowOne):
                     'flavor' : bare_utils._format_imageORflavor,
                     'Image' : bare_utils._format_imageORflavor,
                     'Links' : bare_utils._format_links,
-                    'Metadata' : bare_utils._format_show_dicts_list,
-                    'Raid Arrays' : bare_utils._format_show_dicts_list,
-                    'Nic Physical Ports': bare_utils._format_nic_physical_ports,
-                    'Raid Arrays': bare_utils._format_raid_arrays,
-                    'Filesystems': bare_utils._format_show_dicts_list,
-                    'Chassis-Status' : bare_utils._format_show_dicts_list
+                    'Metadata' : bare_utils._format_dicts_list_generic,
+                    'Raid Arrays' : bare_utils._format_dicts_list_generic,
+                    'Nic Physical Ports': bare_utils._format_dicts_list_generic,
+                    'Raid Arrays': bare_utils._format_dicts_list_generic,
+                    'Filesystems': bare_utils._format_dicts_list_generic,
+                    'Chassis-Status' : bare_utils._format_dicts_list_generic
                 }))
 
 class DeleteServer(command.ShowOne):
