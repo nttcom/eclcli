@@ -1,4 +1,5 @@
 #Functions used to do the format work
+import json
 
 def _format_subdict(dict_x, list_it = True):
     if dict_x == None:
@@ -125,6 +126,9 @@ def _format_show_dictionary(dict_x):
     except:
         return dict_x
 
+def _format_dicts_list_generic(input_list):
+    return json.dumps(input_list, indent=4, sort_keys=True)
+
 def _format_show_dicts_list(list_x):
     """
     1. Format a list which is full of dicts;
@@ -133,7 +137,6 @@ def _format_show_dicts_list(list_x):
     :param list_x: a list
     :return: formatted string
     """
-
     try:
         if list_x == None:
             return None
