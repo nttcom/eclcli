@@ -70,6 +70,6 @@ class ShowPort(command.ShowOne):
                         columns,
                         mixed_case_fields=[],
                         formatters={
-                            'Attached Ports':bare_utils._format_show_dicts_list
+                            'Attached Ports':bare_utils._format_dicts_list_generic
                         }
                         ))
