@@ -22,12 +22,17 @@ class ShowZone(command.Lister):
             'zoneState',
             'hosts',
            )
+        display_columns = (
+                           'Name',
+                           'State',
+                           'Hosts',
+                           )
         mixed_case_fields = ['zoneState','zoneName']
-        return (columns,
+        return (display_columns,
                 (utils.get_item_properties(
                     s, columns,
                     mixed_case_fields=mixed_case_fields,
                     formatters={
-                        'zoneState': bare_utils._format_show_dicts_list
+                        'zoneState': bare_utils._format_zone_state
                     },
                 ) for s in data))

@@ -65,6 +65,6 @@ class ShowFlavor(command.ShowOne):
         return (columns,utils.get_item_properties
                 (data, columns, mixed_case_fields = [],
                     formatters = {
-                        'Links': bare_utils._format_links
+                        'Links': bare_utils._format_dicts_list_generic
                     }
                 ))

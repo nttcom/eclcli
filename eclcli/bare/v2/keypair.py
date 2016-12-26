@@ -25,6 +25,7 @@ class CreateKeypair(command.ShowOne):
         if parsed_args.public_key:
             columns = (
                 'Name',
+                'Fingerprint',
                 'Public key',
             )
 
@@ -35,6 +36,9 @@ class CreateKeypair(command.ShowOne):
         else:
             columns = (
                 'Name',
+                'Fingerprint',
+                'Public Key',
+                'Private Key',
             )
             data = bare_client.keypairs.create(parsed_args.keypair)
 

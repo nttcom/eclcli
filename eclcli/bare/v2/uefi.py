@@ -42,7 +42,7 @@ class ShowUEFI(command.ShowOne):
                 columns,
                 mixed_case_fields=[],
                 formatters={
-                    'Setting': bare_utils._format_show_dicts_list
+                    'Setting': bare_utils._format_dicts_list_generic
                 }
                 )
 
