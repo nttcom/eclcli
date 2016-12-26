@@ -239,7 +239,8 @@ class SetPort(command.ShowOne):
         if parsed_args.fixed_ips:
             body['port'].update({'fixed_ips': parsed_args.fixed_ips})
         if parsed_args.allowed_address_pairs:
-            body['port'].update({'allowed_address_pairs': parsed_args.allowed_address_pairs})
+            result = filter(lambda allowed_address_pair: allowed_address_pair != {}, parsed_args.allowed_address_pairs)
+            body['port'].update({'allowed_address_pairs': result})
         if parsed_args.segmentation_id:
             body['port'].update({'segmentation_id': parsed_args.segmentation_id})
         if parsed_args.segmentation_type:
