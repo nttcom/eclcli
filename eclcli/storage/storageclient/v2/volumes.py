@@ -241,6 +241,9 @@ class VolumeManager(base.ManagerWithFind):
         """
         if not kwargs:
             return
+        if kwargs.get("initiator_iqns"):
+            iqns = kwargs.get("initiator_iqns")
+            kwargs["initiator_iqns"] = filter(lambda iqn:iqn != '', iqns)
 
         body = {"volume": kwargs}
 
