@@ -63,6 +63,48 @@ def _format_image(image):
     return info
 
 
+class UpdateImageMember(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(UpdateImageMember, self).get_parser(prog_name)
+        parser.add_argument(
+            "image",
+            metavar="<image>",
+            help="Image to share (name or ID)",
+        )
+        parser.add_argument(
+            "project",
+            metavar="<project>",
+            help="Project to associate with image (name or ID)",
+        )
+        parser.add_argument(
+            "status",
+            metavar="<member-status>",
+            choices=['pending', 'accepted', 'rejected'],
+            help="The status of this image member "
+                 "[pending, accepted, rejected]",
+        )
+        common.add_project_domain_option_to_parser(parser)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+        identity_client = self.app.client_manager.identity
+
+        project_id = parsed_args.project
+        image_id = utils.find_resource(
+            image_client.images,
+            parsed_args.image).id
+        status = parsed_args.status
+
+        image_member = image_client.image_members.update(
+            image_id,
+            project_id,
+            status,
+        )
+
+        return zip(*sorted(six.iteritems(image_member)))
+
+
 class AddProjectToImage(command.ShowOne):
     """Associate project with image"""
 
