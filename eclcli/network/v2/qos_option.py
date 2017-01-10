@@ -6,26 +6,33 @@ from ..networkclient.common import utils as to_obj
 class ListQosOption(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListQosOption, self).get_parser(prog_name)
+        parser.add_argument(
+            '--service-type',
+            metavar="service_type",
+            help="filter by service_type: internet, vpn, interdc")
         return parser
 
     def take_action(self, parsed_args):
         network_client = self.app.client_manager.network
-
+        service_type = parsed_args.service_type
         columns = (
             'id',
             'name',
             'qos_type',
+            'service_type',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
-            'QoS type',
+            'QoS Type',
+            'Service Type',
             'Status',
         )
 
         data = [to_obj.QosOption(inetsv)
-                for inetsv in network_client.list_qos_options().get('qos_options')]
+                for inetsv in network_client.list_qos_options(
+                    service_type=service_type).get('qos_options')]
 
         return (column_headers,
                 (utils.get_item_properties(
