@@ -29,10 +29,13 @@ class ListQosOption(command.Lister):
             'Service Type',
             'Status',
         )
+        params = dict()
+        if service_type:
+            params.update({"service_type": service_type})
 
         data = [to_obj.QosOption(inetsv)
                 for inetsv in network_client.list_qos_options(
-                    service_type=service_type).get('qos_options')]
+                    **params).get('qos_options')]
 
         return (column_headers,
                 (utils.get_item_properties(
