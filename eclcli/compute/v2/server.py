@@ -26,14 +26,50 @@ from eclcli.common import command
 
 try:
     from novaclient.v2 import servers
+    from novaclient.v2.servers import ServerManager
 except ImportError:
     from novaclient.v1_1 import servers
+    from novaclient.v1_1.servers import ServerManager
 
 from eclcli.common import exceptions
 from eclcli.common import parseractions
 from eclcli.common import utils
 from eclcli.i18n import _  # noqa
 from eclcli.identity import common as identity_common
+
+
+class EclServerManager(ServerManager):
+
+    def _boot(self, resource_url, response_key, name, image, flavor,
+              meta=None, files=None, userdata=None,
+              reservation_id=None, return_raw=False, min_count=None,
+              max_count=None, security_groups=None, key_name=None,
+              availability_zone=None, block_device_mapping=None,
+              block_device_mapping_v2=None, nics=None, scheduler_hints=None,
+              config_drive=None, admin_pass=None, disk_config=None, **kwargs):
+
+        resource_url = '/servers'
+
+        return super(EclServerManager, self)._boot(
+            resource_url, response_key, name, image, flavor,
+            meta=meta,
+            files=files,
+            userdata=userdata,
+            reservation_id=reservation_id,
+            return_raw=return_raw,
+            min_count=min_count,
+            max_count=max_count,
+            security_groups=security_groups,
+            key_name=key_name,
+            availability_zone=availability_zone,
+            block_device_mapping=block_device_mapping,
+            block_device_mapping_v2=block_device_mapping_v2,
+            nics=nics,
+            scheduler_hints=scheduler_hints,
+            config_drive=config_drive,
+            admin_pass=admin_pass,
+            disk_config=disk_config,
+            **kwargs)
 
 
 def _format_servers_list_networks(networks):
@@ -515,8 +551,11 @@ class CreateServer(command.ShowOne):
         self.log.debug('boot_kwargs: %s', boot_kwargs)
 
         # Wrap the call to catch exceptions in order to close files
+        c = compute_client
+        c.servers = EclServerManager(c)
         try:
-            server = compute_client.servers.create(*boot_args, **boot_kwargs)
+            server = c.servers.create(*boot_args, **boot_kwargs)
+            # server = compute_client.servers.create(*boot_args, **boot_kwargs)
         finally:
             # Clean up open files - make sure they are not strings
             for f in files:
