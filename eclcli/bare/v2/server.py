@@ -354,7 +354,7 @@ class CreateServer(command.ShowOne):
 
         parser.add_argument(
             "--nic",
-            metavar="<uuid=net-uuid, fixed-ip=ip-addr, port=port-uuid,",
+            metavar="<uuid=net-uuid, fixed_ip=ip-addr, port=port-uuid,",
             action='append',
             default=[],
             help=_("Create a NIC on the server. "
@@ -362,7 +362,7 @@ class CreateServer(command.ShowOne):
                    "Either net-id or port-id must be provided, but not both. "
                    "uuid: attach NIC to network with this UUID, "
                    "port: attach NIC to port with this UUID, "
-                   "fixed-ip: IPv4 fixed address for NIC (optional)"),
+                   "fixed_ip: IPv4 fixed address for NIC (optional)"),
         )
 
         parser.add_argument(
