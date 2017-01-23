@@ -6,6 +6,10 @@ from ..networkclient.common import utils as to_obj
 class ListFirewallPlan(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListFirewallPlan, self).get_parser(prog_name)
+        parser.add_argument(
+            '--enabled',
+            metavar="enabled",
+            help="filter by enabled: true or false")
         return parser
 
     def take_action(self, parsed_args):
@@ -15,15 +19,21 @@ class ListFirewallPlan(command.Lister):
             'id',
             'name',
             'vendor',
+            'enabled',
         )
         column_headers = (
             'ID',
             'Name',
             'Vendor',
+            'Enabled',
         )
 
+        params = dict()
+        if parsed_args.enabled:
+            params.update({"enabled": parsed_args.enabled})
+
         data = [to_obj.FirewallPlan(fwplan)
-            for fwplan in network_client.list_firewall_plans().get('firewall_plans')]
+            for fwplan in network_client.list_firewall_plans(**params).get('firewall_plans')]
 
         return (column_headers,
                 (utils.get_item_properties(
