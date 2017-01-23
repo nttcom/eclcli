@@ -1,19 +1,12 @@
-import argparse
-import getpass
-import io
-import os
+
 import six
 import sys
 
 from eclcli.common import command
 
-from ..bareclient.v2 import servers
-
 from eclcli.common import exceptions
-from eclcli.common import parseractions
 from eclcli.common import utils
 from eclcli.i18n import _  # noqa
-from eclcli.identity import common as identity_common
 from eclcli.bare import bare_utils
 
 
@@ -147,6 +140,7 @@ def _show_progress(progress):
         sys.stdout.write('\rProgress: %s' % progress)
         sys.stdout.flush()
 
+
 class ListServer(command.Lister):
     """List all baremetal servers"""
 
@@ -197,7 +191,6 @@ class ListServer(command.Lister):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         search_opts = {
             "changes-since":parsed_args.changes_since,
@@ -255,6 +248,7 @@ class ListServer(command.Lister):
                     },
                 ) for s in data))
 
+
 class ShowServer(command.ShowOne):
     """Show baremetal server's detail"""
 
@@ -269,7 +263,6 @@ class ShowServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         columns = (
             'ID',
@@ -327,15 +320,16 @@ class ShowServer(command.ShowOne):
         data = utils.find_resource(bare_client.servers,parsed_args.server)
         return column_headers, utils.get_item_properties(
             data, columns, mixed_case_fields, formatters={
-                'flavor' : bare_utils._format_imageORflavor,
-                'Image' : bare_utils._format_imageORflavor,
-                'Links' : bare_utils._format_links,
-                'Metadata' : bare_utils._format_dicts_list_generic,
-                'Raid Arrays' : bare_utils._format_dicts_list_generic,
+                'flavor': bare_utils._format_imageORflavor,
+                'Image': bare_utils._format_imageORflavor,
+                'Links': bare_utils._format_links,
+                'Metadata': bare_utils._format_dicts_list_generic,
+                'Raid Arrays': bare_utils._format_dicts_list_generic,
                 'Nic Physical Ports': bare_utils._format_dicts_list_generic,
                 'Filesystems': bare_utils._format_dicts_list_generic,
-                'Chassis-Status' : bare_utils._format_dicts_list_generic
+                'Chassis-Status': bare_utils._format_dicts_list_generic
             })
+
 
 class CreateServer(command.ShowOne):
     """Create a baremetal server"""
@@ -357,16 +351,32 @@ class CreateServer(command.ShowOne):
             metavar="<image>",
             help="Image ID",
         )
+
         parser.add_argument(
-            "networks",
-            metavar="<networks>",
-            help="Comma separated list of Network ID(s) (Default gateway - first network), eg UUID1,UUID2,UUID3",
+            "--nic",
+            metavar="<uuid=net-uuid, fixed_ip=ip-addr, port=port-uuid,",
+            action='append',
+            default=[],
+            help=_("Create a NIC on the server. "
+                   "Specify option multiple times to create multiple NICs. "
+                   "Either net-id or port-id must be provided, but not both. "
+                   "uuid: attach NIC to network with this UUID, "
+                   "port: attach NIC to port with this UUID, "
+                   "fixed_ip: IPv4 fixed address for NIC (optional)"),
         )
+
         parser.add_argument(
             "--key",
             metavar="<key>",
             help="Name of SSH key to create/attach",
         )
+
+        parser.add_argument(
+            "--adminPass",
+            metavar="<adminPass>",
+            help="Password for the administrator",
+        )
+
         parser.add_argument(
             "--availability-zone",
             metavar="<availability-zone>",
@@ -406,12 +416,18 @@ class CreateServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
-        nics=[]
-        net_list = parsed_args.networks.split(",")
-        for net in net_list:
-            nics.append({"uuid":net})
+        nics = []
+        for nic_str in parsed_args.nic:
+            nic_info = (dict(kv_str.split("=", 1)
+                             for kv_str in nic_str.split(",")))
+            if "uuid" in nic_info and "port" in nic_info or \
+                    "uuid" not in nic_info and "port" not in nic_info:
+                msg = _("either uuid or port should be specified "
+                        "but not both")
+                raise exceptions.CommandError(msg)
+
+            nics.append(nic_info)
 
         columns = (
             'ID',
@@ -454,6 +470,7 @@ class CreateServer(command.ShowOne):
                                           flavor=parsed_args.flavor,
                                           image=parsed_args.image,
                                           nics=nics,
+                                          admin_pass=parsed_args.adminPass,
                                           key_name=parsed_args.key,
                                           availability_zone=parsed_args.availability_zone,
                                           userdata=parsed_args.user_data,
@@ -461,18 +478,18 @@ class CreateServer(command.ShowOne):
                                           files=parsed_args.personality,
                                           disk_config=str(disk_config)
                                           )
-        return (columns,utils.get_item_properties(data, columns, mixed_case_fields, formatters=
+        return (columns, utils.get_item_properties(data, columns, mixed_case_fields, formatters=
                 {
-                    'flavor' : bare_utils._format_imageORflavor,
-                    'Image' : bare_utils._format_imageORflavor,
-                    'Links' : bare_utils._format_links,
-                    'Metadata' : bare_utils._format_dicts_list_generic,
-                    'Raid Arrays' : bare_utils._format_dicts_list_generic,
+                    'flavor': bare_utils._format_imageORflavor,
+                    'Image': bare_utils._format_imageORflavor,
+                    'Links': bare_utils._format_links,
+                    'Metadata': bare_utils._format_dicts_list_generic,
                     'Nic Physical Ports': bare_utils._format_dicts_list_generic,
                     'Raid Arrays': bare_utils._format_dicts_list_generic,
                     'Filesystems': bare_utils._format_dicts_list_generic,
-                    'Chassis-Status' : bare_utils._format_dicts_list_generic
+                    'Chassis-Status': bare_utils._format_dicts_list_generic
                 }))
+
 
 class DeleteServer(command.ShowOne):
     """Delete a baremetal server"""
@@ -488,15 +505,10 @@ class DeleteServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
-        columns = (
-            'ID',
-            'Name',
-        )
         server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
         bare_client.servers.delete(server_obj.id)
-        return {},{}
+        return {}, {}
+
 
 class StartServer(command.ShowOne):
     """Start a baremetal server"""
@@ -517,14 +529,14 @@ class StartServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
         if parsed_args.boot_mode:
             data = bare_client.servers.start_with_mode(server_obj.id,{"boot_mode":parsed_args.boot_mode})
         else:
             data = bare_client.servers.start(server_obj.id)
-        return {},{}
+        return {}, {}
+
 
 class StopServer(command.ShowOne):
     """Stop a baremetal server"""
@@ -540,11 +552,11 @@ class StopServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
         bare_client.servers.stop(server_obj.id)
-        return {},{}
+        return {}, {}
+
 
 class RebootServer(command.ShowOne):
     """Reboot a baremetal server"""
@@ -568,16 +580,17 @@ class RebootServer(command.ShowOne):
             help="baremetal server boot mode. A valid value is DISK, PXE or ISO.",
         )
         return parser
+
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         body = {'type': parsed_args.type}
         if parsed_args.boot_mode:
             body['boot_mode'] = parsed_args.boot_mode
         server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
         bare_client.servers.reboot_with_mode(server_obj.id,body)
-        return {},{}
+        return {}, {}
+
 
 class GetConsoleServer(command.ShowOne):
     """Get management console details"""
@@ -593,7 +606,6 @@ class GetConsoleServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         columns = (
             'Type',
@@ -604,4 +616,4 @@ class GetConsoleServer(command.ShowOne):
 
         server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
         data = bare_client.servers.get_management_console(server_obj.id)['console']
-        return (columns,utils.get_dict_properties(data, columns))
+        return columns, utils.get_dict_properties(data, columns)
