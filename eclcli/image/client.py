@@ -17,6 +17,8 @@ import logging
 
 from eclcli.common import utils
 
+from . import extensions
+
 
 LOG = logging.getLogger(__name__)
 
@@ -55,6 +57,7 @@ def make_client(instance):
         cacert=instance._cacert,
         insecure=instance._insecure,
     )
+    client.extension = extensions.Controller(client.http_client, client.schemas)
 
     # Create the low-level API
 

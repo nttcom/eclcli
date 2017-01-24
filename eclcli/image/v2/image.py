@@ -63,6 +63,102 @@ def _format_image(image):
     return info
 
 
+class CopyImage(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(CopyImage, self).get_parser(prog_name)
+        parser.add_argument(
+            "image",
+            metavar="<image>",
+            help="An identifier for the image (name or ID).",
+        )
+        parser.add_argument(
+            "tenant_id",
+            metavar="<tenant_id>",
+            help="An identifier for the image tenant for destination region.",
+        )
+        common.add_project_domain_option_to_parser(parser)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+
+        tenant_id = parsed_args.tenant_id
+        image_id = utils.find_resource(
+            image_client.images,
+            parsed_args.image).id
+
+        image = image_client.extension.copy(
+            image_id,
+            tenant_id,
+        )
+
+        return zip(*sorted(six.iteritems(image)))
+
+
+class CancelCopyImage(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(CancelCopyImage, self).get_parser(prog_name)
+        parser.add_argument(
+            "job_id",
+            metavar="<job_id>",
+            help="job_id that has been paid out in the Copy API.",
+        )
+        common.add_project_domain_option_to_parser(parser)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+        job_id = parsed_args.job_id
+
+        image = image_client.extension.cancel_copy(job_id)
+
+        return zip(*sorted(six.iteritems(image)))
+
+
+class ListCopyImage(command.Lister):
+    def get_parser(self, prog_name):
+        parser = super(ListCopyImage, self).get_parser(prog_name)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+        columns = [
+            'Job ID',
+            'Source Image Name',
+            'Destination Image ID',
+            'Destination Tenant ID',
+            'Status',
+        ]
+        column_headers = columns
+
+        data = image_client.extension.list()
+
+        return (column_headers,
+                (utils.get_item_properties(
+                    s, columns
+                ) for s in data))
+
+
+class ShowCopyImage(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(ShowCopyImage, self).get_parser(prog_name)
+        parser.add_argument(
+            "job_id",
+            metavar="<job_id>",
+            help="job_id that has been paid out in the Copy API.",
+        )
+        common.add_project_domain_option_to_parser(parser)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+        job_id = parsed_args.job_id
+
+        image = image_client.extension.detail(job_id)
+
+        return zip(*sorted(six.iteritems(image)))
+
+
 class UpdateImageMember(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(UpdateImageMember, self).get_parser(prog_name)
@@ -478,6 +574,7 @@ class ListImage(command.Lister):
             "--limit",
             metavar="<limit>",
             type=int,
+            default=1000,
             help="Maximum number of images to display.",
         )
         parser.add_argument(
