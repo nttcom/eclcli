@@ -478,6 +478,7 @@ class ListImage(command.Lister):
             "--limit",
             metavar="<limit>",
             type=int,
+            default=1000,
             help="Maximum number of images to display.",
         )
         parser.add_argument(
