@@ -115,6 +115,29 @@ class CancelCopyImage(command.ShowOne):
         return zip(*sorted(six.iteritems(image)))
 
 
+class ListCopyImage(command.Lister):
+    def get_parser(self, prog_name):
+        parser = super(ListCopyImage, self).get_parser(prog_name)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+        columns = [
+            'Job ID',
+            'Source Image Name',
+            'Destination Image ID',
+            'Destination Tenant ID',
+            'Status',
+        ]
+        column_headers = columns
+
+        data = image_client.extension.list()
+
+        return (column_headers,
+                (utils.get_item_properties(
+                    s, columns
+                ) for s in data))
+
 class UpdateImageMember(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(UpdateImageMember, self).get_parser(prog_name)
