@@ -63,6 +63,38 @@ def _format_image(image):
     return info
 
 
+class CopyImage(command.ShowOne):
+    def get_parser(self, prog_name):
+        parser = super(CopyImage, self).get_parser(prog_name)
+        parser.add_argument(
+            "image",
+            metavar="<image>",
+            help="An identifier for the image (name or ID).",
+        )
+        parser.add_argument(
+            "tenant_id",
+            metavar="<tenant_id>",
+            help="An identifier for the image tenant for destination region.",
+        )
+        common.add_project_domain_option_to_parser(parser)
+        return parser
+
+    def take_action(self, parsed_args):
+        image_client = self.app.client_manager.image
+
+        tenant_id = parsed_args.tenant_id
+        image_id = utils.find_resource(
+            image_client.images,
+            parsed_args.image).id
+
+        image = image_client.extension.copy(
+            image_id,
+            tenant_id,
+        )
+
+        return zip(*sorted(six.iteritems(image)))
+
+
 class UpdateImageMember(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(UpdateImageMember, self).get_parser(prog_name)
