@@ -68,20 +68,24 @@ class SetLoadBalancerInterface(command.ShowOne):
         parser.add_argument(
             '--network_id',
             metavar='NETWORK_ID',
-            help='Network ID for load balancer interface to attach.')
+            help='Network ID for load balancer interface to attach.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--ip_address',
             metavar='<ipv4>',
-            help='Logical IP Address of load balancer interface to be set.')
+            help='Logical IP Address of load balancer interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--virtual_ip_address',
             metavar='<ipv4>',
-            help='Virtual IP Address of load balancer interface to be set.')
+            help='Virtual IP Address of load balancer interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--vrid',
             metavar='<integer>',
             type=int,
-            help='VRID of load balancer interface to be set.')
+            help='VRID of load balancer interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         return parser
 
     def take_action(self, parsed_args):
@@ -94,6 +98,23 @@ class SetLoadBalancerInterface(command.ShowOne):
             body['load_balancer_interface'],
             ['description', 'network_id', 'ip_address',
              'virtual_ip_address'])
+
+        if parsed_args.network_id == '0':
+            body["load_balancer_interface"]["network_id"] = None
+
+        if parsed_args.ip_address == '0':
+            body["load_balancer_interface"]["ip_address"] = None
+
+        if parsed_args.virtual_ip_address == '0':
+            body["load_balancer_interface"]["virtual_ip_address"] = None
+
+        if parsed_args.vrid == 0:
+            body["load_balancer_interface"]["virtual_ip_properties"] = None
+        elif parsed_args.vrid:
+            body["load_balancer_interface"]["virtual_ip_properties"] = {
+                "protocol": "vrrp",
+                "vrid": parsed_args.vrid,
+            }
 
         dic = network_client.update_loadbalancer_interface(
             loadbalancer_interface_id, body).get('load_balancer_interface')

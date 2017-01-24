@@ -68,20 +68,24 @@ class SetFirewallInterface(command.ShowOne):
         parser.add_argument(
             '--network_id',
             metavar='NETWORK_ID',
-            help='Network ID for firewall interface to attach.')
+            help='Network ID for firewall interface to attach.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--ip_address',
             metavar='<ipv4>',
-            help='Logical IP Address of firewall interface to be set.')
+            help='Logical IP Address of firewall interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--virtual_ip_address',
             metavar='<ipv4>',
-            help='Virtual IP Address of firewall interface to be set.')
+            help='Virtual IP Address of firewall interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         parser.add_argument(
             '--vrid',
             metavar='<integer>',
             type=int,
-            help='VRID of firewall interface to be set.')
+            help='VRID of firewall interface to be set.'
+                 'If you want to set this param to null, please specified 0.')
         return parser
 
     def take_action(self, parsed_args):
@@ -94,6 +98,23 @@ class SetFirewallInterface(command.ShowOne):
             body['firewall_interface'],
             ['description', 'network_id', 'ip_address',
              'virtual_ip_address'])
+
+        if parsed_args.network_id == '0':
+            body["firewall_interface"]["network_id"] = None
+
+        if parsed_args.ip_address == '0':
+            body["firewall_interface"]["ip_address"] = None
+
+        if parsed_args.virtual_ip_address == '0':
+            body["firewall_interface"]["virtual_ip_address"] = None
+
+        if parsed_args.vrid == 0:
+            body["firewall_interface"]["virtual_ip_properties"] = None
+        elif parsed_args.vrid:
+            body["firewall_interface"]["virtual_ip_properties"] = {
+                "protocol": "vrrp",
+                "vrid": parsed_args.vrid,
+            }
 
         dic = network_client.update_firewall_interface(
             firewall_interface_id, body).get('firewall_interface')
