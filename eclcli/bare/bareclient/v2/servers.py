@@ -21,6 +21,7 @@ Server interface.
 
 import base64
 import json
+import os
 
 from oslo_utils import encodeutils
 import six
@@ -444,8 +445,9 @@ class ServerManager(base.BootingManagerWithFind):
             body['server'].update({'imageRef': image})
 
         if userdata:
-            if hasattr(userdata, 'read'):
-                userdata = userdata.read()
+            if os.path.exists(userdata):
+                with open(userdata, "r") as fuserdata:
+                    userdata = fuserdata.read()
 
             if six.PY3:
                 userdata = userdata.encode("utf-8")
@@ -537,7 +539,6 @@ class ServerManager(base.BootingManagerWithFind):
             # body['server']['OS-DCF:diskConfig'] = disk_config
             for k, v in disk_config_dict.items():
                 body['server'][k] = v
-
         return self._create(resource_url, body, response_key,
                             return_raw=return_raw, **kwargs)
 
