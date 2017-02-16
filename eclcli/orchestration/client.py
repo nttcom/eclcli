@@ -21,7 +21,7 @@ DEFAULT_ORCHESTRATION_API_VERSION = '1'
 API_VERSION_OPTION = 'os_orchestration_api_version'
 API_NAME = 'orchestration'
 API_VERSIONS = {
-    '1': 'heatclient.v1.client.Client',
+    '1': 'eclcli.orchestration.heatclient.v1.client.Client',
 }
 
 
@@ -46,14 +46,14 @@ def make_client(instance):
 
 
 def build_option_parser(parser):
-    """Hook to add global options"""
-    parser.add_argument(
-        '--os-orchestration-api-version',
-        metavar='<orchestration-api-version>',
-        default=utils.env(
-            'OS_ORCHESTRATION_API_VERSION',
-            default=DEFAULT_ORCHESTRATION_API_VERSION),
-        help='Orchestration API version, default=' +
-             DEFAULT_ORCHESTRATION_API_VERSION +
-             ' (Env: OS_ORCHESTRATION_API_VERSION)')
+    # """Hook to add global options"""
+    # parser.add_argument(
+    #     '--os-orchestration-api-version',
+    #     metavar='<orchestration-api-version>',
+    #     default=utils.env(
+    #         'OS_ORCHESTRATION_API_VERSION',
+    #         default=DEFAULT_ORCHESTRATION_API_VERSION),
+    #     help='Orchestration API version, default=' +
+    #          DEFAULT_ORCHESTRATION_API_VERSION +
+    #          ' (Env: OS_ORCHESTRATION_API_VERSION)')
     return parser

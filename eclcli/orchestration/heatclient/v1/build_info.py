@@ -13,6 +13,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-__all__ = ['Client']
+from eclcli.orchestration.heatclient.common import utils
+from eclcli.orchestration.heatclient.openstack.common.apiclient import base
 
-from eclcli.orchestration.heatclient.v1.client import Client  # noqa
+
+class BuildInfo(base.Resource):
+    def __repr__(self):
+        return "<BuildInfo %s>" % self._info
+
+    def build_info(self):
+        return self.manager.build_info()
+
+
+class BuildInfoManager(base.BaseManager):
+    resource_class = BuildInfo
+
+    def build_info(self):
+        resp = self.client.get('/build_info')
+        body = utils.get_response_body(resp)
+        return body
