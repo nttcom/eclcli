@@ -150,6 +150,8 @@ class StackManager(StackChildManager):
     def preview(self, **kwargs):
         """Preview a stack."""
         headers = self.client.credentials_headers()
+        headers.update({'X-Auth-User': self.client.username,
+                        'X-Auth-Key': self.client.password})
         resp = self.client.post('/stacks/preview',
                                 data=kwargs, headers=headers)
         body = utils.get_response_body(resp)
@@ -158,6 +160,8 @@ class StackManager(StackChildManager):
     def create(self, **kwargs):
         """Create a stack."""
         headers = self.client.credentials_headers()
+        headers.update({'X-Auth-User': self.client.username,
+                        'X-Auth-Key': self.client.password})
         resp = self.client.post('/stacks',
                                 data=kwargs, headers=headers)
         body = utils.get_response_body(resp)

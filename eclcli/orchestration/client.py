@@ -11,7 +11,11 @@
 #   under the License.
 #
 
+import argparse
 import logging
+
+from eclcli.orchestration.heatclient.openstack.common._i18n import _
+
 
 from eclcli.common import utils
 
@@ -33,8 +37,13 @@ def make_client(instance):
         API_VERSIONS)
     LOG.debug('Instantiating orchestration client: %s', heat_client)
 
+    cli_args = instance._cli_options
+    endpoint = cli_args.heat_url if cli_args.heat_url \
+        else instance.get_endpoint_for_service_type(API_NAME)
+
     client = heat_client(
-        endpoint=instance.get_endpoint_for_service_type('orchestration'),
+        endpoint=endpoint,
+        # endpoint=instance.get_endpoint_for_service_type('orchestration'),
         session=instance.session,
         auth_url=instance._auth_url,
         username=instance._username,
@@ -46,14 +55,11 @@ def make_client(instance):
 
 
 def build_option_parser(parser):
-    # """Hook to add global options"""
-    # parser.add_argument(
-    #     '--os-orchestration-api-version',
-    #     metavar='<orchestration-api-version>',
-    #     default=utils.env(
-    #         'OS_ORCHESTRATION_API_VERSION',
-    #         default=DEFAULT_ORCHESTRATION_API_VERSION),
-    #     help='Orchestration API version, default=' +
-    #          DEFAULT_ORCHESTRATION_API_VERSION +
-    #          ' (Env: OS_ORCHESTRATION_API_VERSION)')
+    parser.add_argument('--heat-url',
+                        default=utils.env('HEAT_URL'),
+                        help=_('Defaults to %(value)s.') % {
+                            'value': 'env[HEAT_URL]'
+                        })
+    parser.add_argument('--heat_url',
+                        help=argparse.SUPPRESS)
     return parser

@@ -292,6 +292,10 @@ class HTTPClient(object):
 
 class SessionClient(adapter.LegacyJsonAdapter):
     """HTTP client based on Keystone client session."""
+    def __init__(self, *args, **kwargs):
+        self.username = kwargs.pop('username',None)
+        self.password = kwargs.pop('password', None)
+        super(SessionClient, self).__init__(*args,**kwargs)
 
     def request(self, url, method, **kwargs):
         redirect = kwargs.get('redirect')
@@ -341,6 +345,10 @@ def _construct_http_client(endpoint=None, username=None, password=None,
 
     if session:
         kwargs['endpoint_override'] = endpoint
+        if username:
+            kwargs.update({'username': username})
+        if password:
+            kwargs.update({'password': password})
         return SessionClient(session, auth=auth, **kwargs)
     else:
         return HTTPClient(endpoint=endpoint, username=username,
