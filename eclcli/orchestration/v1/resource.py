@@ -70,7 +70,9 @@ class ResourceShow(show.ShowOne):
                     'resource': parsed_args.resource})
             raise exc.CommandError(msg)
 
-        return self.dict2columns(resource.to_dict())
+        resource_dict = resource.to_dict()
+        del resource_dict['updated_time']
+        return self.dict2columns(resource_dict)
 
 
 class ResourceList(lister.Lister):
@@ -126,8 +128,12 @@ class ResourceList(lister.Lister):
             msg = _('Stack not found: %s') % parsed_args.stack
             raise exc.CommandError(msg)
 
-        columns = ['physical_resource_id', 'resource_type', 'resource_status',
-                   'updated_time']
+        columns = [
+            'physical_resource_id',
+            'resource_type',
+            'resource_status',
+            # 'updated_time'
+        ]
 
         if len(resources) >= 1 and not hasattr(resources[0], 'resource_name'):
             columns.insert(0, 'logical_resource_id')

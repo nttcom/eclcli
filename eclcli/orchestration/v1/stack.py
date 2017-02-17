@@ -404,7 +404,7 @@ def _show_stack(heat_client, stack_id, format='', short=False):
             'stack_name',
             'description',
             'creation_time',
-            'updated_time',
+            # 'updated_time',
             'stack_status',
             'stack_status_reason',
         ]
@@ -530,7 +530,7 @@ def _list(client, args=None):
         'Stack Name',
         'Stack Status',
         'Creation Time',
-        'Updated Time',
+        # 'Updated Time',
     ]
 
     if args:
