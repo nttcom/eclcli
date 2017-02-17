@@ -73,18 +73,18 @@ class CreateStack(show.ShowOne):
             type=int,
             help=_('Stack creating timeout in minutes')
         )
-        parser.add_argument(
-            '--pre-create',
-            metavar='<resource>',
-            default=None,
-            action='append',
-            help=_('Name of a resource to set a pre-create hook to. Resources '
-                   'in nested stacks can be set using slash as a separator: '
-                   'nested_stack/another/my_resource. You can use wildcards '
-                   'to match multiple stacks or resources: '
-                   'nested_stack/an*/*_resource. This can be specified '
-                   'multiple times')
-        )
+        # parser.add_argument(
+        #     '--pre-create',
+        #     metavar='<resource>',
+        #     default=None,
+        #     action='append',
+        #     help=_('Name of a resource to set a pre-create hook to. Resources '
+        #            'in nested stacks can be set using slash as a separator: '
+        #            'nested_stack/another/my_resource. You can use wildcards '
+        #            'to match multiple stacks or resources: '
+        #            'nested_stack/an*/*_resource. This can be specified '
+        #            'multiple times')
+        # )
         parser.add_argument(
             '--enable-rollback',
             action='store_true',
@@ -147,9 +147,9 @@ class CreateStack(show.ShowOne):
             parsed_args.parameter_file,
             parsed_args.template)
 
-        if parsed_args.pre_create:
-            template_utils.hooks_to_env(env, parsed_args.pre_create,
-                                        'pre-create')
+        # if parsed_args.pre_create:
+        #     template_utils.hooks_to_env(env, parsed_args.pre_create,
+        #                                 'pre-create')
 
         fields = {
             'stack_name': parsed_args.name,
@@ -974,7 +974,7 @@ def _stacks_action(parsed_args, heat_client, action, action_name=None):
         'Stack Name',
         'Stack Status',
         'Creation Time',
-        'Updated Time'
+        # 'Updated Time'
     ]
     for stack in parsed_args.stack:
         data = _stack_action(stack, parsed_args, heat_client, action,
