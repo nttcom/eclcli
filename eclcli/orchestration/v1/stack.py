@@ -450,24 +450,24 @@ class ListStack(lister.Lister):
             action='store_true',
             help=_('Include soft-deleted stacks in the stack listing')
         )
-        parser.add_argument(
-            '--nested',
-            action='store_true',
-            help=_('Include nested stacks in the stack listing')
-        )
-        parser.add_argument(
-            '--hidden',
-            action='store_true',
-            help=_('Include hidden stacks in the stack listing')
-        )
-        parser.add_argument(
-            '--property',
-            dest='properties',
-            metavar='<key=value>',
-            help=_('Filter properties to apply on returned stacks (repeat to '
-                   'filter on multiple properties)'),
-            action=parseractions.KeyValueAction
-        )
+        # parser.add_argument(
+        #     '--nested',
+        #     action='store_true',
+        #     help=_('Include nested stacks in the stack listing')
+        # )
+        # parser.add_argument(
+        #     '--hidden',
+        #     action='store_true',
+        #     help=_('Include hidden stacks in the stack listing')
+        # )
+        # parser.add_argument(
+        #     '--property',
+        #     dest='properties',
+        #     metavar='<key=value>',
+        #     help=_('Filter properties to apply on returned stacks (repeat to '
+        #            'filter on multiple properties)'),
+        #     action=parseractions.KeyValueAction
+        # )
         parser.add_argument(
             '--tags',
             metavar='<tag1,tag2...>',
@@ -498,22 +498,22 @@ class ListStack(lister.Lister):
                    '(default: asc). Specify multiple times to sort on '
                    'multiple properties')
         )
-        parser.add_argument(
-            '--all-projects',
-            action='store_true',
-            help=_('Include all projects (admin only)')
-        )
+        # parser.add_argument(
+        #     '--all-projects',
+        #     action='store_true',
+        #     help=_('Include all projects (admin only)')
+        # )
         parser.add_argument(
             '--short',
             action='store_true',
             help=_('List fewer fields in output')
         )
-        parser.add_argument(
-            '--long',
-            action='store_true',
-            help=_('List additional fields in output, this is implied by '
-                   '--all-projects')
-        )
+        # parser.add_argument(
+        #     '--long',
+        #     action='store_true',
+        #     help=_('List additional fields in output, this is implied by '
+        #            '--all-projects')
+        # )
         return parser
 
     def take_action(self, parsed_args):
@@ -534,16 +534,18 @@ def _list(client, args=None):
     ]
 
     if args:
-        kwargs = {'limit': args.limit,
-                  'marker': args.marker,
-                  'filters': heat_utils.format_parameters(args.properties),
-                  'tags': None,
-                  'tags_any': None,
-                  'not_tags': None,
-                  'not_tags_any': None,
-                  'global_tenant': args.all_projects or args.long,
-                  'show_deleted': args.deleted,
-                  'show_hidden': args.hidden}
+        kwargs = {
+            'limit': args.limit,
+            'marker': args.marker,
+            # 'filters': heat_utils.format_parameters(args.properties),
+            'tags': None,
+            'tags_any': None,
+            'not_tags': None,
+            'not_tags_any': None,
+            # 'global_tenant': args.all_projects or args.long,
+            'show_deleted': args.deleted,
+            # 'show_hidden': args.hidden
+        }
 
         if args.tags:
             if args.tag_mode:
@@ -562,14 +564,14 @@ def _list(client, args=None):
         if args.short:
             columns.pop()
             columns.pop()
-        if args.long:
-            columns.insert(2, 'Stack Owner')
-        if args.long or args.all_projects:
-            columns.insert(2, 'Project')
+        # if args.long:
+        #     columns.insert(2, 'Stack Owner')
+        # if args.long or args.all_projects:
+        #     columns.insert(2, 'Project')
 
-        if args.nested:
-            columns.append('Parent')
-            kwargs['show_nested'] = True
+        # if args.nested:
+        #     columns.append('Parent')
+        #     kwargs['show_nested'] = True
 
     data = client.stacks.list(**kwargs)
     data = utils.sort_items(data, args.sort if args else None)
