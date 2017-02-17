@@ -100,15 +100,14 @@ class ListEvent(lister.Lister):
         parser.add_argument(
             '--resource',
             metavar='<resource>',
-            help=_('Name of resource to show events for. Note: this cannot '
-                   'be specified with --nested-depth')
+            help=_('Name of resource to show events for.')
         )
-        parser.add_argument(
-            '--filter',
-            metavar='<key=value>',
-            action='append',
-            help=_('Filter parameters to apply on returned events')
-        )
+        # parser.add_argument(
+        #     '--filter',
+        #     metavar='<key=value>',
+        #     action='append',
+        #     help=_('Filter parameters to apply on returned events')
+        # )
         parser.add_argument(
             '--limit',
             metavar='<limit>',
@@ -120,13 +119,13 @@ class ListEvent(lister.Lister):
             metavar='<id>',
             help=_('Only return events that appear after the given ID')
         )
-        parser.add_argument(
-            '--nested-depth',
-            metavar='<depth>',
-            type=int,
-            help=_('Depth of nested stacks from which to display events. '
-                   'Note: this cannot be specified with --resource')
-        )
+        # parser.add_argument(
+        #     '--nested-depth',
+        #     metavar='<depth>',
+        #     type=int,
+        #     help=_('Depth of nested stacks from which to display events. '
+        #            'Note: this cannot be specified with --resource')
+        # )
         parser.add_argument(
             '--sort',
             metavar='<key>[:<direction>]',
@@ -154,23 +153,23 @@ class ListEvent(lister.Lister):
             'resource_name': parsed_args.resource,
             'limit': parsed_args.limit,
             'marker': parsed_args.marker,
-            'filters': heat_utils.format_parameters(parsed_args.filter),
+            # 'filters': heat_utils.format_parameters(parsed_args.filter),
             'sort_dir': 'asc'
         }
 
-        if parsed_args.resource and parsed_args.nested_depth:
-            msg = _('--nested-depth cannot be specified with --resource')
-            raise exc.CommandError(msg)
+        # if parsed_args.resource and parsed_args.nested_depth:
+        #     msg = _('--nested-depth cannot be specified with --resource')
+        #     raise exc.CommandError(msg)
 
-        if parsed_args.nested_depth:
-            # Until the API supports recursive event listing we'll have to do
-            # the marker/limit filtering client-side
-            del kwargs['marker']
-            del kwargs['limit']
-            columns.append('stack_name')
-            nested_depth = parsed_args.nested_depth
-        else:
-            nested_depth = 0
+        # if parsed_args.nested_depth:
+        #     # Until the API supports recursive event listing we'll have to do
+        #     # the marker/limit filtering client-side
+        #     del kwargs['marker']
+        #     del kwargs['limit']
+        #     columns.append('stack_name')
+        #     # nested_depth = parsed_args.nested_depth
+        # else:
+        #     nested_depth = 0
 
         if parsed_args.follow:
             if parsed_args.formatter != 'value':
@@ -185,7 +184,8 @@ class ListEvent(lister.Lister):
                         client,
                         stack_id=parsed_args.stack,
                         event_args=kwargs,
-                        nested_depth=nested_depth,
+                        # nested_depth=nested_depth,
+                        nested_depth=0,
                         marker=marker)
                     if events:
                         marker = getattr(events[-1], 'id', None)
@@ -198,8 +198,12 @@ class ListEvent(lister.Lister):
                 return [], []
 
         events = event_utils.get_events(
-            client, stack_id=parsed_args.stack, event_args=kwargs,
-            nested_depth=nested_depth, marker=parsed_args.marker,
+            client,
+            stack_id=parsed_args.stack,
+            event_args=kwargs,
+            # nested_depth=nested_depth,
+            nested_depth=0,
+            marker=parsed_args.marker,
             limit=parsed_args.limit)
 
         if parsed_args.sort:
