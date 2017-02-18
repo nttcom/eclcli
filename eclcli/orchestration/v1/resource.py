@@ -93,21 +93,21 @@ class ResourceList(lister.Lister):
             help=_('Enable detailed information presented for each resource '
                    'in resource list')
         )
-        parser.add_argument(
-            '-n', '--nested-depth',
-            metavar='<nested-depth>',
-            type=int,
-            help=_('Depth of nested stacks from which to display resources')
-        )
+        # parser.add_argument(
+        #     '-n', '--nested-depth',
+        #     metavar='<nested-depth>',
+        #     type=int,
+        #     help=_('Depth of nested stacks from which to display resources')
+        # )
 
-        parser.add_argument(
-            '--filter',
-            metavar='<key=value>',
-            action='append',
-            help=_('Filter parameters to apply on returned resources based on '
-                   'their name, status, type, action, id and '
-                   'physcial_resource_id')
-        )
+        # parser.add_argument(
+        #     '--filter',
+        #     metavar='<key=value>',
+        #     action='append',
+        #     help=_('Filter parameters to apply on returned resources based on '
+        #            'their name, status, type, action, id and '
+        #            'physcial_resource_id')
+        # )
 
         return parser
 
@@ -117,9 +117,9 @@ class ResourceList(lister.Lister):
         client = self.app.client_manager.orchestration
 
         fields = {
-            'nested_depth': parsed_args.nested_depth,
+            # 'nested_depth': parsed_args.nested_depth,
             'with_detail': parsed_args.long,
-            'filters': heat_utils.format_parameters(parsed_args.filter),
+            # 'filters': heat_utils.format_parameters(parsed_args.filter),
         }
 
         try:
@@ -140,7 +140,8 @@ class ResourceList(lister.Lister):
         else:
             columns.insert(0, 'resource_name')
 
-        if parsed_args.nested_depth or parsed_args.long:
+        # if parsed_args.nested_depth or parsed_args.long:
+        if parsed_args.long:
             columns.append('stack_name')
 
         return (
