@@ -47,12 +47,12 @@ class ResourceShow(show.ShowOne):
             metavar='<resource>',
             help=_('Name or ID of resource')
         )
-        parser.add_argument(
-            '--with-attr',
-            metavar='<attribute>',
-            action='append',
-            help=_('Attribute to show, can be specified multiple times')
-        )
+        # parser.add_argument(
+        #     '--with-attr',
+        #     metavar='<attribute>',
+        #     action='append',
+        #     help=_('Attribute to show, can be specified multiple times')
+        # )
         return parser
 
     def take_action(self, parsed_args):
@@ -61,9 +61,11 @@ class ResourceShow(show.ShowOne):
         client = self.app.client_manager.orchestration
 
         try:
-            resource = client.resources.get(parsed_args.stack,
-                                            parsed_args.resource,
-                                            with_attr=parsed_args.with_attr)
+            resource = client.resources.get(
+                parsed_args.stack,
+                parsed_args.resource,
+                # with_attr=parsed_args.with_attr
+            )
         except heat_exc.HTTPNotFound:
             msg = (_('Stack or resource not found: %(stack)s %(resource)s') %
                    {'stack': parsed_args.stack,
