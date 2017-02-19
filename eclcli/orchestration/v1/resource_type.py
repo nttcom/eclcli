@@ -37,11 +37,11 @@ class ResourceTypeShow(format_utils.YamlFormat):
             metavar='<resource-type>',
             help=_('Resource type to show details for'),
         )
-        parser.add_argument(
-            '--template-type',
-            metavar='<template-type>',
-            help=_('Optional template type to generate, hot or cfn')
-        )
+        # parser.add_argument(
+        #     '--template-type',
+        #     metavar='<template-type>',
+        #     help=_('Optional template type to generate, hot or cfn')
+        # )
         return parser
 
     def take_action(self, parsed_args):
@@ -53,17 +53,18 @@ class ResourceTypeShow(format_utils.YamlFormat):
 
 def _show_resourcetype(heat_client, parsed_args):
     try:
-        if parsed_args.template_type:
-            template_type = parsed_args.template_type.lower()
-            if template_type not in ('hot', 'cfn'):
-                raise exc.CommandError(
-                    _('Template type invalid: %s') % parsed_args.template_type)
-
-            fields = {'resource_type': parsed_args.resource_type,
-                      'template_type': template_type}
-            data = heat_client.resource_types.generate_template(**fields)
-        else:
-            data = heat_client.resource_types.get(parsed_args.resource_type)
+        # if parsed_args.template_type:
+        #     template_type = parsed_args.template_type.lower()
+        #     if template_type not in ('hot', 'cfn'):
+        #         raise exc.CommandError(
+        #             _('Template type invalid: %s') % parsed_args.template_type)
+        #
+        #     fields = {'resource_type': parsed_args.resource_type,
+        #               'template_type': template_type}
+        #     data = heat_client.resource_types.generate_template(**fields)
+        # else:
+        #     data = heat_client.resource_types.get(parsed_args.resource_type)
+        data = heat_client.resource_types.get(parsed_args.resource_type)
     except heat_exc.HTTPNotFound:
         raise exc.CommandError(
             _('Resource type not found: %s') % parsed_args.resource_type)
@@ -81,15 +82,15 @@ class ResourceTypeList(lister.Lister):
     def get_parser(self, prog_name):
         parser = super(ResourceTypeList,
                        self).get_parser(prog_name)
-        parser.add_argument(
-            '--filter',
-            dest='filter',
-            metavar='<key=value>',
-            help=_('Filter parameters to apply on returned resource types. '
-                   'This can be specified multiple times. It can be any of '
-                   'name, version or support_status'),
-            action='append'
-        )
+        # parser.add_argument(
+        #     '--filter',
+        #     dest='filter',
+        #     metavar='<key=value>',
+        #     help=_('Filter parameters to apply on returned resource types. '
+        #            'This can be specified multiple times. It can be any of '
+        #            'name, version or support_status'),
+        #     action='append'
+        # )
         return parser
 
     def take_action(self, parsed_args):
@@ -101,7 +102,8 @@ class ResourceTypeList(lister.Lister):
 
 def _list_resourcetypes(heat_client, parsed_args):
     resource_types = heat_client.resource_types.list(
-        filters=heat_utils.format_parameters(parsed_args.filter))
+        # filters=heat_utils.format_parameters(parsed_args.filter)
+    )
     columns = ['Resource Type']
     rows = sorted([r.resource_type] for r in resource_types)
     return (columns, rows)
