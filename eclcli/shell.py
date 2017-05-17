@@ -200,19 +200,19 @@ class ECLClient(app.App):
         #     dest='cacert',
         #     default=utils.env('OS_CACERT'),
         #     help='CA certificate bundle file (Env: OS_CACERT)')
-        # verify_group = parser.add_mutually_exclusive_group()
+        verify_group = parser.add_mutually_exclusive_group()
         # verify_group.add_argument(
         #     '--verify',
         #     action='store_true',
         #     default=None,
         #     help='Verify server certificate (default)',
         # )
-        # verify_group.add_argument(
-        #     '--insecure',
-        #     action='store_true',
-        #     default=None,
-        #     help='Disable server certificate verification',
-        # )
+        verify_group.add_argument(
+            '--insecure',
+            action='store_true',
+            default=None,
+            help='Disable server certificate verification',
+        )
         # parser.add_argument(
         #     '--os-default-domain',
         #     metavar='<auth-domain>',

@@ -1,0 +1,305 @@
+# Copyright 2012 OpenStack Foundation
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+import base64
+import logging
+import os
+import textwrap
+import uuid
+
+from oslo_serialization import jsonutils
+from oslo_utils import encodeutils
+from oslo_utils import importutils
+import prettytable
+import six
+from six.moves.urllib import error
+from six.moves.urllib import parse
+from six.moves.urllib import request
+import yaml
+
+from eclcli.orchestration.heatclient import exc
+from eclcli.orchestration.heatclient.openstack.common._i18n import _
+from eclcli.orchestration.heatclient.openstack.common._i18n import _LE
+from eclcli.orchestration.heatclient.openstack.common import cliutils
+
+LOG = logging.getLogger(__name__)
+
+
+supported_formats = {
+    "json": lambda x: jsonutils.dumps(x, indent=2),
+    "yaml": yaml.safe_dump
+}
+
+# Using common methods from oslo cliutils
+arg = cliutils.arg
+env = cliutils.env
+print_list = cliutils.print_list
+
+
+def link_formatter(links):
+    def format_link(l):
+        if 'rel' in l:
+            return "%s (%s)" % (l.get('href', ''), l.get('rel', ''))
+        else:
+            return "%s" % (l.get('href', ''))
+    return '\n'.join(format_link(l) for l in links or [])
+
+
+def resource_nested_identifier(rsrc):
+    nested_link = [l for l in rsrc.links or []
+                   if l.get('rel') == 'nested']
+    if nested_link:
+        nested_href = nested_link[0].get('href')
+        nested_identifier = nested_href.split("/")[-2:]
+        return "/".join(nested_identifier)
+
+
+def json_formatter(js):
+    return jsonutils.dumps(js, indent=2, ensure_ascii=False,
+                           separators=(', ', ': '))
+
+
+def yaml_formatter(js):
+    return yaml.safe_dump(js, default_flow_style=False)
+
+
+def text_wrap_formatter(d):
+    return '\n'.join(textwrap.wrap(d or '', 55))
+
+
+def newline_list_formatter(r):
+    return '\n'.join(r or [])
+
+
+def print_dict(d, formatters=None):
+    formatters = formatters or {}
+    pt = prettytable.PrettyTable(['Property', 'Value'],
+                                 caching=False, print_empty=False)
+    pt.align = 'l'
+
+    for field in d.keys():
+        if field in formatters:
+            pt.add_row([field, formatters[field](d[field])])
+        else:
+            pt.add_row([field, d[field]])
+    print(pt.get_string(sortby='Property'))
+
+
+def event_log_formatter(events):
+    """Return the events in log format."""
+    event_log = []
+    log_format = ("%(event_time)s "
+                  "[%(rsrc_name)s]: %(rsrc_status)s  %(rsrc_status_reason)s")
+    for event in events:
+        event_time = getattr(event, 'event_time', '')
+        log = log_format % {
+            'event_time': event_time.replace('T', ' '),
+            'rsrc_name': getattr(event, 'resource_name', ''),
+            'rsrc_status': getattr(event, 'resource_status', ''),
+            'rsrc_status_reason': getattr(event, 'resource_status_reason', '')
+        }
+        event_log.append(log)
+
+    return "\n".join(event_log)
+
+
+def print_update_list(lst, fields, formatters=None):
+    """Print the stack-update --dry-run output as a table.
+
+    This function is necessary to print the stack-update --dry-run
+    output, which contains additional information about the update.
+    """
+    formatters = formatters or {}
+    pt = prettytable.PrettyTable(fields, caching=False, print_empty=False)
+    pt.align = 'l'
+
+    for change in lst:
+        row = []
+        for field in fields:
+            if field in formatters:
+                row.append(formatters[field](change.get(field, None)))
+            else:
+                row.append(change.get(field, None))
+
+        pt.add_row(row)
+
+    if six.PY3:
+        print(encodeutils.safe_encode(pt.get_string()).decode())
+    else:
+        print(encodeutils.safe_encode(pt.get_string()))
+
+
+def find_resource(manager, name_or_id):
+    """Helper for the _find_* methods."""
+    # first try to get entity as integer id
+    try:
+        if isinstance(name_or_id, int) or name_or_id.isdigit():
+            return manager.get(int(name_or_id))
+    except exc.NotFound:
+        pass
+
+    # now try to get entity as uuid
+    try:
+        uuid.UUID(str(name_or_id))
+        return manager.get(name_or_id)
+    except (ValueError, exc.NotFound):
+        pass
+
+    # finally try to find entity by name
+    try:
+        return manager.find(name=name_or_id)
+    except exc.NotFound:
+        msg = (
+            _("No %(name)s with a name or ID of "
+              "'%(name_or_id)s' exists.")
+            % {
+                'name': manager.resource_class.__name__.lower(),
+                'name_or_id': name_or_id
+            })
+        raise exc.CommandError(msg)
+
+
+def import_versioned_module(version, submodule=None):
+    module = 'heatclient.v%s' % version
+    if submodule:
+        module = '.'.join((module, submodule))
+    return importutils.import_module(module)
+
+
+def format_parameters(params, parse_semicolon=True):
+    '''Reformat parameters into dict of format expected by the API.'''
+
+    if not params:
+        return {}
+
+    if parse_semicolon:
+        # expect multiple invocations of --parameters but fall back
+        # to ; delimited if only one --parameters is specified
+        if len(params) == 1:
+            params = params[0].split(';')
+
+    parameters = {}
+    for p in params:
+        try:
+            (n, v) = p.split(('='), 1)
+        except ValueError:
+            msg = _('Malformed parameter(%s). Use the key=value format.') % p
+            raise exc.CommandError(msg)
+
+        if n not in parameters:
+            parameters[n] = v
+        else:
+            if not isinstance(parameters[n], list):
+                parameters[n] = [parameters[n]]
+            parameters[n].append(v)
+
+    return parameters
+
+
+def format_all_parameters(params, param_files,
+                          template_file=None, template_url=None):
+    parameters = {}
+    parameters.update(format_parameters(params))
+    parameters.update(format_parameter_file(
+        param_files,
+        template_file,
+        template_url))
+    return parameters
+
+
+def format_parameter_file(param_files, template_file=None,
+                          template_url=None):
+    '''Reformat file parameters into dict of format expected by the API.'''
+    if not param_files:
+        return {}
+    params = format_parameters(param_files, False)
+
+    template_base_url = None
+    if template_file or template_url:
+        template_base_url = base_url_for_url(get_template_url(
+            template_file, template_url))
+
+    param_file = {}
+    for key, value in six.iteritems(params):
+                param_file[key] = resolve_param_get_file(value,
+                                                         template_base_url)
+    return param_file
+
+
+def resolve_param_get_file(file, base_url):
+    if base_url and not base_url.endswith('/'):
+        base_url = base_url + '/'
+    str_url = parse.urljoin(base_url, file)
+    return read_url_content(str_url)
+
+
+def format_output(output, format='yaml'):
+    """Format the supplied dict as specified."""
+    output_format = format.lower()
+    try:
+        return supported_formats[output_format](output)
+    except KeyError:
+        raise exc.HTTPUnsupported(_("The format(%s) is unsupported.")
+                                  % output_format)
+
+
+def parse_query_url(url):
+    base_url, query_params = url.split('?')
+    return base_url, parse.parse_qs(query_params)
+
+
+def get_template_url(template_file=None, template_url=None):
+    if template_file:
+        template_url = normalise_file_path_to_url(template_file)
+    return template_url
+
+
+def read_url_content(url):
+    try:
+        content = request.urlopen(url).read()
+    except error.URLError:
+        raise exc.CommandError(_('Could not fetch contents for %s') % url)
+
+    if content:
+        try:
+            content.decode('utf-8')
+        except ValueError:
+            content = base64.encodestring(content)
+    return content
+
+
+def base_url_for_url(url):
+    parsed = parse.urlparse(url)
+    parsed_dir = os.path.dirname(parsed.path)
+    return parse.urljoin(url, parsed_dir)
+
+
+def normalise_file_path_to_url(path):
+    if parse.urlparse(path).scheme:
+        return path
+    path = os.path.abspath(path)
+    return parse.urljoin('file:', request.pathname2url(path))
+
+
+def get_response_body(resp):
+    body = resp.content
+    if 'application/json' in resp.headers.get('content-type', ''):
+        try:
+            body = resp.json()
+        except ValueError:
+            LOG.error(_LE('Could not decode response body as JSON'))
+    else:
+        body = None
+    return body
