@@ -325,14 +325,14 @@ class CreateServer(command.ShowOne):
             help=_('Set a property on this server '
                    '(repeat for multiple values)'),
         )
-        parser.add_argument(
-            '--file',
-            metavar='<dest-filename=source-filename>',
-            action='append',
-            default=[],
-            help=_('File to inject into image before boot '
-                   '(repeat for multiple files)'),
-        )
+        # parser.add_argument(
+        #     '--file',
+        #     metavar='<dest-filename=source-filename>',
+        #     action='append',
+        #     default=[],
+        #     help=_('File to inject into image before boot '
+        #            '(repeat for multiple files)'),
+        # )
         parser.add_argument(
             '--user-data',
             metavar='<user-data>',
@@ -428,13 +428,13 @@ class CreateServer(command.ShowOne):
 
         boot_args = [parsed_args.server_name, image, flavor]
 
-        files = {}
-        for f in parsed_args.file:
-            dst, src = f.split('=', 1)
-            try:
-                files[dst] = io.open(src, 'rb')
-            except IOError as e:
-                raise exceptions.CommandError("Can't open '%s': %s" % (src, e))
+        # files = {}
+        # for f in parsed_args.file:
+        #     dst, src = f.split('=', 1)
+        #     try:
+        #         files[dst] = io.open(src, 'rb')
+        #     except IOError as e:
+        #         raise exceptions.CommandError("Can't open '%s': %s" % (src, e))
 
         if parsed_args.min > parsed_args.max:
             msg = _("min instances should be <= max instances")
@@ -534,7 +534,7 @@ class CreateServer(command.ShowOne):
 
         boot_kwargs = dict(
             meta=parsed_args.property,
-            files=files,
+            # files=files,
             reservation_id=None,
             min_count=parsed_args.min,
             max_count=parsed_args.max,
@@ -558,9 +558,9 @@ class CreateServer(command.ShowOne):
             # server = compute_client.servers.create(*boot_args, **boot_kwargs)
         finally:
             # Clean up open files - make sure they are not strings
-            for f in files:
-                if hasattr(f, 'close'):
-                    f.close()
+            # for f in files:
+            #     if hasattr(f, 'close'):
+            #         f.close()
             if hasattr(userdata, 'close'):
                 userdata.close()
 
