@@ -350,7 +350,7 @@ class SetVolume(command.Command):
             metavar='<boolean>',
             type=utils.parse_bool,
             choices=[True, False],
-            help='Admin State Up of network to create.'
+            help='Update bootable status of a volume.'
         )
         return parser
 
