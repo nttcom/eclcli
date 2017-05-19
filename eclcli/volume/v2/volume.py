@@ -345,6 +345,13 @@ class SetVolume(command.Command):
             help='Property to add or modify for this volume '
                  '(repeat option to set multiple properties)',
         )
+        parser.add_argument(
+            '--bootable',
+            metavar='<boolean>',
+            type=utils.parse_bool,
+            choices=[True, False],
+            help='Admin State Up of network to create.'
+        )
         return parser
 
     def take_action(self, parsed_args):
@@ -366,6 +373,9 @@ class SetVolume(command.Command):
         if parsed_args.property:
             volume_client.volumes.set_metadata(volume.id, parsed_args.property)
 
+        if parsed_args.bootable is not None:
+            volume_client.volumes.set_bootable(volume.id, parsed_args.bootable)
+
         kwargs = {}
         if parsed_args.name:
             kwargs['display_name'] = parsed_args.name
@@ -374,7 +384,8 @@ class SetVolume(command.Command):
         if kwargs:
             volume_client.volumes.update(volume.id, **kwargs)
 
-        if not kwargs and not parsed_args.property and not parsed_args.size:
+        if not kwargs and not parsed_args.property and not parsed_args.size \
+           and not parsed_args.bootable:
             self.app.log.error("No changes requested\n")
 
 
