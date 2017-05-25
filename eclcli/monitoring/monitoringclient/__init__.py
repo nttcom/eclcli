@@ -10,12 +10,4 @@
 #   License for the specific language governing permissions and limitations
 #   under the License.
 
-__all__ = ['__version__']
-
-import pbr.version
-
-version_info = pbr.version.VersionInfo('monitoringclient')
-try:
-    __version__ = version_info.version_string()
-except AttributeError:
-    __version__ = None
+__version__ = '2'
