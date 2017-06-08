@@ -7,6 +7,10 @@ class ListQosOption(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListQosOption, self).get_parser(prog_name)
         parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
             '--name',
             metavar="name",
             help="filter by name")
@@ -61,6 +65,8 @@ class ListQosOption(command.Lister):
             'Status',
         )
         params = dict()
+        if parsed_args.id:
+            params.update({"id": parsed_args.id})
         if parsed_args.name:
             params.update({"name": parsed_args.name})
         if parsed_args.service_type:
