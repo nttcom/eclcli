@@ -6,6 +6,48 @@ from ..networkclient.common import utils as to_obj
 class ListStaticRoute(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListStaticRoute, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--nexthop',
+            metavar="nexthop",
+            help="filter by next hop")
+        parser.add_argument(
+            '--destination',
+            metavar="destination",
+            help="filter by destination")
+        parser.add_argument(
+            '--service-type',
+            metavar="service_type",
+            help="filter by service_type")
+        parser.add_argument(
+            '--internet-gw-id',
+            metavar="internet_gw_id",
+            help="filter by internet gateway id")
+        parser.add_argument(
+            '--aws-gw-id',
+            metavar="aws_gw_id",
+            help="filter by aws gateway id")
+        parser.add_argument(
+            '--interdc-gw-id',
+            metavar="interdc_gw_id",
+            help="filter by interdc gateway id")
+        parser.add_argument(
+            '--vpn-gw-id',
+            metavar="vpn_gw_id",
+            help="filter by vpn gateway id")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +56,45 @@ class ListStaticRoute(command.Lister):
         columns = (
             'id',
             'name',
+            'service_type',
+            'destination',
+            'nexthop',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Service Type',
+            'Destination',
+            'Nexthop',
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.destination:
+            search_opts.update({"destination": parsed_args.destination})
+        if parsed_args.nexthop:
+            search_opts.update({"nexthop": parsed_args.nexthop})
+        if parsed_args.service_type:
+            search_opts.update({"service_type": parsed_args.service_type})
+        if parsed_args.interdc_gw_id:
+            search_opts.update({"interdc_gw_id": parsed_args.interdc_gw_id})
+        if parsed_args.internet_gw_id:
+            search_opts.update({"internet_gw_id": parsed_args.internet_gw_id})
+        if parsed_args.aws_gw_id:
+            search_opts.update({"aws_gw_id": parsed_args.aws_gw_id})
+        if parsed_args.vpn_gw_id:
+            search_opts.update({"vpn_gw_id": parsed_args.vpn_gw_id})
+
         data = [to_obj.StaticRoute(static_route)
-            for static_route in network_client.list_static_routes().get('static_routes')]
+                for static_route in network_client.list_static_routes(
+                            **search_opts).get('static_routes')]
 
         return (column_headers,
                 (utils.get_item_properties(
