@@ -6,6 +6,75 @@ from ..networkclient.common import utils as to_obj
 class ListGwInterface(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListGwInterface, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--service-type',
+            metavar="service_type",
+            help="filter by service_type")
+        parser.add_argument(
+            '--internet-gw-id',
+            metavar="internet_gw_id",
+            help="filter by internet gateway id")
+        parser.add_argument(
+            '--aws-gw-id',
+            metavar="aws_gw_id",
+            help="filter by aws gateway id")
+        parser.add_argument(
+            '--interdc-gw-id',
+            metavar="interdc_gw_id",
+            help="filter by interdc gateway id")
+        parser.add_argument(
+            '--vpn-gw-id',
+            metavar="vpn_gw_id",
+            help="filter by vpn gateway id")
+        parser.add_argument(
+            '--netmask',
+            metavar="netmask",
+            help="filter by netmask")
+        parser.add_argument(
+            '--network-id',
+            metavar="network_id",
+            help="filter by network id")
+        parser.add_argument(
+            '--gw-vipv4',
+            metavar="gw_vipv4",
+            help="filter by gateway ipv4")
+        parser.add_argument(
+            '--gw-vipv6',
+            metavar="gw-vipv6",
+            help="filter by gateway ipv6")
+        parser.add_argument(
+            '--primary-ipv4',
+            metavar="primary_ipv4",
+            help="filter by primary ipv4")
+        parser.add_argument(
+            '--primary-ipv6',
+            metavar="primary_ipv6",
+            help="filter by primary ipv6")
+        parser.add_argument(
+            '--secondary-ipv4',
+            metavar="secondary_ipv4",
+            help="filter by secondary ipv4")
+        parser.add_argument(
+            '--secondary-ipv6',
+            metavar="secondary_ipv6",
+            help="filter by secondary ipv6")
+        parser.add_argument(
+            '--vrid',
+            metavar="vrid",
+            help="filter by vrid")
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +83,57 @@ class ListGwInterface(command.Lister):
         columns = (
             'id',
             'name',
+            'service_type',
+            'network_id',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Service Type',
+            'Network',
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.service_type:
+            search_opts.update({"service_type": parsed_args.service_type})
+        if parsed_args.interdc_gw_id:
+            search_opts.update({"interdc_gw_id": parsed_args.interdc_gw_id})
+        if parsed_args.internet_gw_id:
+            search_opts.update({"internet_gw_id": parsed_args.internet_gw_id})
+        if parsed_args.aws_gw_id:
+            search_opts.update({"aws_gw_id": parsed_args.aws_gw_id})
+        if parsed_args.vpn_gw_id:
+            search_opts.update({"vpn_gw_id": parsed_args.vpn_gw_id})
+        if parsed_args.netmask:
+            search_opts.update({"netmask": parsed_args.netmask})
+        if parsed_args.network_id:
+            search_opts.update({"network_id": parsed_args.network_id})
+        if parsed_args.gw_vipv4:
+            search_opts.update({"gw_vipv4": parsed_args.gw_vipv4})
+        if parsed_args.gw_vipv6:
+            search_opts.update({"gw_vipv6": parsed_args.gw_vipv6})
+        if parsed_args.primary_ipv4:
+            search_opts.update({"primary_ipv4": parsed_args.primary_ipv4})
+        if parsed_args.primary_ipv6:
+            search_opts.update({"primary_ipv6": parsed_args.primary_ipv6})
+        if parsed_args.secondary_ipv4:
+            search_opts.update({"secondary_ipv4": parsed_args.secondary_ipv4})
+        if parsed_args.secondary_ipv6:
+            search_opts.update({"secondary_ipv6": parsed_args.secondary_ipv6})
+        if parsed_args.vrid:
+            search_opts.update({"vrid": parsed_args.vrid})
+
         data = [to_obj.GwInterface(gw_interface)
-            for gw_interface in network_client.list_gw_interfaces().get('gw_interfaces')]
+                for gw_interface in network_client.list_gw_interfaces(
+                **search_opts).get('gw_interfaces')]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -47,7 +157,7 @@ class ShowGwInterface(command.ShowOne):
         gw_interface_id = parsed_args.gw_interface_id
 
         dic = network_client.show_gw_interface(gw_interface_id).get('gw_interface')
-        columns = utils.get_columns(dic)
+        columns = dic #utils.get_columns(dic)
         obj = to_obj.GwInterface(dic)
         data = utils.get_item_properties(
             obj, columns,)
