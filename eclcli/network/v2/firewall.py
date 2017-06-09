@@ -6,6 +6,34 @@ from ..networkclient.common import utils as to_obj
 class ListFirewall(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListFirewall, self).get_parser(prog_name)
+        parser.add_argument(
+            '--admin_username',
+            metavar="admin_username",
+            help="filter by admin username")
+        parser.add_argument(
+            '--user_username',
+            metavar="user_username",
+            help="filter by user username")
+        parser.add_argument(
+            '--default-gateway',
+            metavar="default_gateway",
+            help="filter by default gateway")
+        parser.add_argument(
+            '--firewall-plan-id',
+            metavar="firewall_plan_id",
+            help="filter by firewall plan id")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
         return parser
 
     def take_action(self, parsed_args):
@@ -22,8 +50,24 @@ class ListFirewall(command.Lister):
             'Status',
         )
 
+        search_opts = dict()
+        if parsed_args.admin_username:
+            search_opts.update({"admin_username": parsed_args.admin_username})
+        if parsed_args.user_username:
+            search_opts.update({"user_username": parsed_args.user_username})
+        if parsed_args.default_gateway:
+            search_opts.update({"default_gateway": parsed_args.default_gateway})
+        if parsed_args.firewall_plan_id:
+            search_opts.update({"firewall_plan_id": parsed_args.firewall_plan_id})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+
         data = [to_obj.Firewall(firewall)
-                for firewall in network_client.list_firewalls().get('firewalls')]
+                for firewall in network_client.list_firewalls(**search_opts).get('firewalls')]
 
         return (column_headers,
                 (utils.get_item_properties(
