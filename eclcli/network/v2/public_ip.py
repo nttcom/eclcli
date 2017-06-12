@@ -20,11 +20,11 @@ class ListPubicIP(command.Lister):
             metavar="status",
             help="filter by status")
         parser.add_argument(
-            '--internet-gw-id',
+            '--internet_gw_id',
             metavar="internet_gw_id",
             help="filter by internet gateway id")
         parser.add_argument(
-            '--submask-length',
+            '--submask_length',
             metavar="submask_length",
             help="filter by submask length")
         parser.add_argument(

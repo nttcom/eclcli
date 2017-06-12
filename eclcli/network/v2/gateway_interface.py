@@ -20,23 +20,23 @@ class ListGwInterface(command.Lister):
             metavar="status",
             help="filter by status")
         parser.add_argument(
-            '--service-type',
+            '--service_type',
             metavar="service_type",
             help="filter by service_type")
         parser.add_argument(
-            '--internet-gw-id',
+            '--internet_gw_id',
             metavar="internet_gw_id",
             help="filter by internet gateway id")
         parser.add_argument(
-            '--aws-gw-id',
+            '--aws_gw_id',
             metavar="aws_gw_id",
             help="filter by aws gateway id")
         parser.add_argument(
-            '--interdc-gw-id',
+            '--interdc_gw_id',
             metavar="interdc_gw_id",
             help="filter by interdc gateway id")
         parser.add_argument(
-            '--vpn-gw-id',
+            '--vpn_gw_id',
             metavar="vpn_gw_id",
             help="filter by vpn gateway id")
         parser.add_argument(
@@ -44,31 +44,31 @@ class ListGwInterface(command.Lister):
             metavar="netmask",
             help="filter by netmask")
         parser.add_argument(
-            '--network-id',
+            '--network_id',
             metavar="network_id",
             help="filter by network id")
         parser.add_argument(
-            '--gw-vipv4',
+            '--gw_vipv4',
             metavar="gw_vipv4",
             help="filter by gateway ipv4")
         parser.add_argument(
-            '--gw-vipv6',
-            metavar="gw-vipv6",
+            '--gw_vipv6',
+            metavar="gw_vipv6",
             help="filter by gateway ipv6")
         parser.add_argument(
-            '--primary-ipv4',
+            '--primary_ipv4',
             metavar="primary_ipv4",
             help="filter by primary ipv4")
         parser.add_argument(
-            '--primary-ipv6',
+            '--primary_ipv6',
             metavar="primary_ipv6",
             help="filter by primary ipv6")
         parser.add_argument(
-            '--secondary-ipv4',
+            '--secondary_ipv4',
             metavar="secondary_ipv4",
             help="filter by secondary ipv4")
         parser.add_argument(
-            '--secondary-ipv6',
+            '--secondary_ipv6',
             metavar="secondary_ipv6",
             help="filter by secondary ipv6")
         parser.add_argument(

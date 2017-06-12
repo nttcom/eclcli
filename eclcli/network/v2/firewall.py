@@ -15,11 +15,11 @@ class ListFirewall(command.Lister):
             metavar="user_username",
             help="filter by user username")
         parser.add_argument(
-            '--default-gateway',
+            '--default_gateway',
             metavar="default_gateway",
             help="filter by default gateway")
         parser.add_argument(
-            '--firewall-plan-id',
+            '--firewall_plan_id',
             metavar="firewall_plan_id",
             help="filter by firewall plan id")
         parser.add_argument(

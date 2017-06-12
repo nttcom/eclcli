@@ -15,27 +15,27 @@ class ListQosOption(command.Lister):
             metavar="name",
             help="filter by name")
         parser.add_argument(
-            '--qos-type',
+            '--qos_type',
             metavar="qos_type",
             help="filter by qos_type: besteffort, guaranteed")
         parser.add_argument(
-            '--service-type',
+            '--service_type',
             metavar="service_type",
             help="filter by service_type: aws, interdc, internet, vpn")
         parser.add_argument(
-            '--aws-service-id',
+            '--aws_service_id',
             metavar="aws_service_id",
             help="filter by aws service id")
         parser.add_argument(
-            '--interdc-service-id',
+            '--interdc_service_id',
             metavar="interdc_service_id",
             help="filter by interdc service id")
         parser.add_argument(
-            '--internet-service-id',
+            '--internet_service_id',
             metavar="internet_service_id",
             help="filter by internet service id")
         parser.add_argument(
-            '--vpn-service-id',
+            '--vpn_service_id',
             metavar="vpn_service_id",
             help="filter by vpn service id")
         parser.add_argument(

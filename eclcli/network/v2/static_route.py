@@ -28,23 +28,23 @@ class ListStaticRoute(command.Lister):
             metavar="destination",
             help="filter by destination")
         parser.add_argument(
-            '--service-type',
+            '--service_type',
             metavar="service_type",
             help="filter by service_type")
         parser.add_argument(
-            '--internet-gw-id',
+            '--internet_gw_id',
             metavar="internet_gw_id",
             help="filter by internet gateway id")
         parser.add_argument(
-            '--aws-gw-id',
+            '--aws_gw_id',
             metavar="aws_gw_id",
             help="filter by aws gateway id")
         parser.add_argument(
-            '--interdc-gw-id',
+            '--interdc_gw_id',
             metavar="interdc_gw_id",
             help="filter by interdc gateway id")
         parser.add_argument(
-            '--vpn-gw-id',
+            '--vpn_gw_id',
             metavar="vpn_gw_id",
             help="filter by vpn gateway id")
 

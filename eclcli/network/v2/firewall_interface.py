@@ -16,7 +16,7 @@ class ListFirewallInterface(command.Lister):
             metavar="id",
             help="filter by id")
         parser.add_argument(
-            '--ip-address',
+            '--ip_address',
             metavar="ip_address",
             help="filter by ip address")
         parser.add_argument(
@@ -24,11 +24,11 @@ class ListFirewallInterface(command.Lister):
             metavar="name",
             help="filter by name")
         parser.add_argument(
-            '--network-id',
+            '--network_id',
             metavar="network_id",
             help="filter by network id")
         parser.add_argument(
-            '--slot-number',
+            '--slot_number',
             metavar="slot_number",
             help="filter by slot number")
         parser.add_argument(
@@ -36,7 +36,7 @@ class ListFirewallInterface(command.Lister):
             metavar="status",
             help="filter by status")
         parser.add_argument(
-            '--virtual-ip-address',
+            '--virtual_ip_address',
             metavar="virtual_ip_address",
             help="filter by virtual ip address")
 
