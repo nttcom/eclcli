@@ -6,6 +6,14 @@ from ..networkclient.common import utils as to_obj
 class ListCommonFunction(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListCommonFunction, self).get_parser(prog_name)
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
         return parser
 
     def take_action(self, parsed_args):
@@ -22,8 +30,15 @@ class ListCommonFunction(command.Lister):
             'Status',
         )
 
+        search_opts = dict()
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+
         data = [to_obj.CommonFunction(cfp)
-            for cfp in network_client.list_common_functions().get('common_functions')]
+                for cfp in network_client.list_common_functions(
+                    **search_opts).get('common_functions')]
 
         return (column_headers,
                 (utils.get_item_properties(
