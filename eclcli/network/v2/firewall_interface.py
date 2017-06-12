@@ -8,7 +8,7 @@ class ListFirewallInterface(command.Lister):
         parser = super(ListFirewallInterface, self).get_parser(prog_name)
 
         parser.add_argument(
-            '--firewall-id',
+            '--firewall_id',
             metavar="firewall_id",
             help="filter by firewall id")
         parser.add_argument(
@@ -62,8 +62,8 @@ class ListFirewallInterface(command.Lister):
         search_opts = {}
         if parsed_args.firewall_id:
             search_opts.update({"firewall_id": parsed_args.firewall_id})
-        if parsed_args.firewall_id:
-            search_opts.update({"id": parsed_args.firewall_id})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
         if parsed_args.ip_address:
             search_opts.update({"ip_address": parsed_args.ip_address})
         if parsed_args.name:
