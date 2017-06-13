@@ -11,6 +11,10 @@ class ListCommonFunctionGateway(command.Lister):
             metavar="common_function_pool_id",
             help="filter by common function pool id")
         parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
             '--id',
             metavar="id",
             help="filter by id")
@@ -49,6 +53,8 @@ class ListCommonFunctionGateway(command.Lister):
         )
 
         search_opts = dict()
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
         if parsed_args.id:
             search_opts.update({"id": parsed_args.id})
         if parsed_args.name:

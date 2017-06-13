@@ -7,6 +7,10 @@ class ListCommonFunction(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListCommonFunction, self).get_parser(prog_name)
         parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
             '--id',
             metavar="id",
             help="filter by id")
@@ -31,6 +35,8 @@ class ListCommonFunction(command.Lister):
         )
 
         search_opts = dict()
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
         if parsed_args.id:
             search_opts.update({"id": parsed_args.id})
         if parsed_args.name:
