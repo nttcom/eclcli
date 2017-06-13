@@ -226,7 +226,7 @@ class DeleteLoadBalancerSyslogServer(command.Command):
             network_client.delete_loadbalancer_syslog_server(lb_sid)
 
 
-class SetLoadBalancerSyslogServer(command.Command):
+class SetLoadBalancerSyslogServer(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(SetLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(
@@ -293,8 +293,9 @@ class SetLoadBalancerSyslogServer(command.Command):
 
         dic = network_client.update_loadbalancer_syslog_server(
             load_balancer_syslog_server_id, body).get('load_balancer_syslog_server')
+
         columns = utils.get_columns(dic)
         obj = to_obj.LoadBalancerSyslogServer(dic)
         data = utils.get_item_properties(
-            obj, columns,)
+                    obj, columns,)
         return columns, data
