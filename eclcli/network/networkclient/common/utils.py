@@ -344,6 +344,10 @@ class LoadBalancerInterface(ESIAPIDictWrapper):
         super(LoadBalancerInterface, self).__init__(apiresource)
 
 
+class LoadBalancerSyslogServer(ESIAPIDictWrapper):
+    def __init__(self, apiresource):
+        super(LoadBalancerSyslogServer, self).__init__(apiresource)
+
 class CommonFunctionPool(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(CommonFunctionPool, self).__init__(apiresource)

@@ -46,11 +46,15 @@ class ListLoadBalancer(command.Lister):
         columns = (
             'id',
             'name',
+            'load_balancer_plan_id',
+            'default_gateway',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Load Balancer Plan',
+            'Default Gateway',
             'Status',
         )
 
