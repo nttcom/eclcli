@@ -56,7 +56,7 @@ class ListFirewallInterface(command.Lister):
             'ID',
             'Name',
             'Firewall',
-            'IP Address',
+            'Address',
             'Status',
         )
         search_opts = {}
@@ -78,9 +78,9 @@ class ListFirewallInterface(command.Lister):
             search_opts.update({"virtual_ip_address": parsed_args.virtual_ip_address})
 
         data = [to_obj.FirewallInterface(firewall_interface)
-            for firewall_interface in
+                for firewall_interface in
                 network_client.list_firewall_interfaces(
-                    **search_opts).get('firewall_interfaces')]
+                        **search_opts).get('firewall_interfaces')]
 
         return (column_headers,
                 (utils.get_item_properties(
