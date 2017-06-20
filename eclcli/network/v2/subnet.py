@@ -6,6 +6,48 @@ from ..networkclient.common import utils as to_obj
 class ListSubnet(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListSubnet, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--cidr',
+            metavar="cidr",
+            help="filter by cidr")
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--gateway_ip',
+            metavar="gateway_ip",
+            help="filter by gateway_ip")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--ip_version',
+            metavar="ip_version",
+            help="filter by ip_version")
+        parser.add_argument(
+            '--ipv6_address_mode',
+            metavar="ipv6_address_mode",
+            help="filter by ipv6_address_mode")
+        parser.add_argument(
+            '--ipv6_ra_mode',
+            metavar="ipv6_ra_mode",
+            help="filter by ipv6_ra_mode")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--network_id',
+            metavar="network_id",
+            help="filter by network_id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +56,41 @@ class ListSubnet(command.Lister):
         columns = (
             'id',
             'name',
+            'cidr',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'CIDR',
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.cidr:
+            search_opts.update({"cidr": parsed_args.cidr})
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.gateway_ip:
+            search_opts.update({"gateway_ip": parsed_args.gateway_ip})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.ip_version:
+            search_opts.update({"ip_version": parsed_args.ip_version})
+        if parsed_args.ipv6_address_mode:
+            search_opts.update({"ipv6_address_mode": parsed_args.ipv6_address_mode})
+        if parsed_args.ipv6_ra_mode:
+            search_opts.update({"ipv6_ra_mode": parsed_args.ipv6_ra_mode})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.network_id:
+            search_opts.update({"network_id": parsed_args.network_id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+
         data = [to_obj.Subnet(subnet)
-                for subnet in network_client.list_subnets().get('subnets')]
+                for subnet in network_client.list_subnets(
+                    **search_opts).get('subnets')]
 
         return (column_headers,
                 (utils.get_item_properties(

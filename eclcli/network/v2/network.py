@@ -6,6 +6,28 @@ from ..networkclient.common import utils as to_obj
 class ListNetwork(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListNetwork, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--plane',
+            metavar="plane",
+            help="filter by plane")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -23,9 +45,20 @@ class ListNetwork(command.Lister):
             'Subnets',
             'Status',
         )
-
+        search_opts = {}
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.plane:
+            search_opts.update({"plane": parsed_args.plane})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
         data = [to_obj.Network(network)
-            for network in network_client.list_networks().get('networks')]
+                for network in network_client.list_networks(
+                    **search_opts).get('networks')]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -40,7 +73,7 @@ class ShowNetwork(command.ShowOne):
         parser.add_argument(
             'network_id',
             metavar="<uuid>",
-            help=("Network ID to show.")
+            help="Network ID to show."
         )
         return parser
 
