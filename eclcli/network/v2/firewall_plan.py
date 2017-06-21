@@ -10,6 +10,22 @@ class ListFirewallPlan(command.Lister):
             '--enabled',
             metavar="enabled",
             help="filter by enabled: true or false")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--vendor',
+            metavar="vendor",
+            help="filter by vendor")
+        # parser.add_argument(
+        #     '--version',
+        #     metavar="version",
+        #     help="filter by version")
         return parser
 
     def take_action(self, parsed_args):
@@ -28,12 +44,20 @@ class ListFirewallPlan(command.Lister):
             'Enabled',
         )
 
-        params = dict()
+        search_opts = dict()
         if parsed_args.enabled:
-            params.update({"enabled": parsed_args.enabled})
+            search_opts.update({"enabled": parsed_args.enabled})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.vendor:
+            search_opts.update({"vendor": parsed_args.vendor})
+        # if parsed_args.version:
+        #     search_opts.update({"version": parsed_args.version})
 
         data = [to_obj.FirewallPlan(fwplan)
-            for fwplan in network_client.list_firewall_plans(**params).get('firewall_plans')]
+            for fwplan in network_client.list_firewall_plans(**search_opts).get('firewall_plans')]
 
         return (column_headers,
                 (utils.get_item_properties(

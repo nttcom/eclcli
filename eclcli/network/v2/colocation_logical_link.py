@@ -6,6 +6,44 @@ from ..networkclient.common import utils as to_obj
 class ListColoLogicalLink(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListColoLogicalLink, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--colocation_physical_link_id',
+            metavar="colocation_physical_link_id",
+            help="filter by colocation_physical_link_id space id")
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--network_id',
+            metavar="network_id",
+            help="filter by network_id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--type_a_port_id',
+            metavar="type_a_port_id",
+            help="filter by type_a_port_id")
+        parser.add_argument(
+            '--type_b_port_id',
+            metavar="type_b_port_id",
+            help="filter by type_b_port_id")
+        parser.add_argument(
+            '--vlan_id',
+            metavar="vlan_id",
+            help="filter by vlan_id")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -22,8 +60,27 @@ class ListColoLogicalLink(command.Lister):
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.colocation_physical_link_id:
+            search_opts.update({"colocation_physical_link_id": parsed_args.colocation_physical_link_id})
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.network_id:
+            search_opts.update({"network_id": parsed_args.network_id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.type_b_port_id:
+            search_opts.update({"type_b_port_id": parsed_args.type_b_port_id})
+        if parsed_args.vlan_id:
+            search_opts.update({"vlan_id": parsed_args.vlan_id})
+
         data = [to_obj.ColoLogicalLink(colocation_logical_link)
-            for colocation_logical_link in network_client.list_colo_logical_links().get('colocation_logical_links')]
+                for colocation_logical_link in network_client.list_colo_logical_links(
+                    **search_opts).get('colocation_logical_links')]
 
         return (column_headers,
                 (utils.get_item_properties(

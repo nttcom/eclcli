@@ -1779,3 +1779,141 @@ class UnshelveServer(command.Command):
                 compute_client.servers,
                 server,
             ).unshelve()
+
+
+class AddFixedIP(command.Command):
+    _description = _("Add fixed IP address to server")
+
+    def get_parser(self, prog_name):
+        parser = super(AddFixedIP, self).get_parser(prog_name)
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help=_("Server to receive the fixed IP address (name or ID)"),
+        )
+        parser.add_argument(
+            "network",
+            metavar="<network>",
+            help=_(
+                "Network to allocate the fixed IP address from (ID)"
+            ),
+        )
+        parser.add_argument(
+            "--fixed-ip-address",
+            metavar="<ip-address>",
+            help=_("Requested fixed IP address"),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        compute_client = self.app.client_manager.compute
+
+        server = utils.find_resource(
+            compute_client.servers, parsed_args.server)
+
+        # network = compute_client.api.network_find(parsed_args.network)
+
+        server.interface_attach(
+            port_id=None,
+            net_id=parsed_args.network,
+            fixed_ip=parsed_args.fixed_ip_address,
+        )
+
+
+class RemoveFixedIP(command.Command):
+    _description = _("Remove fixed IP address from server")
+
+    def get_parser(self, prog_name):
+        parser = super(RemoveFixedIP, self).get_parser(prog_name)
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help=_("Server to remove the fixed IP address from (name or ID)"),
+        )
+        parser.add_argument(
+            "ip_address",
+            metavar="<ip-address>",
+            help=_("Fixed IP address to remove from the server (IP only)"),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        compute_client = self.app.client_manager.compute
+
+        server = utils.find_resource(
+            compute_client.servers, parsed_args.server)
+        port_list = self.app.client_manager.network.list_ports(device_id=server.id)
+        port_id = None
+        for port in port_list["ports"]:
+            for fixed_ip in port["fixed_ips"]:
+                if fixed_ip["ip_address"] == parsed_args.ip_address:
+                    port_id = port["id"]
+                    break
+
+        server.interface_detach(port_id)
+
+
+class AddPort(command.Command):
+    _description = _("Add port to server")
+
+    def get_parser(self, prog_name):
+        parser = super(AddPort, self).get_parser(prog_name)
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help=_("Server to add the port to (name or ID)"),
+        )
+        parser.add_argument(
+            "port",
+            metavar="<port>",
+            help=_("Port to add to the server (ID)"),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        compute_client = self.app.client_manager.compute
+
+        server = utils.find_resource(
+            compute_client.servers, parsed_args.server)
+
+        # if self.app.client_manager.is_network_endpoint_enabled():
+        #     network_client = self.app.client_manager.network
+        #     port_id = network_client.find_port(
+        #         parsed_args.port, ignore_missing=False).id
+        # else:
+        #     port_id = parsed_args.port
+
+        server.interface_attach(port_id=parsed_args.port, net_id=None, fixed_ip=None)
+
+
+class RemovePort(command.Command):
+    _description = _("Remove port from server")
+
+    def get_parser(self, prog_name):
+        parser = super(RemovePort, self).get_parser(prog_name)
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help=_("Server to remove the port from (name or ID)"),
+        )
+        parser.add_argument(
+            "port",
+            metavar="<port>",
+            help=_("Port to remove from the server (ID)"),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        compute_client = self.app.client_manager.compute
+
+        server = utils.find_resource(
+            compute_client.servers, parsed_args.server)
+
+        # if self.app.client_manager.is_network_endpoint_enabled():
+        #     network_client = self.app.client_manager.network
+        #     port_id = network_client.find_port(
+        #         parsed_args.port, ignore_missing=False).id
+        # else:
+        #     port_id = parsed_args.port
+
+        server.interface_detach(parsed_args.port)

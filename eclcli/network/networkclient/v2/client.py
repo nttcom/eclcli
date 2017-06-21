@@ -300,6 +300,9 @@ class Client(ClientBase):
     loadbalancer_interfaces_path = '/load_balancer_interfaces'
     loadbalancer_interface_path = '/load_balancer_interfaces/%s'
 
+    loadbalancer_syslog_servers_path = '/load_balancer_syslog_servers'
+    loadbalancer_syslog_server_path = '/load_balancer_syslog_servers/%s'
+
     _cfgw_singular = 'common_function_gateway'
     _cfgw_plural = _cfgw_singular + 's'
 
@@ -789,6 +792,26 @@ class Client(ClientBase):
     @APIParamsCall
     def reset_password_loadbalancer(self, loadbalancer_id, body=None):
         return self.post(self.loadbalancer_path % (loadbalancer_id) + "/reset_password", body=body)
+
+    @APIParamsCall
+    def list_loadbalancer_syslog_servers(self, **_params):
+        return self.list('load_balancer_syslog_servers', self.loadbalancer_syslog_servers_path, **_params)
+
+    @APIParamsCall
+    def show_loadbalancer_syslog_server(self, loadbalancer_syslog_server_id, **_params):
+        return self.get(self.loadbalancer_syslog_server_path % loadbalancer_syslog_server_id, params=_params)
+
+    @APIParamsCall
+    def create_loadbalancer_syslog_server(self, body=None):
+        return self.post(self.loadbalancer_syslog_servers_path, body=body)
+
+    @APIParamsCall
+    def delete_loadbalancer_syslog_server(self, loadbalancer_syslog_server_id, body=None):
+        return self.delete(self.loadbalancer_syslog_server_path % loadbalancer_syslog_server_id, body=body)
+
+    @APIParamsCall
+    def update_loadbalancer_syslog_server(self, loadbalancer_syslog_server_id, body=None):
+        return self.put(self.loadbalancer_syslog_server_path % loadbalancer_syslog_server_id, body=body)
 
     @APIParamsCall
     def list_cfgws(self, **_params):

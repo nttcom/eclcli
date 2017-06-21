@@ -6,6 +6,59 @@ from ..networkclient.common import utils as to_obj
 class ListInterDCInterface(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListInterDCInterface, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--gw_vipv4',
+            metavar="gw_vipv4",
+            help="filter by gateway ipv4")
+        parser.add_argument(
+            '--gw_vipv6',
+            metavar="gw_vipv6",
+            help="filter by gateway ipv6")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--interdc_gw_id',
+            metavar="interdc_gw_id",
+            help="filter by internet gateway id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--netmask',
+            metavar="netmask",
+            help="filter by netmask")
+        parser.add_argument(
+            '--primary_ipv4',
+            metavar="primary_ipv4",
+            help="filter by primary ipv4")
+        parser.add_argument(
+            '--primary_ipv6',
+            metavar="primary_ipv6",
+            help="filter by primary ipv6")
+        parser.add_argument(
+            '--secondary_ipv4',
+            metavar="secondary_ipv4",
+            help="filter by secondary ipv4")
+        parser.add_argument(
+            '--secondary_ipv6',
+            metavar="secondary_ipv6",
+            help="filter by secondary ipv6")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--vrid',
+            metavar="vrid",
+            help="filter by vrid")
         return parser
 
     def take_action(self, parsed_args):
@@ -22,8 +75,36 @@ class ListInterDCInterface(command.Lister):
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.gw_vipv4:
+            search_opts.update({"gw_vipv4": parsed_args.gw_vipv4})
+        if parsed_args.gw_vipv6:
+            search_opts.update({"gw_vipv6": parsed_args.gw_vipv6})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.interdc_gw_id:
+            search_opts.update({"interdc_gw_id": parsed_args.interdc_gw_id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.netmask:
+            search_opts.update({"netmask": parsed_args.netmask})
+        if parsed_args.primary_ipv4:
+            search_opts.update({"primary_ipv4": parsed_args.primary_ipv4})
+        if parsed_args.primary_ipv6:
+            search_opts.update({"primary_ipv6": parsed_args.primary_ipv6})
+        if parsed_args.secondary_ipv4:
+            search_opts.update({"secondary_ipv4": parsed_args.secondary_ipv4})
+        if parsed_args.secondary_ipv6:
+            search_opts.update({"secondary_ipv6": parsed_args.secondary_ipv6})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.vrid:
+            search_opts.update({"vrid": parsed_args.vrid})
         data = [to_obj.InterDCInterface(idcif)
-            for idcif in network_client.list_interdc_interfaces().get('interdc_interfaces')]
+            for idcif in network_client.list_interdc_interfaces(
+                **search_opts).get('interdc_interfaces')]
 
         return (column_headers,
                 (utils.get_item_properties(

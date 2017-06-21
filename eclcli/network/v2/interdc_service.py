@@ -6,6 +6,22 @@ from ..networkclient.common import utils as to_obj
 class ListInterDCService(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListInterDCService, self).get_parser(prog_name)
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--zone',
+            metavar="zone",
+            help="filter by zone")
         return parser
 
     def take_action(self, parsed_args):
@@ -22,8 +38,19 @@ class ListInterDCService(command.Lister):
             'zone',
         )
 
+        search_opts = {}
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.zone:
+            search_opts.update({"zone": parsed_args.zone})
+
         data = [to_obj.InterDCService(idcsv)
-            for idcsv in network_client.list_interdc_services().get('interdc_services')]
+                for idcsv in network_client.list_interdc_services(
+                    **search_opts).get('interdc_services')]
 
         return (column_headers,
                 (utils.get_item_properties(

@@ -6,6 +6,34 @@ from ..networkclient.common import utils as to_obj
 class ListCommonFunctionGateway(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListCommonFunctionGateway, self).get_parser(prog_name)
+        parser.add_argument(
+            '--common_function_pool_id',
+            metavar="common_function_pool_id",
+            help="filter by common function pool id")
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--network_id',
+            metavar="network_id",
+            help="filter by network id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--subnet_id',
+            metavar="subnet_id",
+            help="filter by subnet id")
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +42,37 @@ class ListCommonFunctionGateway(command.Lister):
         columns = (
             'id',
             'name',
+            'common_function_pool_id',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Common Function Pool'
             'Status',
         )
 
+        search_opts = dict()
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.common_function_pool_id:
+            search_opts.update({"common_function_pool_id":
+                                parsed_args.common_function_pool_id})
+        if parsed_args.network_id:
+            search_opts.update({"network_id": parsed_args.network_id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.subnet_id:
+            search_opts.update({"subnet_id":
+                                parsed_args.subnet_id})
+
         data = [to_obj.CommonFunctionGateway(common_function_gateway)
-            for common_function_gateway in network_client.list_cfgws().get('common_function_gateways')]
+                for common_function_gateway in network_client.list_cfgws(
+                    **search_opts).get('common_function_gateways')]
 
         return (column_headers,
                 (utils.get_item_properties(

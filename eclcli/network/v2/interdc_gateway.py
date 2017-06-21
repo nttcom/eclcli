@@ -6,6 +6,26 @@ from ..networkclient.common import utils as to_obj
 class ListInterDCGateway(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListInterDCGateway, self).get_parser(prog_name)
+        parser.add_argument(
+            '--description',
+            metavar="description",
+            help="filter by description")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--interdc_service_id',
+            metavar="interdc_service_id",
+            help="filter by interdc service id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
         return parser
 
     def take_action(self, parsed_args):
@@ -21,9 +41,23 @@ class ListInterDCGateway(command.Lister):
             'Name',
             'Status',
         )
+        search_opts = {}
+        if parsed_args.description:
+            search_opts.update({"description": parsed_args.description})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.interdc_service_id:
+            search_opts.update({"interdc_service_id": parsed_args.interdc_service_id})
+        if parsed_args.interdc_service_id:
+            search_opts.update({"interdc_service_id": parsed_args.interdc_service_id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
 
         data = [to_obj.InterDCGateway(idcgw)
-            for idcgw in network_client.list_interdc_gateways().get('interdc_gateways')]
+                for idcgw in network_client.list_interdc_gateways(
+                    **search_opts).get('interdc_gateways')]
 
         return (column_headers,
                 (utils.get_item_properties(

@@ -6,6 +6,38 @@ from ..networkclient.common import utils as to_obj
 class ListLoadBalancer(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListLoadBalancer, self).get_parser(prog_name)
+        parser.add_argument(
+            '--admin_username',
+            metavar="admin_username",
+            help="filter by admin username")
+        parser.add_argument(
+            '--availability_zone',
+            metavar="availability_zone",
+            help="filter by availability zone")
+        parser.add_argument(
+            '--default_gateway',
+            metavar="default_gateway",
+            help="filter by default gateway")
+        parser.add_argument(
+            '--user_username',
+            metavar="user_username",
+            help="filter by user username")
+        parser.add_argument(
+            '--load_balancer_plan_id',
+            metavar="load_balancer_plan_id",
+            help="filter by load balancer plan id")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
         return parser
 
     def take_action(self, parsed_args):
@@ -14,13 +46,35 @@ class ListLoadBalancer(command.Lister):
         columns = (
             'id',
             'name',
+            'load_balancer_plan_id',
+            'default_gateway',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Load Balancer Plan',
+            'Default Gateway',
             'Status',
         )
+
+        search_opts = dict()
+        if parsed_args.admin_username:
+            search_opts.update({"admin_username": parsed_args.admin_username})
+        if parsed_args.availability_zone:
+            search_opts.update({"availability_zone": parsed_args.availability_zones})
+        if parsed_args.user_username:
+            search_opts.update({"user_username": parsed_args.user_username})
+        if parsed_args.default_gateway:
+            search_opts.update({"default_gateway": parsed_args.default_gateway})
+        if parsed_args.load_balancer_plan_id:
+            search_opts.update({"load_balancer_plan_id": parsed_args.load_balancer_plan_id})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
 
         data = [to_obj.LoadBalancer(loadbalancer)
             for loadbalancer in network_client.list_loadbalancers().get('load_balancers')]

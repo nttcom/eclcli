@@ -6,6 +6,40 @@ from ..networkclient.common import utils as to_obj
 class ListFirewallInterface(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListFirewallInterface, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--firewall_id',
+            metavar="firewall_id",
+            help="filter by firewall id")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--ip_address',
+            metavar="ip_address",
+            help="filter by ip address")
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--network_id',
+            metavar="network_id",
+            help="filter by network id")
+        parser.add_argument(
+            '--slot_number',
+            metavar="slot_number",
+            help="filter by slot number")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--virtual_ip_address',
+            metavar="virtual_ip_address",
+            help="filter by virtual ip address")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +48,39 @@ class ListFirewallInterface(command.Lister):
         columns = (
             'id',
             'name',
+            'firewall_id',
+            'ip_address',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'Firewall',
+            'Address',
             'Status',
         )
+        search_opts = {}
+        if parsed_args.firewall_id:
+            search_opts.update({"firewall_id": parsed_args.firewall_id})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.ip_address:
+            search_opts.update({"ip_address": parsed_args.ip_address})
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.network_id:
+            search_opts.update({"network_id": parsed_args.network_id})
+        if parsed_args.slot_number:
+            search_opts.update({"slot_number": parsed_args.slot_number})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.virtual_ip_address:
+            search_opts.update({"virtual_ip_address": parsed_args.virtual_ip_address})
 
         data = [to_obj.FirewallInterface(firewall_interface)
-            for firewall_interface in network_client.list_firewall_interfaces().get('firewall_interfaces')]
+                for firewall_interface in
+                network_client.list_firewall_interfaces(
+                        **search_opts).get('firewall_interfaces')]
 
         return (column_headers,
                 (utils.get_item_properties(

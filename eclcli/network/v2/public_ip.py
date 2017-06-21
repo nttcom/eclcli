@@ -6,6 +6,32 @@ from ..networkclient.common import utils as to_obj
 class ListPubicIP(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListPubicIP, self).get_parser(prog_name)
+
+        parser.add_argument(
+            '--name',
+            metavar="name",
+            help="filter by name")
+        parser.add_argument(
+            '--id',
+            metavar="id",
+            help="filter by id")
+        parser.add_argument(
+            '--status',
+            metavar="status",
+            help="filter by status")
+        parser.add_argument(
+            '--internet_gw_id',
+            metavar="internet_gw_id",
+            help="filter by internet gateway id")
+        parser.add_argument(
+            '--submask_length',
+            metavar="submask_length",
+            help="filter by submask length")
+        parser.add_argument(
+            '--cidr',
+            metavar="cidr",
+            help="filter by cidr")
+
         return parser
 
     def take_action(self, parsed_args):
@@ -14,16 +40,34 @@ class ListPubicIP(command.Lister):
         columns = (
             'id',
             'name',
+            'cidr',
+            'submask_length',
             'status',
         )
         column_headers = (
             'ID',
             'Name',
+            'CIDR',
+            'Submask',
             'Status',
         )
 
+        search_opts = {}
+        if parsed_args.name:
+            search_opts.update({"name": parsed_args.name})
+        if parsed_args.id:
+            search_opts.update({"id": parsed_args.id})
+        if parsed_args.status:
+            search_opts.update({"status": parsed_args.status})
+        if parsed_args.internet_gw_id:
+            search_opts.update({"internet_gw_id": parsed_args.internet_gw_id})
+        if parsed_args.submask_length:
+            search_opts.update({"submask_length": parsed_args.submask_length})
+        if parsed_args.cidr:
+            search_opts.update({"cidr": parsed_args.cidr})
+
         data = [to_obj.PubicIP(public_ip)
-                for public_ip in network_client.list_public_ips().get('public_ips')]
+                for public_ip in network_client.list_public_ips(**search_opts).get('public_ips')]
 
         return (column_headers,
                 (utils.get_item_properties(
