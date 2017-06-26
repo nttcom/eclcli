@@ -15,6 +15,7 @@ from oslo_utils import importutils
 from oslo_utils import strutils
 
 import eclcli
+from eclcli.api import eclsdk
 from eclcli.common import clientmanager
 from eclcli.common import commandmanager
 from eclcli.common import exceptions as exc
@@ -397,6 +398,11 @@ class ECLClient(app.App):
             verify=self.verify,
             api_version=self.api_version,
             pw_func=prompt_for_password,
+        )
+
+        self.eclsdk = eclsdk.ConnectionManager(
+            cli_options=self.cloud,
+            verify=self.verify,
         )
 
     def prepare_to_run_command(self, cmd):
