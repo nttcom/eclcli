@@ -88,6 +88,14 @@ def _format_servers_list_networks(networks):
     return '; '.join(output)
 
 
+def _format_servers_port_list_fixed_ips(fixed_ips):
+    output = []
+    for item in fixed_ips:
+        group = "%s=%s" % (item["subnet_id"], item["ip_address"])
+        output.append(group)
+    return '; '.join(output)
+
+
 def _format_servers_list_power_state(state):
     """Return a formatted string of a server's power state
 
@@ -1851,6 +1859,49 @@ class RemoveFixedIP(command.Command):
                     break
 
         server.interface_detach(port_id)
+
+
+class ListPort(command.Lister):
+    _description = _("Lists port interfaces")
+
+    def get_parser(self, prog_name):
+        parser = super(ListPort, self).get_parser(prog_name)
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help=_("Server to list the port from (name or ID)"),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        compute_client = self.app.client_manager.compute
+
+        server = utils.find_resource(
+            compute_client.servers, parsed_args.server)
+
+        columns = [
+            'port_id',
+            'net_id',
+            'port_state',
+            'fixed_ips',
+            'mac_addr',
+        ]
+        column_headers = [
+            'Port ID',
+            'Network ID',
+            'Port Status',
+            'Fixed IPs (subnet_id=ip_address)',
+            'MAC Address',
+        ]
+
+        data = server.interface_list()
+        return (column_headers,
+                (utils.get_item_properties(
+                    s, columns,
+                    formatters={
+                        'fixed_ips': _format_servers_port_list_fixed_ips,
+                    },
+                ) for s in data))
 
 
 class AddPort(command.Command):
