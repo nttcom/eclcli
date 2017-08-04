@@ -48,7 +48,7 @@ class ListCommonFunctionGateway(command.Lister):
         column_headers = (
             'ID',
             'Name',
-            'Common Function Pool'
+            'Common Function Pool',
             'Status',
         )
 
