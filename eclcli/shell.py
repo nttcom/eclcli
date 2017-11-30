@@ -241,17 +241,19 @@ class ECLClient(app.App):
         # )
 
         # osprofiler HMAC key argument
-        # if osprofiler_profiler:
-        #     parser.add_argument('--profile',
-        #                         metavar='hmac-key',
-        #                         help='HMAC key to use for encrypting context '
-        #                         'data for performance profiling of operation. '
-        #                         'This key should be the value of one of the '
-        #                         'HMAC keys configured in osprofiler '
-        #                         'middleware in the projects user would like '
-        #                         'to profile. It needs to be specified in '
-        #                         'configuration files of the required '
-        #                         'projects.')
+        if osprofiler_profiler:
+            parser.add_argument('--profile',
+                                metavar='hmac-key',
+                                dest='profile',
+                                default=utils.env('OS_PROFILE'),
+                                help='HMAC key to use for encrypting context '
+                                'data for performance profiling of operation. '
+                                'This key should be the value of one of the '
+                                'HMAC keys configured in osprofiler '
+                                'middleware in the projects user would like '
+                                'to profile. It needs to be specified in '
+                                'configuration files of the required '
+                                'projects.')
 
         return clientmanager.build_plugin_option_parser(parser)
 
