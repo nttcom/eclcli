@@ -1,6 +1,6 @@
 import logging
 
-from openstack import connection
+from ecl import connection
 
 from eclcli.common import utils
 
