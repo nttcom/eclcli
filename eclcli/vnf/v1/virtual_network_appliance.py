@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import json
+import json_merge_patch as jmp
 import copy
 import six
 from eclcli.common import command
+from eclcli.common import exceptions
 from eclcli.common import utils
 from eclcli.i18n import _  # noqa
 
@@ -20,6 +22,7 @@ class ListVirtualNetworkAppliance(command.Lister):
         columns = [
             'ID',
             'Name',
+            'Description',
             'Appliance Type',
             'OS Monitoring Status',
             'OS Login Status',
@@ -52,6 +55,7 @@ class ShowVirtualNetworkAppliance(command.ShowOne):
         rows = [
             'ID',
             'Name',
+            'Description',
             'Appliance Type',
             'OS Monitoring Status',
             'OS Login Status',
@@ -124,6 +128,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         rows = [
             'ID',
             'Name',
+            'Description',
             'Appliance Type',
             'OS Monitoring Status',
             'OS Login Status',
@@ -212,19 +217,15 @@ class DeleteVirtualNetworkAppliance(command.Command):
                 virtual_network_appliance_id)
 
 
-class UpdateVirtualNetworkAppliance(command.ShowOne):
-    """
-    T.B.D ...
-    Now I'm asking spec about updating of VNF ?
-    """
+class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(UpdateVirtualNetworkAppliance, self).\
+        parser = super(UpdateVirtualNetworkApplianceMetaData, self).\
             get_parser(prog_name)
         parser.add_argument(
-            'virtual_network_appliance_id',
-            metavar='<virtual-network-appliance-id>',
-            help='ID of virtual network appliance')
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance name or id>',
+            help='Name or ID of virtual network appliance')
         parser.add_argument(
             "--name",
             help="Name of virtual network appliance",
@@ -236,27 +237,15 @@ class UpdateVirtualNetworkAppliance(command.ShowOne):
             metavar='<string>'
         )
 
-        parser.add_argument(
-            '--interface',
-            metavar="<net-id=net-uuid,fixed-ip=ip-addr,name=interface-name>,",
-            action='append',
-            default=[],
-            help=_("Specify interface parameter for VNF. "
-                   "You can specify only one interface in creation of "
-                   "virtual network appliance. "
-                   "net-id: attach interface to network with this UUID, "
-                   "fixed-ip: IPv4 fixed address for NIC, "
-                   "name: Name of Interface (optional)."),
-        )
-
         return parser
 
     def take_action(self, parsed_args):
-        client = self.app.eclsdk.conn.virtual_network_appliance
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
         rows = [
             'ID',
             'Name',
+            'Description',
             'Appliance Type',
             'OS Monitoring Status',
             'OS Login Status',
@@ -265,89 +254,102 @@ class UpdateVirtualNetworkAppliance(command.ShowOne):
         ]
         row_headers = rows
 
-        body = {}
+        # serialize request parmeter as JSON
+        requested_param = {}
         if parsed_args.name:
-            body["name"] = parsed_args.name
+            requested_param["name"] = parsed_args.name
         if parsed_args.description:
-            body["description"] = parsed_args.description
+            requested_param["description"] = parsed_args.description
 
+        target = vnf_client.\
+            get_virtual_network_appliance(
+            parsed_args.virtual_network_appliance)
 
-        if parsed_args.interfaces:
+        # serialize current parmeter as JSON
+        current_param = {
+            'name': target.name,
+            'description': target.description,
+        }
 
-            interfaces = []
-            for if_str in parsed_args.interface:
-                if_info = {"net-id": "", "fixed-ip": "",
-                           "name": ""}
-                if_info.update(dict(kv_str.split("=", 1)
-                               for kv_str in if_str.split(",")))
-                if not bool(if_info["net-id"]) or not bool(if_info["fixed-ip"]):
-                    msg = _("You must specify network uuid and ip address both")
-                    raise exceptions.CommandError(msg)
+        # import pdb; pdb.set_trace()
 
-                interfaces.append(if_info)
+        patch = jmp.create_patch(current_param, requested_param)
+        if not patch:
+            msg = _('No change will be expected')
+            raise exceptions.CommandError(msg)
 
-            interface_object = {}
-            if_num = 1
-            for interface in interfaces:
+        data = vnf_client.update_virtual_network_appliance(
+            parsed_args.virtual_network_appliance, **patch)
 
-                if_key = 'interface_' + str(if_num)
-                tmp = {
-                    if_key: {
-                        'network_id': interface['net-id'],
-                        'fixed_ips': [
-                            {'ip_address': interface['fixed-ip']}
-                        ]
-                    }
-                }
-                if interface['name']:
-                    tmp[if_key].update({'name': interface['name']})
-
-                interface_object.update(tmp)
-                if_num += 1
-
-            body["interfaces"] = None
-
-        data = client.update_snapshot(parsed_args.snapshot_id, **body)
+        _set_interfaces_for_display(data)
 
         return (row_headers, utils.get_item_properties(data, rows))
+
+
+class StartVirtualNetworkAppliance(command.Command):
+
+    def get_parser(self, prog_name):
+        parser = super(StartVirtualNetworkAppliance, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance>',
+            nargs="+",
+            help=_('Virtual Network Appliance(s) to start (name or ID)'),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        for virtual_network_appliance in parsed_args.virtual_network_appliance:
+            vnf_client.\
+                start_virtual_network_appliance(virtual_network_appliance)
+
+
+class StopVirtualNetworkAppliance(command.Command):
+
+    def get_parser(self, prog_name):
+        parser = super(StopVirtualNetworkAppliance, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance>',
+            nargs="+",
+            help=_('Virtual Network Appliance(s) to stop (name or ID)'),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        for virtual_network_appliance in parsed_args.virtual_network_appliance:
+            vnf_client.\
+                stop_virtual_network_appliance(virtual_network_appliance)
+
+
+class RestartVirtualNetworkAppliance(command.Command):
+
+    def get_parser(self, prog_name):
+        parser = super(RestartVirtualNetworkAppliance, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance>',
+            nargs="+",
+            help=_('Virtual Network Appliance(s) to restart (name or ID)'),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        for virtual_network_appliance in parsed_args.virtual_network_appliance:
+            vnf_client.\
+                restart_virtual_network_appliance(virtual_network_appliance)
 
 
 def _set_interfaces_for_display(data):
     ifs = data.interfaces
     interfaces_json = json.dumps(ifs, indent=2)
     setattr(data, 'interfaces', interfaces_json)
-
-
-def _define_interface(arg_interface):
-    interfaces = []
-    for if_str in arg_interface:
-        if_info = {"net-id": "", "fixed-ip": "",
-                   "name": ""}
-        if_info.update(dict(kv_str.split("=", 1)
-                            for kv_str in if_str.split(",")))
-        if not bool(if_info["net-id"]) or not bool(if_info["fixed-ip"]):
-            msg = _("You must specify network uuid and ip address both")
-            raise exceptions.CommandError(msg)
-
-        interfaces.append(if_info)
-
-    interface_object = {}
-    if_num = 1
-    for interface in interfaces:
-
-        if_key = 'interface_' + str(if_num)
-        tmp = {
-            if_key: {
-                'network_id': interface['net-id'],
-                'fixed_ips': [
-                    {'ip_address': interface['fixed-ip']}
-                ]
-            }
-        }
-        if interface['name']:
-            tmp[if_key].update({'name': interface['name']})
-
-        interface_object.update(tmp)
-        if_num += 1
-
-    return interface_object
