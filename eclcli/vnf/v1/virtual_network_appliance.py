@@ -84,14 +84,16 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             '--interface',
-            metavar="<net-id=net-uuid,fixed-ip=ip-addr,name=interface-name>,",
+            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name>,",
             action='append',
             default=[],
-            help=_("Specify interface parameter for VNF. "
+            help=_("Specify interface parameter for "
+                   "virtual network appliance. "
                    "You can specify only one interface in creation of "
                    "virtual network appliance. "
                    "net-id: attach interface to network with this UUID, "
-                   "fixed-ip: IPv4 fixed address for NIC, "
+                   "ip-address: IPv4 fixed address for interface. "
+                   "(You can specify only one address in creation), "
                    "name: Name of Interface (optional)."),
         )
 
@@ -147,7 +149,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         interfaces = []
         for if_str in parsed_args.interface:
-            if_info = {"net-id": "", "fixed-ip": "",
+            if_info = {"net-id": "", "ip-address": "",
                        "name": ""}
             if_info.update(dict(kv_str.split("=", 1)
                            for kv_str in if_str.split(",")))
@@ -166,7 +168,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                 if_key: {
                     'network_id': interface['net-id'],
                     'fixed_ips': [
-                        {'ip_address': interface['fixed-ip']}
+                        {'ip_address': interface['ip-address']}
                     ]
                 }
             }
@@ -242,6 +244,10 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
     def take_action(self, parsed_args):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
+        target = vnf_client.\
+            get_virtual_network_appliance(
+            parsed_args.virtual_network_appliance)
+
         rows = [
             'ID',
             'Name',
@@ -261,19 +267,237 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         if parsed_args.description:
             requested_param["description"] = parsed_args.description
 
-        target = vnf_client.\
-            get_virtual_network_appliance(
-            parsed_args.virtual_network_appliance)
-
         # serialize current parmeter as JSON
         current_param = {
             'name': target.name,
             'description': target.description,
         }
 
-        # import pdb; pdb.set_trace()
-
         patch = jmp.create_patch(current_param, requested_param)
+
+        if not patch:
+            msg = _('No change will be expected')
+            raise exceptions.CommandError(msg)
+
+        data = vnf_client.update_virtual_network_appliance(
+            parsed_args.virtual_network_appliance, **patch)
+
+        _set_interfaces_for_display(data)
+
+        return (row_headers, utils.get_item_properties(data, rows))
+
+
+class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateVirtualNetworkApplianceInterfaces, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance name or id>',
+            help='Name or ID of virtual network appliance')
+
+        parser.add_argument(
+            '--interface',
+            metavar="<slot-no=number,net-id=net-uuid,"
+                    "ip-address=ip-addr,name=interface-name>",
+            action='append',
+            default=[],
+            help=_("Specify interface parameter "
+                   "for virtual network appliance. "
+                   "slot-no: sequential number of interface,"
+                   "net-id: attach interface to network with this UUID, "
+                   "fixed-ips: IPv4 fixed address for NIC. "
+                   "You can specif multiple ip address by using ':' "
+                   "(e.g: 1.1.1.1:2.2.2.2:...) , "
+                   "name: Name of Interface."),
+        )
+
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        target = vnf_client.\
+            get_virtual_network_appliance(
+            parsed_args.virtual_network_appliance)
+
+        rows = [
+            'ID',
+            'Name',
+            'Description',
+            'Appliance Type',
+            'OS Monitoring Status',
+            'OS Login Status',
+            'VM Status',
+            'Interfaces'
+        ]
+        row_headers = rows
+
+        interfaces = []
+        VALID_KEYS = ['slot-no', 'net-id', 'fixed-ips', 'name']
+        for if_str in parsed_args.interface:
+            # if_info = {"net-id": "", "fixed-ips": "",
+            #            "name": "", "slot-no": ""}
+            if_info = {}
+            if_info.update(dict(kv_str.split("=", 1)
+                           for kv_str in if_str.split(",")))
+
+            for k in if_info.keys():
+                if k not in VALID_KEYS:
+                    msg = 'Invalid key %s is specified.' % k
+                    raise exceptions.CommandError(msg)
+
+            interfaces.append(if_info)
+
+        requested_interface_object = {}
+        for interface in interfaces:
+            slot_no = interface.get('slot-no')
+            if_key = 'interface_' + str(slot_no)
+
+            network_id = interface.get('net-id')
+            name = interface.get('name')
+            fixed_ips_tmp = interface.get('fixed-ips')
+
+            each_if_info = {}
+
+            if name:
+                each_if_info.update({'name': name})
+
+            if network_id:
+                each_if_info.update({'network_id': network_id})
+
+            if fixed_ips_tmp:
+                fixed_ips = [ip for ip in fixed_ips_tmp.split(':')]
+                each_if_info.update({'fixed_ips': fixed_ips})
+
+            interface_tmp = {
+                if_key: each_if_info
+            }
+            requested_interface_object.update(interface_tmp)
+
+        current_interface_object = copy.deepcopy(target.interfaces)
+        merged_interface_object = jmp.merge(current_interface_object,
+                                            requested_interface_object)
+        patch = jmp.create_patch(target.interfaces,
+                                 merged_interface_object)
+
+        patch = {'interfaces': patch}
+        if not patch:
+            msg = _('No change will be expected')
+            raise exceptions.CommandError(msg)
+
+        data = vnf_client.update_virtual_network_appliance(
+            parsed_args.virtual_network_appliance, **patch)
+
+        _set_interfaces_for_display(data)
+
+        return (row_headers, utils.get_item_properties(data, rows))
+
+
+class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateVirtualNetworkApplianceAAPs, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance name or id>',
+            help='Name or ID of virtual network appliance')
+
+        parser.add_argument(
+            '--allowed-address-pair',
+            metavar="<slot-no=number,ip-address=ip-addr,"
+                    "mac-address=mac-addr,vrid=vrid>",
+            action='append',
+            default=[],
+            help=_("Specify Allowed Address Pair(A.A.P) parameter for "
+                   "virtual network appliance. "
+                   "slot-no: sequential number of interface,"
+                   "ip-address: IP address of A.A.P, "
+                   "mac-address: MAC address of A.A.P, "
+                   "type: Type of A.A.P. You can use 'vrrp' or '', "
+                   "vrid: VRID of A.A.P. You can use this only in case vrrp, "
+                   "You can specify same slot number multiple times."
+                   "(e.g: --allowed-address-pair slot-no=1,ip-address=1.1.1.1 "
+                   "--allowed-address-pair slot-no=1,ipaddress=2.2.2.2 ...) , "
+                   "In this case, all values relates to slot-no=1 "
+                   "will be appended as interface_1.allowed_address_pairs "
+                   "list."),
+        )
+
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        target = vnf_client.\
+            get_virtual_network_appliance(
+            parsed_args.virtual_network_appliance)
+
+        rows = [
+            'ID',
+            'Name',
+            'Description',
+            'Appliance Type',
+            'OS Monitoring Status',
+            'OS Login Status',
+            'VM Status',
+            'Interfaces'
+        ]
+        row_headers = rows
+
+        aaps = []
+        VALID_KEYS = ['slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
+        for aap_str in parsed_args.allowed_address_pair:
+            aap_info = {}
+            aap_info.update(dict(aap_str.split("=", 1)
+                           for aap_str in aap_str.split(",")))
+
+            for k in aap_info.keys():
+                if k not in VALID_KEYS:
+                    msg = 'Invalid key %s is specified.' % k
+                    raise exceptions.CommandError(msg)
+
+            aaps.append(aap_info)
+
+        requested_aap_object = {}
+        for aap in aaps:
+            slot_no = aap.get('slot-no')
+
+            # create key <-> value if not exist.
+            if_key = 'interface_' + str(slot_no)
+            requested_aap_object.setdefault(if_key, {'allowed_address_pairs': []})
+
+            ip_address = aap.get('ip-address')
+            mac_address = aap.get('mac-address')
+            aap_type = aap.get('type')
+            vrid = aap.get('vrid')
+
+            each_aap_info = {}
+
+            if ip_address:
+                each_aap_info.update({'ip_address': ip_address})
+
+            if mac_address:
+                each_aap_info.update({'mac_address': mac_address})
+
+            if aap_type:
+                each_aap_info.update({'type': aap_type})
+
+            if vrid:
+                each_aap_info.update({'vrid': vrid})
+
+            requested_aap_object[if_key]['allowed_address_pairs'].\
+                append(each_aap_info)
+
+        current_interface_object = copy.deepcopy(target.interfaces)
+        merged_interface_object = jmp.merge(current_interface_object,
+                                            requested_aap_object)
+        patch = jmp.create_patch(target.interfaces,
+                                 merged_interface_object)
+
+        patch = {'interfaces': patch}
         if not patch:
             msg = _('No change will be expected')
             raise exceptions.CommandError(msg)
