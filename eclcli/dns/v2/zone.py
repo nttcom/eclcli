@@ -59,18 +59,19 @@ class CreateZone(command.ShowOne):
             metavar="<description>",
             help="Description for this zone",
         )
+        return parser
 
     def take_action(self, parsed_args):
         dns_client = self.app.eclsdk.conn.dns
 
-        args = (
-            parsed_args.name,
-            parsed_args.email,
-            parsed_args.masters,
-            parsed_args.ttl,
-            parsed_args.type,
-            parsed_args.description,
-        )
+        kwargs = {
+            'name': parsed_args.name,
+            'email': parsed_args.email,
+            'masters': parsed_args.masters,
+            'ttl': parsed_args.ttl,
+            'type': parsed_args.type,
+            'description': parsed_args.description,
+        }
         row = [
             'id',
             'pool_id',
@@ -90,9 +91,9 @@ class CreateZone(command.ShowOne):
             'links',
         ]
 
-        zone = dns_client.create_zone(*args)
+        zone = dns_client.create_zone(**kwargs)
 
-        return (row, utils.get_item_properties(zone, row))
+        return row, utils.get_item_properties(zone, row)
 
 
 class DeleteZone(command.Command):
@@ -116,8 +117,8 @@ class ShowZone(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(ShowZone, self).get_parser(prog_name)
         parser.add_argument(
-            "zond_id",
-            metavar='<zond_id>',
+            "zone_id",
+            metavar='<zone_id>',
             help='ID of the zone to show.'
         )
         return parser
@@ -143,9 +144,11 @@ class ShowZone(command.ShowOne):
             'updated_at',
             'links',
         ]
+
         zone = dns_client.get_zone(parsed_args.zone_id)
 
-        return (row, utils.get_item_properties(zone, row))
+        return row, utils.get_item_properties(zone, row)
+
 
 class ListZone(command.Lister):
 
@@ -183,10 +186,16 @@ class ListZone(command.Lister):
                     formatters={'Metadata': utils.format_dict},
                 ) for s in zones))
 
+
 class UpdateZone(command.ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(UpdateZone, self).get_parser(prog_name)
+        parser.add_argument(
+            "zone_id",
+            metavar="<zone_id>",
+            help="zone id which you want to update"
+        )
         parser.add_argument(
             "--description",
             metavar="<description>",
@@ -214,14 +223,14 @@ class UpdateZone(command.ShowOne):
     def take_action(self, parsed_args):
         dns_client = self.app.eclsdk.conn.dns
 
-        args = (
-            parsed_args.email,
-            parsed_args.masters,
-            parsed_args.ttl,
-            parsed_args.description,
-        )
-
-        zone = dns_client.update_zone(*args)
+        kwargs = {
+            'zone': parsed_args.zone_id,
+            'email': parsed_args.email,
+            'masters': parsed_args.masters,
+            'ttl': parsed_args.ttl,
+            'description': parsed_args.description,
+        }
+        zone = dns_client.update_zone(**kwargs)
 
         row = [
             'id',
@@ -242,4 +251,4 @@ class UpdateZone(command.ShowOne):
             'links',
         ]
 
-        return (row, utils.get_item_properties(zone, row))
+        return row, utils.get_item_properties(zone, row)
