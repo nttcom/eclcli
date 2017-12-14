@@ -71,7 +71,7 @@ class CreateTenantConnectionRequest(command.ShowOne):
             '--keystone-user-id',
             metavar='<KEYSTONE USER ID>',
             help='Keystone user ID of tenant connection request',
-            required=True,
+            required=False,
         )
 
         parser.add_argument(
@@ -85,7 +85,7 @@ class CreateTenantConnectionRequest(command.ShowOne):
             '--tenant-id',
             metavar='<TENANT ID>',
             help='Tenant ID of owner of tenant connection request',
-            required=True,
+            required=False,
         )
 
         parser.add_argument(

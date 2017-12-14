@@ -18,10 +18,11 @@ class ListTenantConnecion(command.Lister):
 
         columns = [
             'ID',
+            'Tenant Connection Request ID',
             'Name',
             'Name Other',
             'Tenant ID',
-            'Tenant Other ID',
+            'Tenant ID Other',
             'Network ID',
             'Status',
           ]
@@ -286,5 +287,5 @@ class DeleteTenantConnection(command.Command):
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.provider_connectivity
 
-        data = client.delete_tenant_connection(
-                    parsed_args.tenant_connection_id)
+        client.delete_tenant_connection(
+                parsed_args.tenant_connection_id)
