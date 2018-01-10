@@ -226,7 +226,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance name or id>',
+            metavar='<virtual-network-appliance-id>',
             help='Name or ID of virtual network appliance')
         parser.add_argument(
             "--name",
@@ -294,7 +294,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance name or id>',
+            metavar='<virtual-network-appliance-id>',
             help='Name or ID of virtual network appliance')
 
         parser.add_argument(
@@ -402,7 +402,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance name or id>',
+            metavar='<virtual-network-appliance-id>',
             help='Name or ID of virtual network appliance')
 
         parser.add_argument(
@@ -520,7 +520,7 @@ class StartVirtualNetworkAppliance(command.Command):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance>',
+            metavar='<virtual-network-appliance-id>',
             nargs="+",
             help=_('Virtual Network Appliance(s) to start (name or ID)'),
         )
@@ -541,7 +541,7 @@ class StopVirtualNetworkAppliance(command.Command):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance>',
+            metavar='<virtual-network-appliance-id>',
             nargs="+",
             help=_('Virtual Network Appliance(s) to stop (name or ID)'),
         )
@@ -562,7 +562,7 @@ class RestartVirtualNetworkAppliance(command.Command):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance>',
+            metavar='<virtual-network-appliance-id>',
             nargs="+",
             help=_('Virtual Network Appliance(s) to restart (name or ID)'),
         )
@@ -583,7 +583,7 @@ class ResetPasswordVirtualNetworkAppliance(command.Command):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
-            metavar='<virtual-network-appliance>',
+            metavar='<virtual-network-appliance-id>',
             nargs="+",
             help=_('Virtual Network Appliance(s) to restart (name or ID)'),
         )
