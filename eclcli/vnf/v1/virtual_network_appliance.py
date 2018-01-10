@@ -153,7 +153,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                        "name": ""}
             if_info.update(dict(kv_str.split("=", 1)
                            for kv_str in if_str.split(",")))
-            if not bool(if_info["net-id"]) or not bool(if_info["fixed-ip"]):
+            if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
                 msg = _("You must specify network uuid and ip address both")
                 raise exceptions.CommandError(msg)
 
