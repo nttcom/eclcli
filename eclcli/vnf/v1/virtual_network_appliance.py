@@ -407,8 +407,8 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
         parser.add_argument(
             '--allowed-address-pair',
-            metavar="<slot-no=number,ip-address=ip-addr,"
-                    "mac-address=mac-addr,vrid=vrid>",
+            metavar="<interface-slot-no=number,ip-address=ip-addr,"
+                    "mac-address=mac-addr,type=type,vrid=vrid>",
             action='append',
             default=[],
             help=_("Specify Allowed Address Pair(A.A.P) parameter for "
@@ -448,7 +448,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         row_headers = rows
 
         aaps = []
-        VALID_KEYS = ['slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
+        VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
         for aap_str in parsed_args.allowed_address_pair:
             aap_info = {}
             aap_info.update(dict(aap_str.split("=", 1)
@@ -463,7 +463,10 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
         requested_aap_object = {}
         for aap in aaps:
-            slot_no = aap.get('slot-no')
+            slot_no = aap.get('interface-slot-no', None)
+            if not slot_no:
+                msg = 'No interface number is specified.'
+                raise exceptions.CommandError(msg)
 
             # create key <-> value if not exist.
             if_key = 'interface_' + str(slot_no)
