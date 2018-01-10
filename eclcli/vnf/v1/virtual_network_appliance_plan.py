@@ -20,10 +20,8 @@ class ListVirtualNetworkAppliancePlan(command.Lister):
         columns = [
             'ID',
             'Name',
-            'Appliance Type',
-            'Version',
-            'Flavor',
             'Number of Interfaces',
+            'Max Number of AAP',
         ]
         column_headers = copy.deepcopy(columns)
 
@@ -57,6 +55,7 @@ class ShowVirtualNetworkAppliancePlan(command.ShowOne):
             'Version',
             'Flavor',
             'Number of Interfaces',
+            'Max Number of AAP',
             'Licenses',
         ]
         row_headers = rows
