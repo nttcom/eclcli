@@ -84,7 +84,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             '--interface',
-            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name>,",
+            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name>",
             action='append',
             default=[],
             help=_("Specify interface parameter for "
