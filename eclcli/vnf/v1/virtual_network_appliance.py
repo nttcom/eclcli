@@ -300,7 +300,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         parser.add_argument(
             '--interface',
             metavar="<slot-no=number,net-id=net-uuid,"
-                    "ip-address=ip-addr,name=interface-name>",
+                    "fixed-ips=ip-addr1:ip-addr2...,name=interface-name>",
             action='append',
             default=[],
             help=_("Specify interface parameter "
