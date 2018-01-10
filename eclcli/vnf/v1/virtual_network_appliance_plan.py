@@ -20,6 +20,7 @@ class ListVirtualNetworkAppliancePlan(command.Lister):
         columns = [
             'ID',
             'Name',
+            'Enabled',
             'Number of Interfaces',
             'Max Number of AAP',
         ]
@@ -56,6 +57,7 @@ class ShowVirtualNetworkAppliancePlan(command.ShowOne):
             'Flavor',
             'Number of Interfaces',
             'Max Number of AAP',
+            'Enabled',
             'Licenses',
         ]
         row_headers = rows

@@ -10,6 +10,19 @@ from eclcli.common import utils
 from eclcli.i18n import _  # noqa
 
 
+ROWS_FOR_SHOW = [
+    'ID',
+    'Name',
+    'Description',
+    'Virtual Network Appliance Plan',
+    'Appliance Type',
+    'OS Monitoring Status',
+    'OS Login Status',
+    'VM Status',
+    'Interfaces'
+]
+
+
 class ListVirtualNetworkAppliance(command.Lister):
 
     def get_parser(self, prog_name):
@@ -22,8 +35,7 @@ class ListVirtualNetworkAppliance(command.Lister):
         columns = [
             'ID',
             'Name',
-            'Description',
-            'Appliance Type',
+            'Virtual Network Appliance Plan',
             'OS Monitoring Status',
             'OS Login Status',
             'VM Status',
@@ -31,6 +43,12 @@ class ListVirtualNetworkAppliance(command.Lister):
         column_headers = copy.deepcopy(columns)
 
         data = client.virtual_network_appliances()
+        plans = client.virtual_network_appliance_plans()
+        for datum in data:
+            for plan in plans:
+                if datum.virtual_network_appliance_plan_id == plan.id:
+                    setattr(datum, 'virtual_network_appliance_plan', plan.name)
+                    break
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -52,20 +70,16 @@ class ShowVirtualNetworkAppliance(command.ShowOne):
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.virtual_network_appliance
 
-        rows = [
-            'ID',
-            'Name',
-            'Description',
-            'Appliance Type',
-            'OS Monitoring Status',
-            'OS Login Status',
-            'VM Status',
-            'Interfaces'
-        ]
+        rows = ROWS_FOR_SHOW
         row_headers = rows
 
         data = client.get_virtual_network_appliance(
             parsed_args.virtual_network_appliance_id)
+
+        # Set plan name
+        plan = client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
 
         _set_interfaces_for_display(data)
 
@@ -135,6 +149,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             'OS Monitoring Status',
             'OS Login Status',
             'VM Status',
+            'Username',
+            'Password',
         ]
         row_headers = rows
 
@@ -252,11 +268,6 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             'ID',
             'Name',
             'Description',
-            'Appliance Type',
-            'OS Monitoring Status',
-            'OS Login Status',
-            'VM Status',
-            'Interfaces'
         ]
         row_headers = rows
 
@@ -322,16 +333,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
-        rows = [
-            'ID',
-            'Name',
-            'Description',
-            'Appliance Type',
-            'OS Monitoring Status',
-            'OS Login Status',
-            'VM Status',
-            'Interfaces'
-        ]
+        rows = ROWS_FOR_SHOW
         row_headers = rows
 
         interfaces = []
@@ -435,16 +437,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
             get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
-        rows = [
-            'ID',
-            'Name',
-            'Description',
-            'Appliance Type',
-            'OS Monitoring Status',
-            'OS Login Status',
-            'VM Status',
-            'Interfaces'
-        ]
+        rows = ROWS_FOR_SHOW
         row_headers = rows
 
         aaps = []
@@ -522,7 +515,7 @@ class StartVirtualNetworkAppliance(command.Command):
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
             nargs="+",
-            help=_('Virtual Network Appliance(s) to start (name or ID)'),
+            help=_('Virtual Network Appliance ID to start'),
         )
         return parser
 
@@ -543,7 +536,7 @@ class StopVirtualNetworkAppliance(command.Command):
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
             nargs="+",
-            help=_('Virtual Network Appliance(s) to stop (name or ID)'),
+            help=_('Virtual Network Appliance(s) to stop'),
         )
         return parser
 
@@ -564,7 +557,7 @@ class RestartVirtualNetworkAppliance(command.Command):
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
             nargs="+",
-            help=_('Virtual Network Appliance(s) to restart (name or ID)'),
+            help=_('Virtual Network Appliance(s) to restart'),
         )
         return parser
 
@@ -576,7 +569,7 @@ class RestartVirtualNetworkAppliance(command.Command):
                 restart_virtual_network_appliance(virtual_network_appliance)
 
 
-class ResetPasswordVirtualNetworkAppliance(command.Command):
+class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
 
     def get_parser(self, prog_name):
         parser = super(ResetPasswordVirtualNetworkAppliance, self).\
@@ -584,18 +577,25 @@ class ResetPasswordVirtualNetworkAppliance(command.Command):
         parser.add_argument(
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
-            nargs="+",
-            help=_('Virtual Network Appliance(s) to restart (name or ID)'),
+            # nargs="+",
+            help=_('Virtual Network Appliance ID to restart'),
         )
         return parser
 
     def take_action(self, parsed_args):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
-        for virtual_network_appliance in parsed_args.virtual_network_appliance:
-            vnf_client.reset_password_virtual_network_appliance(
-                virtual_network_appliance)
+        rows = [
+            'ID',
+            'Name',
+            'Username',
+            'New Password'
+        ]
+        row_headers = rows
 
+        vna = parsed_args.virtual_network_appliance
+        data = vnf_client.reset_password_virtual_network_appliance(vna)
+        return (row_headers, utils.get_item_properties(data, rows))
 
 def _set_interfaces_for_display(data):
     ifs = data.interfaces

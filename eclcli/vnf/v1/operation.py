@@ -25,6 +25,8 @@ class ListOperation(command.Lister):
             'ID',
             'Resource ID',
             'Request Type',
+            'Reception Datetime',
+            'Commit Datetime',
             'Status',
         ]
         column_headers = copy.deepcopy(columns)
@@ -35,6 +37,10 @@ class ListOperation(command.Lister):
         if resource_id:
             data = [datum for datum in data
                     if datum.resource_id == resource_id]
+
+        sorted(data,
+               key=lambda datum: datum.reception_datetime,
+               reverse=True)
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -67,7 +73,7 @@ class ShowOperation(command.ShowOne):
             'Request Body',
             'Warning',
             'Error',
-            'Error Details',
+            # 'Error Details',
             'Tenant ID',
             'Resource Type',
         ]
