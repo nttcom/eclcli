@@ -43,7 +43,7 @@ class ShowVirtualNetworkAppliancePlan(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance_plan_id',
-            metavar='<string>',
+            metavar='<virtual-network-appliance-plan-id>',
             help='ID of virtual network appliance plan id to look up.')
         return parser
 

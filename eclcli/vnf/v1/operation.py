@@ -14,7 +14,7 @@ class ListOperation(command.Lister):
         parser = super(ListOperation, self).get_parser(prog_name)
         parser.add_argument(
             '--resource_id',
-            metavar='<string>',
+            metavar='<resource uuid>',
             help='Resource ID to query operations [Type: String]')
         return parser
 
@@ -50,7 +50,7 @@ class ShowOperation(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'operation_id',
-            metavar='<string>',
+            metavar='<operation-id>',
             help='ID of operation id to look up.')
         return parser
 
