@@ -12,6 +12,10 @@ class ListOperation(command.Lister):
 
     def get_parser(self, prog_name):
         parser = super(ListOperation, self).get_parser(prog_name)
+        parser.add_argument(
+            '--resource_id',
+            metavar='<string>',
+            help='Resource ID to query operations [Type: String]')
         return parser
 
     def take_action(self, parsed_args):
@@ -26,6 +30,11 @@ class ListOperation(command.Lister):
         column_headers = copy.deepcopy(columns)
 
         data = client.operations()
+
+        resource_id = getattr(parsed_args, 'resource_id', None)
+        if resource_id:
+            data = [datum for datum in data
+                    if datum.resource_id == resource_id]
 
         return (column_headers,
                 (utils.get_item_properties(
