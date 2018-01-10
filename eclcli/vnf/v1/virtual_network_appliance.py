@@ -576,6 +576,27 @@ class RestartVirtualNetworkAppliance(command.Command):
                 restart_virtual_network_appliance(virtual_network_appliance)
 
 
+class ResetPasswordVirtualNetworkAppliance(command.Command):
+
+    def get_parser(self, prog_name):
+        parser = super(ResetPasswordVirtualNetworkAppliance, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance>',
+            nargs="+",
+            help=_('Virtual Network Appliance(s) to restart (name or ID)'),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+
+        for virtual_network_appliance in parsed_args.virtual_network_appliance:
+            vnf_client.reset_password_virtual_network_appliance(
+                virtual_network_appliance)
+
+
 def _set_interfaces_for_display(data):
     ifs = data.interfaces
     interfaces_json = json.dumps(ifs, indent=2)
