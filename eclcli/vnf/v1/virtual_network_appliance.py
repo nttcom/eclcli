@@ -45,7 +45,7 @@ class ShowVirtualNetworkAppliance(command.ShowOne):
         parser = super(ShowVirtualNetworkAppliance, self).get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance_id',
-            metavar='<string>',
+            metavar='<virtual-network-appliance-id>',
             help='ID of virtual network appliance id to look up.')
         return parser
 
