@@ -93,7 +93,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance_plan_id',
-            metavar='<virtual-network-appliance-id>',
+            metavar='<virtual-network-appliance-plan-id>',
             help='ID of virtual network appliance plan')
 
         parser.add_argument(
@@ -596,6 +596,46 @@ class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
         vna = parsed_args.virtual_network_appliance
         data = vnf_client.reset_password_virtual_network_appliance(vna)
         return (row_headers, utils.get_item_properties(data, rows))
+
+
+class ShowVirtualNetworkApplianceConsole(command.ShowOne):
+
+    def get_parser(self, prog_name):
+        parser = super(ShowVirtualNetworkApplianceConsole, self).\
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance-id>',
+            help=_('Virtual Network Appliance ID to show console url'),
+        )
+        type_group = parser.add_mutually_exclusive_group()
+        type_group.add_argument(
+            '--novnc',
+            dest='url_type',
+            action='store_const',
+            const='novnc',
+            default='novnc',
+            help='Show noVNC console URL (default)',
+        )
+        type_group.add_argument(
+            '--xvpvnc',
+            dest='url_type',
+            action='store_const',
+            const='xvpvnc',
+            help='Show xpvnc console URL',
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+        vna = parsed_args.virtual_network_appliance
+        data = vnf_client.get_virtual_network_appliance_console(
+            vna, parsed_args.url_type)
+
+        return zip(*sorted(six.iteritems(data)))
+
+
+
 
 def _set_interfaces_for_display(data):
     ifs = data.interfaces
