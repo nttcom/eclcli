@@ -254,6 +254,15 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             help="Description of virtual network appliance",
             metavar='<string>'
         )
+        parser.add_argument(
+            "--interface",
+            metavar="<slot-no=number,name=interface-name>",
+            action="append",
+            help=_("Specify inteface slot number and name "
+                   "for virtual network appliance to update."
+                   "slot-no: sequential number of interface, "
+                   "name: Name of Interface.")
+        )
 
         return parser
 
@@ -268,23 +277,50 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             'ID',
             'Name',
             'Description',
+            'Interface Names',
         ]
         row_headers = rows
 
+        interfaces = []
+        VALID_KEYS = ['slot-no', 'name']
+
+        if parsed_args.interface:
+            for if_str in parsed_args.interface:
+                if_names = {}
+                if_names.update(dict(kv_str.split('=', 1)
+                                     for kv_str in if_str.split(',')))
+                for k in if_names.keys():
+                    if k not in VALID_KEYS:
+                        msg = 'Invalid key %s is specified.' % k
+                        raise exceptions.CommandError(msg)
+                interfaces.append(if_names)
+
         # serialize request parmeter as JSON
         requested_param = {}
-        if parsed_args.name:
-            requested_param["name"] = parsed_args.name
-        if parsed_args.description:
-            requested_param["description"] = parsed_args.description
+        if hasattr(parsed_args, 'name'):
+            requested_param['name'] = parsed_args.name
+        if hasattr(parsed_args, 'description'):
+            requested_param['description'] = parsed_args.description
+        for interface in interfaces:
+            if 'interfaces' not in requested_param:
+                requested_param['interfaces'] = {}
+            slot_no = interface.get('slot-no')
+            if_key = 'interface_%s' % slot_no
+            name = interface.get('name')
+            each_if_info = {}
+            if name:
+                each_if_info.update({'name': name})
+            requested_param['interfaces'].update({if_key: each_if_info})
 
         # serialize current parmeter as JSON
         current_param = {
             'name': target.name,
             'description': target.description,
         }
-
-        patch = jmp.create_patch(current_param, requested_param)
+        current_param['interfaces'] = copy.deepcopy(target.interfaces)
+        origin_param = copy.deepcopy(current_param)
+        merged_param = jmp.merge(current_param, requested_param)
+        patch = jmp.create_patch(origin_param, merged_param)
 
         if not patch:
             msg = _('No change will be expected')
@@ -293,9 +329,9 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
 
-        _set_interfaces_for_display(data)
+        _set_interface_names_for_display(data)
 
-        return (row_headers, utils.get_item_properties(data, rows))
+        return row_headers, utils.get_item_properties(data, rows)
 
 
 class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
@@ -311,7 +347,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         parser.add_argument(
             '--interface',
             metavar="<slot-no=number,net-id=net-uuid,"
-                    "fixed-ips=ip-addr1:ip-addr2...,name=interface-name>",
+                    "fixed-ips=ip-addr1:ip-addr2...>",
             action='append',
             default=[],
             help=_("Specify interface parameter "
@@ -320,8 +356,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                    "net-id: attach interface to network with this UUID, "
                    "fixed-ips: IPv4 fixed address for NIC. "
                    "You can specif multiple ip address by using ':' "
-                   "(e.g: 1.1.1.1:2.2.2.2:...) , "
-                   "name: Name of Interface."),
+                   "(e.g: 1.1.1.1:2.2.2.2:...)")
         )
 
         return parser
@@ -337,10 +372,10 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         row_headers = rows
 
         interfaces = []
-        VALID_KEYS = ['slot-no', 'net-id', 'fixed-ips', 'name']
+        VALID_KEYS = ['slot-no', 'net-id', 'fixed-ips']
         for if_str in parsed_args.interface:
             # if_info = {"net-id": "", "fixed-ips": "",
-            #            "name": "", "slot-no": ""}
+            #            "slot-no": ""}
             if_info = {}
             if_info.update(dict(kv_str.split("=", 1)
                            for kv_str in if_str.split(",")))
@@ -358,13 +393,9 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             if_key = 'interface_' + str(slot_no)
 
             network_id = interface.get('net-id')
-            name = interface.get('name')
             fixed_ips_tmp = interface.get('fixed-ips')
 
             each_if_info = {}
-
-            if name:
-                each_if_info.update({'name': name})
 
             if network_id:
                 each_if_info.update({'network_id': network_id})
@@ -635,9 +666,14 @@ class ShowVirtualNetworkApplianceConsole(command.ShowOne):
         return zip(*sorted(six.iteritems(data)))
 
 
-
-
 def _set_interfaces_for_display(data):
     ifs = data.interfaces
     interfaces_json = json.dumps(ifs, indent=2)
     setattr(data, 'interfaces', interfaces_json)
+
+
+def _set_interface_names_for_display(data):
+    ifs = {}
+    for if_key, if_obj in data.interfaces.items():
+       ifs[if_key] = {'name': if_obj['name']}
+    setattr(data, 'interface_names', json.dumps(ifs, indent=2))
