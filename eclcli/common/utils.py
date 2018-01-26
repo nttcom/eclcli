@@ -388,3 +388,26 @@ def filter_list_with_property(datalist, attribute, value):
         if value in attr:
             postfilter.append(data)
     return postfilter
+
+
+def parse_vna_interface(text):
+    """parse vna interface text
+
+    :param text: not in one of the following format
+              net-id=net-uuid,ip-address=ip-addr,name=interface-name,
+              slot-no=number,name=name
+              slot-no=number,net-id=net-uuid,fixed-ips=ip-addr1:ip-addr2...
+              interface-slot-no=number,ip-address=ip-addr, \
+                     mac-address=mac-addr,type=type,vrid=vrid
+    :return:
+    """
+    try:
+        return dict(kv_str.split("=", 1) for kv_str in text.split(","))
+    except ValueError:
+        msg = "%r is not in the format of " \
+              " net-id=net-uuid,ip-address=ip-addr,name=interface-name, or," \
+              " slot-no=number,name=name, or," \
+              " slot-no=number,net-id=net-uuid,fixed-ips=ip-addr1:ip-addr2," \
+              " or, interface-slot-no=number,ip-address=ip-addr, " \
+              "mac-address=mac-addr,type=type,vrid=vrid>"
+        raise exceptions.CommandError(msg % text)

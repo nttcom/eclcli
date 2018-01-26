@@ -167,8 +167,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         for if_str in parsed_args.interface:
             if_info = {"net-id": "", "ip-address": "",
                        "name": ""}
-            if_info.update(dict(kv_str.split("=", 1)
-                           for kv_str in if_str.split(",")))
+            if_info.update(utils.parse_vna_interface(if_str))
             if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
                 msg = _("You must specify network uuid and ip address both")
                 raise exceptions.CommandError(msg)
@@ -287,8 +286,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         if parsed_args.interface:
             for if_str in parsed_args.interface:
                 if_names = {}
-                if_names.update(dict(kv_str.split('=', 1)
-                                     for kv_str in if_str.split(',')))
+                if_names.update(utils.parse_vna_interface(if_str))
                 for k in if_names.keys():
                     if k not in VALID_KEYS:
                         msg = 'Invalid key %s is specified.' % k
@@ -377,9 +375,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             # if_info = {"net-id": "", "fixed-ips": "",
             #            "slot-no": ""}
             if_info = {}
-            if_info.update(dict(kv_str.split("=", 1)
-                           for kv_str in if_str.split(",")))
-
+            if_info.update(utils.parse_vna_interface(if_str))
             for k in if_info.keys():
                 if k not in VALID_KEYS:
                     msg = 'Invalid key %s is specified.' % k
@@ -401,7 +397,8 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                 each_if_info.update({'network_id': network_id})
 
             if fixed_ips_tmp:
-                fixed_ips = [ip for ip in fixed_ips_tmp.split(':')]
+                fixed_ips = [{'ip_address': ip}
+                             for ip in fixed_ips_tmp.split(':')]
                 each_if_info.update({'fixed_ips': fixed_ips})
 
             interface_tmp = {
@@ -475,8 +472,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
         for aap_str in parsed_args.allowed_address_pair:
             aap_info = {}
-            aap_info.update(dict(aap_str.split("=", 1)
-                           for aap_str in aap_str.split(",")))
+            aap_info.update(utils.parse_vna_interface(aap_str))
 
             for k in aap_info.keys():
                 if k not in VALID_KEYS:
@@ -494,14 +490,19 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
             # create key <-> value if not exist.
             if_key = 'interface_' + str(slot_no)
-            requested_aap_object.setdefault(if_key, {'allowed_address_pairs': []})
+            requested_aap_object.setdefault(if_key,
+                                            {'allowed_address_pairs': []})
 
             ip_address = aap.get('ip-address')
             mac_address = aap.get('mac-address')
             aap_type = aap.get('type')
             vrid = aap.get('vrid')
 
-            each_aap_info = {}
+            each_aap_info = {
+                'mac_address': '',
+                'type': '',
+                'vrid': None
+            }
 
             if ip_address:
                 each_aap_info.update({'ip_address': ip_address})
@@ -513,10 +514,19 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
                 each_aap_info.update({'type': aap_type})
 
             if vrid:
-                each_aap_info.update({'vrid': vrid})
+                try:
+                    each_aap_info.update({'vrid': int(vrid)})
+                except ValueError:
+                    msg = 'vrid should be a positive number 1〜255'
+                    raise exceptions.CommandError(msg)
 
             requested_aap_object[if_key]['allowed_address_pairs'].\
                 append(each_aap_info)
+
+            if mac_address and (aap_type == "vrrp" or vrid):
+                msg = 'mac_address and vrrp type cannot be set ' \
+                      'at the same time.'
+                raise exceptions.CommandError(msg)
 
         current_interface_object = copy.deepcopy(target.interfaces)
         merged_interface_object = jmp.merge(current_interface_object,
@@ -534,7 +544,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
         _set_interfaces_for_display(data)
 
-        return (row_headers, utils.get_item_properties(data, rows))
+        return row_headers, utils.get_item_properties(data, rows)
 
 
 class StartVirtualNetworkAppliance(command.Command):
