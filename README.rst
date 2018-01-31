@@ -14,24 +14,22 @@ Enterprise Cloud CLI can be installed from PyPI using pip.
 
    $ pip install eclcli
 
-
-There are a few variants on getting help.
-A list of global options are supported with ``--help``.
-
-.. code-block:: bash
-   
-   $ ecl --help
-
-There is also a ``help`` command that can be used to get help text for a specific command.
+Yet it is strongly advised to use `virtualenv <https://virtualenv.pypa.io/en/stable/>`_ to avoid conflicts with system packages, in short:
 
 .. code-block:: bash
 
-   $ ecl help baremetal server create
+   $ virtualenv .venv
+   $ source .venv/bin/activate
+   $ pip install --upgrade eclcli
+
+For experienced users we suggest using `pyenv <https://github.com/pyenv/pyenv>`_ with pyenv-virtualenv plugin:
 
 Configuration
 --------------
 
-The CLI is configured via environment variables and command-line
+Before you are able to use CLI you must configure it.
+
+The CLI is configured via command-line, environment variables and `~/.config/ecl/clouds.yaml` file.
 
 Authentication using username/password is most commonly used.
 
@@ -44,23 +42,45 @@ Authentication using username/password is most commonly used.
    $ export OS_PROJECT_DOMAIN_ID=default
    $ export OS_USER_DOMAIN_ID=default
 
+
+In certain cases it may be more convenient to use file based configuration using file `~/.config/ecl/clouds.yaml`.
+
+For more information see `ECL tutorial page <https://ecl.ntt.com/en/documents/tutorials/eclc/rsts/installation.html>`_.
+Notice, though, that you may need to use `--os-cloud` option parameter to specify which credentials to use from the file.
+
+Listing command references
+--------------------------
+
+There are a few variants on getting help.
+A list of global options are supported with ``--help``.
+
+.. code-block:: bash
+
+   $ ecl --help
+
+There is also a ``help`` command that can be used to get help text for a specific command.
+
+.. code-block:: bash
+
+   $ ecl help baremetal server create
+
 Usage
 --------
 
 .. code-block:: bash
 
    $ ecl command list
-   #Returns all available commands
+   # Returns all available commands
 
    $ ecl baremetal server list
-   #Returns list of baremetal servers
+   # Returns list of baremetal servers
 
    $ ecl help baremetal
-   #Returns help for any command
+   # Returns help for any command
 
 Documentation
 ----------------
-Please find more usage documentation `here <https://ecl.ntt.com>`_.
+Please find more usage documentation on `official site <https://ecl.ntt.com/en/>`_.
 
 Support
 -----------
@@ -72,6 +92,7 @@ Contact
 
 Contributing
 -------------
+
 Please contribute using `Github Flow <https://guides.github.com/introduction/flow/>`_ Create a branch, add commits, and `open a pull request <https://github.com/nttcom/eclcli/compare/>`_.
 
 License
