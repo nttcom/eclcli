@@ -39,9 +39,11 @@ class CreateRecordSet(command.Lister):
         parser.add_argument(
             "--type",
             required=True,
-            choices=['A', 'AAAA', 'MX', 'CNAME', 'SRV', 'SPF', 'TXT', 'PTR', 'NS'],
-            metavar="<type>",
-            help="TYPE of the recordset.",
+            choices=['A', 'AAAA', 'MX', 'CNAME', 'SRV',
+                     'SPF', 'TXT', 'PTR', 'NS'],
+            metavar="{ A | AAAA | MX | CNAME | SRV | SPF | TXT | PTR | NS }",
+            help="TYPE of the recordset, one of A, AAAA, MX, "
+                 "CNAME, SRV, SPF, TXT, PTR, NS.",
         )
         parser.add_argument(
             "--ttl",
@@ -54,8 +56,8 @@ class CreateRecordSet(command.Lister):
             "--records",
             required=True,
             nargs='+',
-            metavar="<ttl>",
-            help="TTL (Time to Live) for the recordset.",
+            metavar="<records>",
+            help="records for the recordset, should match the type.",
         )
         parser.add_argument(
             "--description",
