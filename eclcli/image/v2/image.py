@@ -488,7 +488,7 @@ class CreateImage(command.ShowOne):
                 image = image_client.images.get(image.id)
 
         if not info:
-            info = _format_image(image._info)
+            info = _format_image(image)
 
         return zip(*sorted(six.iteritems(info)))
 
