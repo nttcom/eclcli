@@ -210,6 +210,43 @@ class APIv1(api.BaseAPI):
         if headers:
             self.create(urllib.parse.quote(container), headers=headers)
 
+    def object_copy(
+        self,
+        container=None,
+        object=None,
+        dest_container=None,
+        dest_object=None,
+        ):
+        """Copy object
+
+        :param string container:
+            name of container to store object
+        :param string object:
+            local path to object
+        :param string dest_container:
+            name of dest_container to store object
+        :param string dest_object:
+            dest_container to dest_object
+        :returns:
+            dict of returned headers
+        """
+
+        if container is None or object is None or \
+            dest_container is None:
+            # TODO(dtroyer): What exception to raise here?
+            return {}
+
+        if dest_object is None:
+            dest_object = object
+
+        headers = {"X-Copy-From": "/".join([container, object])}
+        if headers:
+            self.create("%s/%s" %
+                (urllib.parse.quote(dest_container),
+                urllib.parse.quote(dest_object)),
+                method="PUT",
+                headers=headers)
+
     def object_create(
         self,
         container=None,

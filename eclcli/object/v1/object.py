@@ -23,6 +23,42 @@ from eclcli.common import parseractions
 from eclcli.common import utils
 
 
+class CopyObject(command.Command):
+    """Copy object from container"""
+
+    def get_parser(self, prog_name):
+        parser = super(CopyObject, self).get_parser(prog_name)
+        parser.add_argument(
+            'container',
+            metavar='<container>',
+            help='Copy object from <container>',
+        )
+        parser.add_argument(
+            'object',
+            metavar='<object>',
+            help='Object to copy',
+        )
+        parser.add_argument(
+            "--dest_container",
+            metavar="<dest_container>",
+            help="Destination container",
+        )
+        parser.add_argument(
+            "--dest_object",
+            metavar="<dest_object>",
+            help="Destination object",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        self.app.client_manager.object_store.object_copy(
+            container=parsed_args.container,
+            object=parsed_args.object,
+            dest_container=parsed_args.dest_container,
+            dest_object=parsed_args.dest_object,
+        )
+
+
 class CreateObject(command.Lister):
     """Upload object to container"""
 
