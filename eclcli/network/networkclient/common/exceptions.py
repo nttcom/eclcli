@@ -27,6 +27,7 @@ class ESIClientException(ESIException):
 
 class BadRequest(ESIClientException):
     status_code = 400
+    message = _("Bad Request")
 
 
 class Unauthorized(ESIClientException):
@@ -42,18 +43,22 @@ class Forbidden(ESIClientException):
 
 class NotFound(ESIClientException):
     status_code = 404
+    message = _("Not Found")
 
 
 class Conflict(ESIClientException):
     status_code = 409
+    message = _("Conflict")
 
 
 class InternalServerError(ESIClientException):
     status_code = 500
+    message = _("Internal Server Error")
 
 
 class ServiceUnavailable(ESIClientException):
     status_code = 503
+    message = _("Service Unavailable")
 
 
 HTTP_EXCEPTION_MAP = {
