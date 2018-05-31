@@ -21,8 +21,8 @@ class ListDatabase(command.Lister):
         client = self.app.eclsdk.conn.database
         columns = [
             'Name',
-            'Character Set',
-            'Collate',
+            # 'Character Set',
+            # 'Collate',
         ]
         column_headers = copy.deepcopy(columns)
         data = client.databases(parsed_args.instance_id)
@@ -30,7 +30,7 @@ class ListDatabase(command.Lister):
                 (utils.get_item_properties(d, columns) for d in data))
 
 
-class CreateDatabase(command.ShowOne):
+class CreateDatabase(command.Command):
 
     def get_parser(self, prog_name):
         parser = super(CreateDatabase, self).get_parser(prog_name)
@@ -48,12 +48,14 @@ class CreateDatabase(command.ShowOne):
         parser.add_argument(
             '--character_set',
             metavar='<string>',
-            help='Database character code.',
+            help='Database character code. '
+                 'Default value is UTF8.',
         )
         parser.add_argument(
             '--collate',
             metavar='<string>',
-            help='Database collation.',
+            help='Database collation. '
+                 'Default value is C.',
         )
         return parser
 
@@ -63,7 +65,7 @@ class CreateDatabase(command.ShowOne):
 
         kwargs = {}
         if parsed_args.character_set:
-            kwargs["character_set"] = parsed_args.character_set
+            kwargs["charset"] = parsed_args.character_set
         if parsed_args.collate:
             kwargs["collate"] = parsed_args.collate
 
@@ -72,8 +74,8 @@ class CreateDatabase(command.ShowOne):
             parsed_args.name,
             **kwargs)._body
 
-        data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
-        return zip(*sorted(six.iteritems(data)))
+        # data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
+        # return zip(*sorted(six.iteritems(data)))
 
 
 class DeleteDatabase(command.Command):

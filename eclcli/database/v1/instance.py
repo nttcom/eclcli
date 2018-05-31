@@ -68,24 +68,27 @@ class CreateInstance(command.ShowOne):
             'flavor',
             metavar='FLAVOR',
             help='Actual name to a flavor as it appears in the list flavors '
-                 'response. (You can get it by <ecl compute flavor list>)',
+                 'response. (You can get it by <ecl rdb flavor list>)',
         )
         parser.add_argument(
             'size',
             metavar='SIZE',
             type=utils.parse_volume,
-            help='Disk volume size(GB) for your instance.',
+            help='Disk volume size(GB) for your instance. '
+                 'You can specify 40, 80, 100 or 300.',
         )
         parser.add_argument(
             'type',
             metavar='TYPE',
             help='Database(Datastore) type which you would like to create into '
-                 'database instance. e.g. postgresql',
+                 'database instance. e.g. postgresql '
+                 '(You can get it by <ecl rdb datastore list>)',
         )
         parser.add_argument(
             'version',
             metavar='VERSION',
-            help='Database version of the target Database type. e.g. 9.5.4',
+            help='Database version of the target Database type. e.g. 9.5.4'
+                 '(You can get it by <ecl rdb datastore list>)',
         )
         parser.add_argument(
             '--network_id',
@@ -98,41 +101,42 @@ class CreateInstance(command.ShowOne):
         )
 
         parser.add_argument(
-            'database_name',
-            metavar='DATABASE_NAME',
+            '--database_name',
+            metavar='<string>',
             help='Database name.',
         )
         parser.add_argument(
             '--character_set',
             metavar='<string>',
-            help='Database character code.',
+            help='Database character code. '
+                 'Default value is UTF8.',
         )
         parser.add_argument(
             '--collate',
             metavar='<string>',
-            help='Database collation.',
+            help='Database collation. '
+                 'Default value is C.',
         )
-
         parser.add_argument(
-            'user_name',
-            metavar='USER_NAME',
+            '--user_name',
+            metavar='<string>',
             help='Database user name. (1~63 characters). Allowed characters '
                  'depend on database type.',
         )
         parser.add_argument(
-            'password',
-            metavar='PASSWOR',
+            '--password',
+            metavar='<string>',
             help='Database user password. (8~128 characters). Allowed '
                  'characters depend on database type.',
         )
         parser.add_argument(
-            '--database',
-            metavar='<string>',
-            help='Databases that user can access.'
-                 'Please specify it same as database_name '
-                 'if you want to associate this user to the database.',
+            '--revoke_user',
+            action='store_true',
+            default=False,
+            help='Please specify it '
+                 'if you do not want to associate this user to the database '
+                 'you specified at --database_name option.',
         )
-
         parser.add_argument(
             '--availability_zone',
             metavar='<string>',
@@ -141,22 +145,28 @@ class CreateInstance(command.ShowOne):
         parser.add_argument(
             '--backup_window',
             metavar='<string>',
-            help='The range of backing up time. (HH:mm-HH:mm)',
+            help='The range of backing up time (UTC). '
+                 'Please specify it like HH:mm-HH:mm. '
+                 'Default value is 23:00-06:00.',
         )
         parser.add_argument(
             '--backup_retention_period',
             metavar='<integer>',
-            help='The days how long back-up data should be kept. (0~3)',
+            help='The days how long back-up data should be kept. '
+                 'Please specify it between 0 to 35.'
+                 'Default value is 7.',
         )
         parser.add_argument(
             '--maintenance_window',
             metavar='<string>',
-            help='ECL2.0 periodical maintenance. (EEE:HH:mm-EEE:HH:mm).',
+            help='ECL2.0 periodical maintenance. '
+                 'Please specify it like EEE:HH:mm-EEE:HH:mm. '
+                 'Default value is Sun:23:00-Mon:05:00.',
         )
         parser.add_argument(
             '--restore_time',
             metavar='<string>',
-            help='The time you want to restore. (e.g. 2018-06-11T11:25:35)',
+            help='The time you want to restore. (e.g. 2018-06-11T11:25:35Z)',
         )
         parser.add_argument(
             '--restore_instance_id',
@@ -170,18 +180,21 @@ class CreateInstance(command.ShowOne):
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.database
 
-        databases = {"name": parsed_args.database_name}
-        if parsed_args.character_set:
-            databases.update({"character_set": parsed_args.character_set})
-        if parsed_args.collate:
-            databases.update({"collate": parsed_args.collate})
+        if parsed_args.database_name:
+            databases = {"name": parsed_args.database_name}
+            if parsed_args.character_set:
+                databases.update({"character_set": parsed_args.character_set})
+            if parsed_args.collate:
+                databases.update({"collate": parsed_args.collate})
 
-        users = {
-            "name": parsed_args.user_name,
-            "password": parsed_args.password,
-        }
-        if parsed_args.database:
-            users.update({"databases": [{"name": parsed_args.database}]})
+        if parsed_args.user_name and parsed_args.password:
+            users = {
+                "name": parsed_args.user_name,
+                "password": parsed_args.password,
+            }
+            if not parsed_args.revoke_user and parsed_args.database_name:
+                users.update(
+                    {"databases": [{"name": parsed_args.database_name}]})
 
         kwargs = {
             "databases": [databases],

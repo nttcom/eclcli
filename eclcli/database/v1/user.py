@@ -21,14 +21,15 @@ class ListUser(command.Lister):
         client = self.app.eclsdk.conn.database
         columns = [
             'Name',
-            'Host',
+            # 'Host',
             'Databases',
         ]
         column_headers = copy.deepcopy(columns)
         data = client.users(parsed_args.instance_id)
-        data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
+        # data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
         return (column_headers,
-                (utils.get_item_properties(d, columns) for d in data))
+                (utils.get_item_properties(d, columns, formatters={
+                    'Databases': utils.format_list_of_dicts}) for d in data))
 
 
 class ShowUser(command.ShowOne):
@@ -57,7 +58,7 @@ class ShowUser(command.ShowOne):
         return zip(*sorted(six.iteritems(data)))
 
 
-class CreateUser(command.ShowOne):
+class CreateUser(command.Command):
 
     def get_parser(self, prog_name):
         parser = super(CreateUser, self).get_parser(prog_name)
@@ -103,8 +104,8 @@ class CreateUser(command.ShowOne):
             parsed_args.password,
             **kwargs)._body
 
-        data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
-        return zip(*sorted(six.iteritems(data)))
+        # data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
+        # return zip(*sorted(six.iteritems(data)))
 
 
 class DeleteUser(command.Command):
