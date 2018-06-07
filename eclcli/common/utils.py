@@ -82,6 +82,9 @@ def format_list_of_dicts(data):
     return '\n'.join(format_dict(i) for i in data)
 
 
+def format_versions(data):
+    return '\n'.join(i["name"] for i in data)
+
 def get_field(item, field):
     try:
         if isinstance(item, dict):
@@ -410,4 +413,28 @@ def parse_vna_interface(text):
               " slot-no=number,net-id=net-uuid,fixed-ips=ip-addr1:ip-addr2," \
               " or, interface-slot-no=number,ip-address=ip-addr, " \
               "mac-address=mac-addr,type=type,vrid=vrid>"
+        raise exceptions.CommandError(msg % text)
+
+
+def parse_databases(text):
+    try:
+        return {"name": text}
+    except ValueError:
+        msg = "%r is not in the format of databases (--databases <string>)"
+        raise exceptions.CommandError(msg % text)
+
+
+def parse_volume(text):
+    try:
+        return {"size": int(text)}
+    except ValueError:
+        msg = "%r is not in the format of volume (<integer>)"
+        raise exceptions.CommandError(msg % text)
+
+
+def parse_net_id(text):
+    try:
+        return {"net-id": text}
+    except ValueError:
+        msg = "%r is not in the format of network_id (--network_id <string>)"
         raise exceptions.CommandError(msg % text)
