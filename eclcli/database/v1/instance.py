@@ -227,8 +227,11 @@ class CreateInstance(command.ShowOne):
         data["flavor"] = utils.format_dict(data.pop('flavor'))
         data["links"] = utils.format_list_of_dicts(data.pop('links'))
         data["nics"] = utils.format_list_of_dicts(data.pop('nics'))
-        data["users"] = utils.format_list_of_dicts(data.pop('users'))
-        data["databases"] = utils.format_list_of_dicts(data.pop('databases'))
+        if data.get("users"):
+            data["users"] = utils.format_list_of_dicts(data.pop('users'))
+        if data.get("databases"):
+            data["databases"] = utils.format_list_of_dicts(
+                data.pop('databases'))
         return zip(*sorted(six.iteritems(data)))
 
 
