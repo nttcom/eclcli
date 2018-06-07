@@ -179,6 +179,7 @@ class CreateInstance(command.ShowOne):
 
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.database
+        kwargs = {}
 
         if parsed_args.database_name:
             databases = {"name": parsed_args.database_name}
@@ -186,6 +187,7 @@ class CreateInstance(command.ShowOne):
                 databases.update({"character_set": parsed_args.character_set})
             if parsed_args.collate:
                 databases.update({"collate": parsed_args.collate})
+            kwargs["databases"] = [databases]
 
         if parsed_args.user_name and parsed_args.password:
             users = {
@@ -195,11 +197,8 @@ class CreateInstance(command.ShowOne):
             if not parsed_args.revoke_user and parsed_args.database_name:
                 users.update(
                     {"databases": [{"name": parsed_args.database_name}]})
+            kwargs["users"] = [users]
 
-        kwargs = {
-            "databases": [databases],
-            "users": [users],
-        }
         if parsed_args.availability_zone:
             kwargs["availability_zone"] = parsed_args.availability_zone
         if parsed_args.backup_window:
