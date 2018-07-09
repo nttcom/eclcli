@@ -100,7 +100,8 @@ class CreateInstance(command.ShowOne):
             required=True,
             action='append',
             type=utils.parse_net_id,
-            help='Logical network ID to which the database instance connects.'
+            help='Logical network ID to which the database instance connects. '
+                 'This parameter is required. '
                  'You can repeat this option.',
         )
 
