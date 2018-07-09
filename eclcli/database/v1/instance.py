@@ -48,10 +48,14 @@ class ShowInstance(command.ShowOne):
 
         data = client.get_instance(parsed_args.instance_id)._body
 
-        data["datastore"] = utils.format_dict(data.pop('datastore'))
-        data["volume"] = utils.format_dict(data.pop('volume'))
-        data["flavor"] = utils.format_dict(data.pop('flavor'))
-        data["links"] = utils.format_list_of_dicts(data.pop('links'))
+        if data.get('datastore'):
+            data["datastore"] = utils.format_dict(data.pop('datastore'))
+        if data.get('volume'):
+            data["volume"] = utils.format_dict(data.pop('volume'))
+        if data.get('flavor'):
+            data["flavor"] = utils.format_dict(data.pop('flavor'))
+        if data.get('links'):
+            data["links"] = utils.format_list_of_dicts(data.pop('links'))
         return zip(*sorted(six.iteritems(data)))
 
 
