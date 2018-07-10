@@ -186,7 +186,6 @@ class ChangeAppQuantity(command.ShowOne):
 
 
 class CancelApp(command.ShowOne):
-    # TODO: Should confirm if mailaddress is need or not
     def get_parser(self, prog_name):
         parser = super(CancelApp, self).get_parser(prog_name)
         parser.add_argument(
