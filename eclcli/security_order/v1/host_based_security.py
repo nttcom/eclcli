@@ -10,7 +10,7 @@ class OrderApp(command.ShowOne):
         parser.add_argument(
             "--service_order_service",
             metavar="<service_order_service>",
-            help='Requested menu. Set "Managed Anti-Virus", '
+            help='"Requested menu. Set "Managed Anti-Virus", '
                  '"Managed Virtual Patch" or '
                  '"Managed Host-based Security Package" to this field.',
             required=True,
@@ -89,7 +89,7 @@ class ChangeAppMenu(command.ShowOne):
         parser.add_argument(
             "--service_order_service",
             metavar="<service_order_service>",
-            help='Requested menu. Set "Managed Anti-Virus", '
+            help='"Requested menu. Set "Managed Anti-Virus", '
                  '"Managed Virtual Patch" or '
                  '"Managed Host-based Security Package" to this field.',
             required=True,
