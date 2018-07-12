@@ -229,12 +229,11 @@ class ShowStatus(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(ShowStatus, self).get_parser(prog_name)
         parser.add_argument(
-            "--soId",
+            "soId",
             metavar="<soId>",
             help="This value is returned value of when you execute API "
                  "of Order Host-based Security, Change menu or quantity, "
                  "or Cancel the order.",
-            required=True,
         )
         parser.add_argument(
             "--locale",

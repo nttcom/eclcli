@@ -127,16 +127,14 @@ class UpdateDevice(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(UpdateDevice, self).get_parser(prog_name)
         parser.add_argument(
-            "--hostname1",
+            "hostname1",
             metavar="<hostname1>",
             help="Set the hostname.",
-            required=True,
         )
         parser.add_argument(
-            "--hostname2",
+            "hostname2",
             metavar="<hostname2>",
             help="Set the hostname.",
-            required=True,
         )
         parser.add_argument(
             "--operatingmode",
@@ -190,16 +188,14 @@ class DeleteDevice(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(DeleteDevice, self).get_parser(prog_name)
         parser.add_argument(
-            "--hostname1",
+            "hostname1",
             metavar="<hostname1>",
             help="Set the hostname.",
-            required=True,
         )
         parser.add_argument(
-            "--hostname2",
+            "hostname2",
             metavar="<hostname2>",
             help="Set the hostname.",
-            required=True,
         )
         parser.add_argument(
             "--locale",
@@ -237,11 +233,10 @@ class ShowStatus(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(ShowStatus, self).get_parser(prog_name)
         parser.add_argument(
-            "--soId",
+            "soId",
             metavar="<soId>",
             help="This value is returned value of when you execute"
                  "Create Server, Update Server or Delete Server API.",
-            required=True,
         )
         parser.add_argument(
             "--locale",
