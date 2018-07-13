@@ -64,6 +64,9 @@ def find_resource(manager, name_or_id, **kwargs):
 
 
 def format_dict(data):
+    if data is None:
+        return ""
+
     output = ""
     for s in sorted(data):
         output = output + s + "='" + six.text_type(data[s]) + "', "
