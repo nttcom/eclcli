@@ -165,8 +165,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         interfaces = []
         for if_str in parsed_args.interface:
-            if_info = {"net-id": "", "ip-address": "",
-                       "name": ""}
+            if_info = {}
             if_info.update(utils.parse_vna_interface(if_str))
             if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
                 msg = _("You must specify network uuid and ip address both")
@@ -295,9 +294,9 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 
         # serialize request parmeter as JSON
         requested_param = {}
-        if hasattr(parsed_args, 'name'):
+        if hasattr(parsed_args, 'name') and parsed_args.name is not None:
             requested_param['name'] = parsed_args.name
-        if hasattr(parsed_args, 'description'):
+        if hasattr(parsed_args, 'description') and parsed_args.description is not None:
             requested_param['description'] = parsed_args.description
         for interface in interfaces:
             if 'interfaces' not in requested_param:
