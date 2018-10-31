@@ -1,4 +1,5 @@
 import getpass
+import ipaddress
 import logging
 import os
 import six
@@ -337,6 +338,13 @@ def parse_allocation_pools(text):
         'end': lst[1]
     }
 
+def validate_ipv4(text):
+    try:
+        ipaddress.IPv4Address(unicode(text))
+    except ipaddress.AddressValueError:
+        msg = "%r is not a valid IPv4 address"
+        raise exceptions.CommandError(msg % text)
+    return text
 
 def parse_host_routes(text):
     if not text:
