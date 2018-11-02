@@ -114,6 +114,7 @@ class ShowSubnet(command.ShowOne):
         subnet_id = parsed_args.subnet_id
 
         dic = network_client.show_subnet(subnet_id).get('subnet')
+        dic['dns_nameservers'] = [ns for ns in dic['dns_nameservers'] if ns != '0.0.0.0']
         columns = utils.get_columns(dic)
         obj = to_obj.Subnet(dic)
         data = utils.get_item_properties(
@@ -176,6 +177,7 @@ class CreateSubnet(command.ShowOne):
         parser.add_argument(
             '--dns_nameservers',
             metavar='<ipv4>',
+            type=utils.validate_ipv4,
             action='append',
             help='DNS name server for this subnet. '
                  'You can repeat this option.')
@@ -221,7 +223,11 @@ class CreateSubnet(command.ShowOne):
         if parsed_args.allocation_pools:
             body['subnet']['allocation_pools'] = parsed_args.allocation_pools
         if parsed_args.dns_nameservers:
-            body['subnet']['dns_nameservers'] = parsed_args.dns_nameservers
+            body['subnet']['dns_nameservers'] = [ns for ns in parsed_args.dns_nameservers if ns != '0.0.0.0']
+            if len(body['subnet']['dns_nameservers']) == 0:
+                body['subnet']['dns_nameservers'].append('0.0.0.0')
+        else:
+            body['subnet']['dns_nameservers'] = ['0.0.0.0']
         if parsed_args.ntp_servers:
             body['subnet']['ntp_servers'] = parsed_args.ntp_servers
         if parsed_args.host_routes:
@@ -233,6 +239,7 @@ class CreateSubnet(command.ShowOne):
             body['subnet'].update({'tags': tags})
 
         dic = network_client.create_subnet(body).get('subnet')
+        dic['dns_nameservers'] = [ns for ns in dic['dns_nameservers'] if ns != '0.0.0.0']
         columns = utils.get_columns(dic)
         obj = to_obj.Subnet(dic)
         data = utils.get_item_properties(
@@ -276,9 +283,11 @@ class SetSubnet(command.ShowOne):
         parser.add_argument(
             '--dns_nameservers',
             metavar='<ipv4>',
+            type=utils.validate_ipv4,
             action='append',
             help='DNS name server for this subnet. '
-                 'You can repeat this option.')
+                 'You can repeat this option. '
+                 'Set 0.0.0.0 to disable DNS name server.')
         parser.add_argument(
             '--ntp_servers',
             metavar='<ipv4>',
@@ -318,7 +327,9 @@ class SetSubnet(command.ShowOne):
         if not (parsed_args.enable_dhcp is None):
             body['subnet'].update({'enable_dhcp': parsed_args.enable_dhcp})
         if parsed_args.dns_nameservers:
-            body['subnet']['dns_nameservers'] = parsed_args.dns_nameservers
+            body['subnet']['dns_nameservers'] = [ns for ns in parsed_args.dns_nameservers if ns != '0.0.0.0']
+            if len(body['subnet']['dns_nameservers']) == 0:
+                body['subnet']['dns_nameservers'].append('0.0.0.0')
         if parsed_args.ntp_servers:
             body['subnet']['ntp_servers'] = parsed_args.ntp_servers
         if parsed_args.host_routes:
@@ -331,6 +342,7 @@ class SetSubnet(command.ShowOne):
 
         dic = network_client.update_subnet(
             subnet_id, body=body).get('subnet')
+        dic['dns_nameservers'] = [ns for ns in dic['dns_nameservers'] if ns != '0.0.0.0']
         columns = utils.get_columns(dic)
         obj = to_obj.Subnet(dic)
         data = utils.get_item_properties(
