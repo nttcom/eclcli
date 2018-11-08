@@ -337,15 +337,11 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         parser = super(UpdateVirtualNetworkApplianceInterfaces, self).\
             get_parser(prog_name)
         parser.add_argument(
-            'virtual_network_appliance',
-            metavar='<virtual-network-appliance-id>',
-            help='Name or ID of virtual network appliance')
-
-        parser.add_argument(
-            '--interface',
+            'interface',
             metavar="<slot-no=number,net-id=net-uuid,"
                     "fixed-ips=ip-addr1:ip-addr2...>",
-            action='append',
+            action='store',
+            nargs='+',
             default=[],
             help=_("Specify interface parameter "
                    "for virtual network appliance. "
@@ -355,6 +351,10 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                    "You can specif multiple ip address by using ':' "
                    "(e.g: 1.1.1.1:2.2.2.2:...)")
         )
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance-id>',
+            help='Name or ID of virtual network appliance')
 
         return parser
 
@@ -430,30 +430,30 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         parser = super(UpdateVirtualNetworkApplianceAAPs, self).\
             get_parser(prog_name)
         parser.add_argument(
-            'virtual_network_appliance',
-            metavar='<virtual-network-appliance-id>',
-            help='Name or ID of virtual network appliance')
-
-        parser.add_argument(
-            '--allowed-address-pair',
+            'allowed_address_pair',
             metavar="<interface-slot-no=number,ip-address=ip-addr,"
                     "mac-address=mac-addr,type=type,vrid=vrid>",
-            action='append',
+            action='store',
+            nargs='+',
             default=[],
             help=_("Specify Allowed Address Pair(A.A.P) parameter for "
                    "virtual network appliance. "
-                   "slot-no: sequential number of interface,"
+                   "interface-slot-no: sequential number of interface,"
                    "ip-address: IP address of A.A.P, "
                    "mac-address: MAC address of A.A.P, "
                    "type: Type of A.A.P. You can use 'vrrp' or '', "
                    "vrid: VRID of A.A.P. You can use this only in case vrrp, "
                    "You can specify same slot number multiple times."
-                   "(e.g: --allowed-address-pair slot-no=1,ip-address=1.1.1.1 "
-                   "--allowed-address-pair slot-no=1,ipaddress=2.2.2.2 ...) , "
-                   "In this case, all values relates to slot-no=1 "
+                   "(e.g: interface-slot-no=1,ip-address=1.1.1.1 "
+                   "interface-slot-no=1,ipaddress=2.2.2.2 ...) , "
+                   "In this case, all values relates to interface-slot-no=1 "
                    "will be appended as interface_1.allowed_address_pairs "
                    "list."),
         )
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance-id>',
+            help='Name or ID of virtual network appliance')
 
         return parser
 
