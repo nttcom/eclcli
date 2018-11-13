@@ -3,6 +3,7 @@
 import json
 import json_merge_patch as jmp
 import copy
+import re
 import six
 from eclcli.common import command
 from eclcli.common import exceptions
@@ -342,7 +343,6 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                     "fixed-ips=ip-addr1:ip-addr2...>",
             action='store',
             nargs='+',
-            default=[],
             help=_("Specify interface parameter "
                    "for virtual network appliance. "
                    "slot-no: sequential number of interface,"
@@ -354,6 +354,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         parser.add_argument(
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
+            type=_type_uuid,
             help='Name or ID of virtual network appliance')
 
         return parser
@@ -435,7 +436,6 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
                     "mac-address=mac-addr,type=type,vrid=vrid>",
             action='store',
             nargs='+',
-            default=[],
             help=_("Specify Allowed Address Pair(A.A.P) parameter for "
                    "virtual network appliance. "
                    "interface-slot-no: sequential number of interface,"
@@ -453,6 +453,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         parser.add_argument(
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
+            type=_type_uuid,
             help='Name or ID of virtual network appliance')
 
         return parser
@@ -686,3 +687,11 @@ def _set_interface_names_for_display(data):
     for if_key, if_obj in data.interfaces.items():
        ifs[if_key] = {'name': if_obj['name']}
     setattr(data, 'interface_names', json.dumps(ifs, indent=2))
+
+
+def _type_uuid(uuid):
+    regex = re.compile('^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z', re.I)
+    if not regex.match(uuid):
+        msg = _("%r is not a valid uuid")
+        raise exceptions.CommandError(msg % uuid)
+    return uuid
