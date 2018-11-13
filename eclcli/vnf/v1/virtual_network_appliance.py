@@ -692,6 +692,6 @@ def _set_interface_names_for_display(data):
 def _type_uuid(uuid):
     regex = re.compile('^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z', re.I)
     if not regex.match(uuid):
-        msg = _("You must specify uuid")
-        raise exceptions.CommandError(msg)
+        msg = _("%r is not a valid uuid")
+        raise exceptions.CommandError(msg % uuid)
     return uuid
