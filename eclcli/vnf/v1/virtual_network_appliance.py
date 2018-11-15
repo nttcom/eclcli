@@ -253,15 +253,6 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             help="Description of virtual network appliance",
             metavar='<string>'
         )
-        parser.add_argument(
-            "--interface",
-            metavar="<slot-no=number,name=interface-name>",
-            action="append",
-            help=_("Specify inteface slot number and name "
-                   "for virtual network appliance to update."
-                   "slot-no: sequential number of interface, "
-                   "name: Name of Interface.")
-        )
 
         return parser
 
@@ -276,22 +267,8 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             'ID',
             'Name',
             'Description',
-            'Interface Names',
         ]
         row_headers = rows
-
-        interfaces = []
-        VALID_KEYS = ['slot-no', 'name']
-
-        if parsed_args.interface:
-            for if_str in parsed_args.interface:
-                if_names = {}
-                if_names.update(utils.parse_vna_interface(if_str))
-                for k in if_names.keys():
-                    if k not in VALID_KEYS:
-                        msg = 'Invalid key %s is specified.' % k
-                        raise exceptions.CommandError(msg)
-                interfaces.append(if_names)
 
         # serialize request parmeter as JSON
         requested_param = {}
@@ -299,23 +276,12 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             requested_param['name'] = parsed_args.name
         if hasattr(parsed_args, 'description') and parsed_args.description is not None:
             requested_param['description'] = parsed_args.description
-        for interface in interfaces:
-            if 'interfaces' not in requested_param:
-                requested_param['interfaces'] = {}
-            slot_no = interface.get('slot-no')
-            if_key = 'interface_%s' % slot_no
-            name = interface.get('name')
-            each_if_info = {}
-            if name:
-                each_if_info.update({'name': name})
-            requested_param['interfaces'].update({if_key: each_if_info})
 
         # serialize current parmeter as JSON
         current_param = {
             'name': target.name,
             'description': target.description,
         }
-        current_param['interfaces'] = copy.deepcopy(target.interfaces)
         origin_param = copy.deepcopy(current_param)
         merged_param = jmp.merge(current_param, requested_param)
         patch = jmp.create_patch(origin_param, merged_param)
@@ -339,13 +305,19 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             get_parser(prog_name)
         parser.add_argument(
             'interface',
-            metavar="<slot-no=number,net-id=net-uuid,"
+            metavar="<slot-no=number,name=interface-name,"
+                    "description=interface-description,"
+                    "tags=tags,net-id=net-uuid,"
                     "fixed-ips=ip-addr1:ip-addr2...>",
             action='store',
             nargs='+',
             help=_("Specify interface parameter "
                    "for virtual network appliance. "
                    "slot-no: sequential number of interface,"
+                   "name: Name of the interface,"
+                   "description: Description of the interface,"
+                   "tags: Tags of the interface,"
+                   "      (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )"
                    "net-id: attach interface to network with this UUID, "
                    "fixed-ips: IPv4 fixed address for NIC. "
                    "You can specif multiple ip address by using ':' "
@@ -370,20 +342,26 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         row_headers = rows
 
         interfaces = []
-        VALID_KEYS = ['slot-no', 'net-id', 'fixed-ips']
+        VALID_KEYS = ['slot-no', 'name', 'description', 'tags', 'net-id', 'fixed-ips']
         for if_str in parsed_args.interface:
             # if_info = {"net-id": "", "fixed-ips": "",
             #            "slot-no": ""}
             if_info = {}
-            if_info.update(utils.parse_vna_interface(if_str))
-            for k in if_info.keys():
-                if k not in VALID_KEYS:
-                    msg = 'Invalid key %s is specified.' % k
-                    raise exceptions.CommandError(msg)
+            if_info.update(utils.parse_vna_interface(if_str, VALID_KEYS))
 
             interfaces.append(if_info)
 
+        # conflict interfaces
+        tmp_interfaces = []
+        for interface in interfaces:
+            tmp_interfaces.append(interface.get('slot_no'))
+
+        if len(tmp_interfaces) != len(set(tmp_interfaces)):
+            msg = _("Interfaces are duplicates")
+            raise exceptions.CommandError(msg)
+
         requested_interface_object = {}
+        tag_flag = False
         for interface in interfaces:
             slot_no = interface.get('slot-no')
             if_key = 'interface_' + str(slot_no)
@@ -392,6 +370,26 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             fixed_ips_tmp = interface.get('fixed-ips')
 
             each_if_info = {}
+
+            if 'name' in interface:
+                name = interface.get('name', '')
+                each_if_info.update({'name': name})
+
+            if 'description' in interface:
+                description = interface.get('description', '')
+                each_if_info.update({'description': description})
+
+            if 'tags' in interface:
+                tag_flag = True
+                tags = interface.get('tags')
+                tags = tags if tags else '{}'
+                try:
+                    obj = json.loads(tags)
+                except Exception:
+                    msg = _("You must specify JSON object format")
+                    raise exceptions.CommandError(msg)
+
+                each_if_info.update({'tags': obj})
 
             if network_id:
                 each_if_info.update({'network_id': network_id})
@@ -412,11 +410,32 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         patch = jmp.create_patch(target.interfaces,
                                  merged_interface_object)
 
-        patch = {'interfaces': patch}
-        if not patch:
+        if patch == {} and tag_flag == False:
             msg = _('No change will be expected')
             raise exceptions.CommandError(msg)
 
+        # ridding keys of unnecessary keys
+        def __ridding_none_value(current, json_keys):
+            for json_key in json_keys:
+                if type(current) == 'dict':
+                    next_current = tmp_current = current[json_key]
+                    if tmp_current is None:
+                        del current[json_key]
+                    else:
+                        next_keys = tmp_current.keys()
+                        if len(next_keys) > 0:
+                            current[json_key] = __ridding_none_value(next_current, next_keys)
+            return current
+        if len(patch.keys()) > 0:
+            patch = __ridding_none_value(patch, patch.keys())
+
+        # replacing patched tags with requested tags
+        for if_key in requested_interface_object.keys():
+            interface = requested_interface_object[if_key]
+            if 'tags' in interface:
+                patch[if_key] = {'tags': interface.get('tags')}
+
+        patch = {'interfaces': patch}
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
 
@@ -472,12 +491,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
         for aap_str in parsed_args.allowed_address_pair:
             aap_info = {}
-            aap_info.update(utils.parse_vna_interface(aap_str))
-
-            for k in aap_info.keys():
-                if k not in VALID_KEYS:
-                    msg = 'Invalid key %s is specified.' % k
-                    raise exceptions.CommandError(msg)
+            aap_info.update(utils.parse_vna_interface(aap_str, VALID_KEYS))
 
             aaps.append(aap_info)
 

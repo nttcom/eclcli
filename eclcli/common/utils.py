@@ -2,6 +2,7 @@ import getpass
 import ipaddress
 import logging
 import os
+import re
 import six
 import time
 
@@ -404,7 +405,7 @@ def filter_list_with_property(datalist, attribute, value):
     return postfilter
 
 
-def parse_vna_interface(text):
+def parse_vna_interface(text, valid_keys):
     """parse vna interface text
 
     :param text: not in one of the following format
@@ -413,10 +414,22 @@ def parse_vna_interface(text):
               slot-no=number,net-id=net-uuid,fixed-ips=ip-addr1:ip-addr2...
               interface-slot-no=number,ip-address=ip-addr, \
                      mac-address=mac-addr,type=type,vrid=vrid
+    :param valid_keys: keys of the vna interface 
     :return:
     """
     try:
-        return dict(kv_str.split("=", 1) for kv_str in text.split(","))
+        params = {}
+        pattern_valid_keys = r'(%s)' % '|'.join(map(lambda x: x + '=', valid_keys))
+        match_keys = re.findall(pattern_valid_keys, text)
+        tmp_text = re.sub(r'\\t', '', text)
+        match_values = re.sub(pattern_valid_keys, '\t', tmp_text).split('\t')
+        for index, key in enumerate(match_keys):
+            params[key.strip('=')] = match_values[index + 1].rstrip(',')
+
+        if len(params) == 0:
+            raise ValueError
+
+        return params
     except ValueError:
         msg = "%r is not in the format of " \
               " net-id=net-uuid,ip-address=ip-addr,name=interface-name, or," \
