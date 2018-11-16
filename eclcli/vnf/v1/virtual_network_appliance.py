@@ -354,7 +354,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         # conflict interfaces
         tmp_interfaces = []
         for interface in interfaces:
-            tmp_interfaces.append(interface.get('slot_no'))
+            tmp_interfaces.append(interface.get('slot-no'))
 
         if len(tmp_interfaces) != len(set(tmp_interfaces)):
             msg = _("Interfaces are duplicates")
