@@ -354,7 +354,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         # conflict interfaces
         tmp_interfaces = []
         for interface in interfaces:
-            tmp_interfaces.append(interface.get('slot_no'))
+            tmp_interfaces.append(interface.get('slot-no'))
 
         if len(tmp_interfaces) != len(set(tmp_interfaces)):
             msg = _("Interfaces are duplicates")
@@ -450,30 +450,37 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         parser = super(UpdateVirtualNetworkApplianceAAPs, self).\
             get_parser(prog_name)
         parser.add_argument(
-            'allowed_address_pair',
-            metavar="<interface-slot-no=number,ip-address=ip-addr,"
-                    "mac-address=mac-addr,type=type,vrid=vrid>",
-            action='store',
-            nargs='+',
-            help=_("Specify Allowed Address Pair(A.A.P) parameter for "
-                   "virtual network appliance. "
-                   "interface-slot-no: sequential number of interface,"
-                   "ip-address: IP address of A.A.P, "
-                   "mac-address: MAC address of A.A.P, "
-                   "type: Type of A.A.P. You can use 'vrrp' or '', "
-                   "vrid: VRID of A.A.P. You can use this only in case vrrp, "
-                   "You can specify same slot number multiple times."
-                   "(e.g: interface-slot-no=1,ip-address=1.1.1.1 "
-                   "interface-slot-no=1,ipaddress=2.2.2.2 ...) , "
-                   "In this case, all values relates to interface-slot-no=1 "
-                   "will be appended as interface_1.allowed_address_pairs "
-                   "list."),
-        )
+            '--add',
+            metavar="<interface-slot-no=number,ip-address=ip-addr," \
+                "mac-address=mac-addr,type=type,vrid=vrid>",
+            action='append',
+            nargs='?',
+            dest='adds',
+            help= _("Specify Allowed Address Pair(A.A.P) parameter for "
+                "virtual network appliance. "
+                "interface-slot-no: sequential number of interface,"
+                "ip-address: IP address of A.A.P, "
+                "mac-address: MAC address of A.A.P, "
+                "type: Type of A.A.P. You can use 'vrrp' or '', "
+                "vrid: VRID of A.A.P. You can use this only in case vrrp, "
+                "You can specify same slot number multiple times."
+                "(e.g: interface-slot-no=1,ip-address=1.1.1.1 "
+                "interface-slot-no=1,ipaddress=2.2.2.2 ...) , "
+                "In this case, all values relates to interface-slot-no=1 "
+                "will be appended as interface_1.allowed_address_pairs "
+                "list."))
+        parser.add_argument(
+            '--delete',
+            metavar='<interface-slot-no>',
+            action='append',
+            nargs='?',
+            dest='deletes',
+            help=_('interface-slot-no: sequential number of interface'))
         parser.add_argument(
             'virtual_network_appliance',
             metavar='<virtual-network-appliance-id>',
             type=_type_uuid,
-            help='Name or ID of virtual network appliance')
+            help=_('Name or ID of virtual network appliance'))
 
         return parser
 
@@ -488,12 +495,39 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         row_headers = rows
 
         aaps = []
+        adds = parsed_args.adds or []
+        delete_aaps = []
+        deletes = parsed_args.deletes or []
+
+        if len(adds) == 0 and len(deletes) == 0:
+            msg = _("No options are specified.")
+            raise exceptions.CommandError(msg)
+            
         VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
-        for aap_str in parsed_args.allowed_address_pair:
+        for aap_str in adds:
             aap_info = {}
             aap_info.update(utils.parse_vna_interface(aap_str, VALID_KEYS))
-
             aaps.append(aap_info)
+
+        for aap_str in deletes:
+            slot_no = re.sub(r'^interface-slot-no=(\d+)$', '\\1', aap_str)
+            if not re.match(r'^\d+$', slot_no):
+                msg = 'No interface number is specified.'
+                raise exceptions.CommandError(msg)
+
+            delete_aaps.append(slot_no)
+
+        # duplicate interfaces check
+        tmp_aaps = []
+        for aap in aaps:
+            tmp_aaps.append(aap.get('interface-slot-no'))
+
+        for slot_no in delete_aaps:
+            tmp_aaps.append(slot_no)
+
+        if len(tmp_aaps) != len(set(tmp_aaps)):
+            msg = _("Interfaces are duplicates")
+            raise exceptions.CommandError(msg)
 
         requested_aap_object = {}
         for aap in aaps:
@@ -541,6 +575,10 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
                 msg = 'mac_address and vrrp type cannot be set ' \
                       'at the same time.'
                 raise exceptions.CommandError(msg)
+
+        for slot_no in delete_aaps:
+            if_key = 'interface_' + slot_no
+            requested_aap_object[if_key] = {'allowed_address_pairs': []}
 
         current_interface_object = copy.deepcopy(target.interfaces)
         merged_interface_object = jmp.merge(current_interface_object,
