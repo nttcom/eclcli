@@ -435,7 +435,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         for if_key in requested_interface_object.keys():
             interface = requested_interface_object[if_key]
             if 'tags' in interface:
-                patch[if_key] = {'tags': interface.get('tags')}
+                patch[if_key]['tags'] = interface.get('tags')
 
         patch = {'interfaces': patch}
         data = vnf_client.update_virtual_network_appliance(
