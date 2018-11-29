@@ -446,12 +446,14 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
                 each_if_info.update({'tags': obj})
 
-            if network_id:
+            if 'net-id' in interface:
                 each_if_info.update({'network_id': network_id})
 
-            if fixed_ips_tmp:
-                fixed_ips = [{'ip_address': ip}
-                             for ip in fixed_ips_tmp.split(':')]
+            if 'fixed-ips' in interface:
+                fixed_ips = []
+                if fixed_ips_tmp:
+                    fixed_ips = [{'ip_address': ip}
+                        for ip in fixed_ips_tmp.split(':')]
                 each_if_info.update({'fixed_ips': fixed_ips})
 
             interface_tmp = {
