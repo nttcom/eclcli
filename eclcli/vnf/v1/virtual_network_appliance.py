@@ -99,7 +99,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             '--interface',
-            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name>",
+            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name,"
+                    "description=interface-description,tags=interface-tags>",
             action='append',
             default=[],
             help=_("Specify interface parameter for "
@@ -109,7 +110,10 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                    "net-id: attach interface to network with this UUID, "
                    "ip-address: IPv4 fixed address for interface. "
                    "(You can specify only one address in creation), "
-                   "name: Name of Interface (optional)."),
+                   "name: Name of Interface (optional)."
+                   "description: Description of the interface,"
+                   "tags: Tags of the interface,"
+                   "      (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )"),
         )
 
         parser.add_argument(
@@ -122,6 +126,13 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             '--description',
             metavar='<description>',
             help=_('Description of virtual network appliance'),
+        )
+
+        parser.add_argument(
+            "--tags",
+            help="Tags of virtual network appliance" \
+                " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
+            metavar='<string>'
         )
 
         parser.add_argument(
@@ -165,10 +176,14 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             raise exceptions.CommandError(msg)
 
         interfaces = []
+        VALID_KEYS = ['net-id', 'ip-address', 'name', 'description', 'tags']
         for if_str in parsed_args.interface:
             if_info = {}
-            if_info.update(utils.parse_vna_interface(if_str))
-            if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
+            if_info.update(utils.parse_vna_interface(if_str, VALID_KEYS))
+            try:
+                if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
+                    raise
+            except Exception:
                 msg = _("You must specify network uuid and ip address both")
                 raise exceptions.CommandError(msg)
 
@@ -187,8 +202,23 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                     ]
                 }
             }
-            if interface['name']:
-                tmp[if_key].update({'name': interface['name']})
+            if 'name' in interface:
+                name = interface.get('name', '')
+                tmp[if_key].update({'name': name})
+
+            if 'description' in interface:
+                description = interface.get('description', '')
+                tmp[if_key].update({'description': description})
+
+            if 'tags' in interface:
+                interface_tags = interface.get('tags') or '{}'
+                try:
+                    obj = json.loads(interface_tags)
+                except Exception:
+                    msg = _("You must specify JSON object format")
+                    raise exceptions.CommandError(msg)
+
+                tmp[if_key].update({'tags': obj})
 
             interface_object.update(tmp)
             if_num += 1
@@ -200,6 +230,12 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         description = parsed_args.description
         default_gateway = parsed_args.default_gateway
         zone = parsed_args.availability_zone
+        tags = parsed_args.tags or '{}'
+        try:
+            tags = json.loads(tags)
+        except Exception:
+            msg = _("You must specify JSON object format")
+            raise exceptions.CommandError(msg)        
 
         data = client.create_virtual_network_appliance(
             virtual_network_appliance_plan_id=plan_id,
@@ -208,6 +244,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             description=description,
             default_gateway=default_gateway,
             availability_zone=zone,
+            tags=tags,
         )
 
         return (row_headers, utils.get_item_properties(data, rows))
@@ -253,6 +290,12 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             help="Description of virtual network appliance",
             metavar='<string>'
         )
+        parser.add_argument(
+            "--tags",
+            help="Tags of virtual network appliance" \
+                " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
+            metavar='<string>'
+        )
 
         return parser
 
@@ -267,6 +310,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             'ID',
             'Name',
             'Description',
+            'Tags'
         ]
         row_headers = rows
 
@@ -276,15 +320,26 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             requested_param['name'] = parsed_args.name
         if hasattr(parsed_args, 'description') and parsed_args.description is not None:
             requested_param['description'] = parsed_args.description
+        if hasattr(parsed_args, 'tags') and parsed_args.tags is not None:
+            tags = parsed_args.tags or '{}'
+            try:
+                requested_param['tags'] = json.loads(tags)
+            except Exception:
+                msg = _("You must specify JSON object format")
+                raise exceptions.CommandError(msg)
 
         # serialize current parmeter as JSON
         current_param = {
             'name': target.name,
             'description': target.description,
+            'tags': target.tags,
         }
         origin_param = copy.deepcopy(current_param)
         merged_param = jmp.merge(current_param, requested_param)
         patch = jmp.create_patch(origin_param, merged_param)
+
+        if target.tags != requested_param['tags']:
+            patch[tags] = requested_param['tags']
 
         if not patch:
             msg = _('No change will be expected')
@@ -307,7 +362,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             'interface',
             metavar="<slot-no=number,name=interface-name,"
                     "description=interface-description,"
-                    "tags=tags,net-id=net-uuid,"
+                    "tags=interface-tags,net-id=net-uuid,"
                     "fixed-ips=ip-addr1:ip-addr2...>",
             action='store',
             nargs='+',
