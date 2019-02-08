@@ -157,6 +157,11 @@ class ShowRecordSet(command.ShowOne):
             metavar="<record_id_or_name>",
             help="ID or name of the recordset you want to show.",
         )
+        parser.add_argument(
+            "--paginated",
+            action='store_true',
+            help="True or False (default is False). Set True for get more 100 items",
+        )
         return parser
 
     def take_action(self, parsed_args):
@@ -176,7 +181,7 @@ class ShowRecordSet(command.ShowOne):
             'updated_at',
             'links',
         ]
-        recordset = dns_client.find_recordset(parsed_args.zone_id, parsed_args.recordset_id_or_name)
+        recordset = dns_client.find_recordset(parsed_args.zone_id, parsed_args.recordset_id_or_name, paginated=parsed_args.paginated)
 
         return (row, utils.get_item_properties(recordset, row))
 
