@@ -157,7 +157,8 @@ class CreateStack(show.ShowOne):
             'parameters': parameters,
             'template': template,
             'files': dict(list(tpl_files.items()) + list(env_files.items())),
-            'environment': env
+            'environment': env,
+            'password': self.app_args.os_password,
         }
 
         if parsed_args.tags:
@@ -319,7 +320,8 @@ class UpdateStack(show.ShowOne):
             'existing': parsed_args.existing,
             'template': template,
             'files': dict(list(tpl_files.items()) + list(env_files.items())),
-            'environment': env
+            'environment': env,
+            'password': self.app_args.os_password,
         }
 
         if parsed_args.tags:
