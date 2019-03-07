@@ -347,6 +347,31 @@ def validate_ipv4(text):
         raise exceptions.CommandError(msg % text)
     return text
 
+def validate_int_range(val, attr_name, min_value=None, max_value=None):
+    try:
+        if not isinstance(val, int):
+            int_val = int(val, 0)
+        else:
+            int_val = val
+        if ((min_value is None or min_value <= int_val) and
+                (max_value is None or int_val <= max_value)):
+            return
+    except (ValueError, TypeError):
+        pass
+
+    if min_value is not None and max_value is not None:
+        msg = "%s \"%s\" should be an integer [%i-%i]." % (attr_name.replace("_", "-"), val, min_value, max_value)
+    elif min_value is not None:
+        msg = "%s \"%s\" should be an integer greater than or equal to %i." \
+              % (attr_name.replace("_", "-"), val, min_value)
+    elif max_value is not None:
+        msg = "%s \"%s\" should be an integer smaller than or equal to %i." \
+              % (attr_name.replace("_", "-"), val, max_value)
+    else:
+        msg = "%s \"%s\" should be an integer." % (attr_name.replace("_", "-"), val)
+
+    raise exceptions.CommandError(msg)
+
 def parse_host_routes(text):
     if not text:
         return {}

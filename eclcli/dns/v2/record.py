@@ -189,12 +189,30 @@ class ListRecordSet(command.Lister):
             metavar="<zone_id>",
             help="ID of the zone which recordset you want to list belong to.",
         )
+        parser.add_argument(
+            "--limit",
+            metavar="<limit>",
+            type=int,
+            default=None,
+            help="The number of record sets that you want to display."
+                 "Values range from 1 to 500. (default=100)",
+        )
+        parser.add_argument(
+            "--marker",
+            metavar="<marker>",
+            default=None,
+            help="Specify the ID for the resource."
+                 "It is displayed from the next record of the specified ID.",
+        )
         return parser
 
     def take_action(self, parsed_args):
+        if parsed_args.limit is not None:
+            utils.validate_int_range(parsed_args.limit, "--limit", 1, 500)
+
         dns_client = self.app.eclsdk.conn.dns
 
-        recordsets = dns_client.recordsets(parsed_args.zone_id)
+        recordsets = dns_client.recordsets(parsed_args.zone_id, parsed_args.limit, parsed_args.marker)
 
         columns = [
             'id',
