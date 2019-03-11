@@ -15,9 +15,12 @@
 
 """Record action implementations"""
 
+import re
 
 from eclcli.common import command
+from eclcli.common import exceptions
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class CreateRecordSet(command.Lister):
@@ -187,12 +190,13 @@ class ListRecordSet(command.Lister):
         parser.add_argument(
             "zone_id",
             metavar="<zone_id>",
+            type=_type_uuid,
             help="ID of the zone which recordset you want to list belong to.",
         )
         parser.add_argument(
             "--limit",
             metavar="<limit>",
-            type=int,
+            type=call_limit_validate_int_range,
             default=None,
             help="The number of record sets that you want to display."
                  "Values range from 1 to 500. (default=100)",
@@ -200,6 +204,7 @@ class ListRecordSet(command.Lister):
         parser.add_argument(
             "--marker",
             metavar="<marker>",
+            type=_type_uuid,
             default=None,
             help="Specify the ID for the resource."
                  "It is displayed from the next record of the specified ID.",
@@ -207,9 +212,6 @@ class ListRecordSet(command.Lister):
         return parser
 
     def take_action(self, parsed_args):
-        if parsed_args.limit is not None:
-            utils.validate_int_range(parsed_args.limit, "--limit", 1, 500)
-
         dns_client = self.app.eclsdk.conn.dns
 
         recordsets = dns_client.recordsets(parsed_args.zone_id, parsed_args.limit, parsed_args.marker)
@@ -302,3 +304,15 @@ class UpdateRecordSet(command.ShowOne):
         ]
 
         return (row, utils.get_item_properties(recordset, row))
+
+
+def call_limit_validate_int_range(text):
+    return utils.validate_int_range(text, 1, 500)
+
+
+def _type_uuid(uuid):
+    regex = re.compile("^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z", re.I)
+    if not regex.match(uuid):
+        msg = _("%r is not a valid uuid")
+        raise exceptions.CommandError(msg % uuid)
+    return uuid
