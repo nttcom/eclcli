@@ -349,13 +349,11 @@ def validate_ipv4(text):
 
 def validate_int_range(text, min_val, max_val):
     try:
-        if not isinstance(text, int):
-            int_text = int(text, 0)
-        else:
-            int_text = text
+        int_text = int(text)
+
         if min_val <= int_text <= max_val:
             return int_text
-    except (ValueError, TypeError):
+    except ValueError:
         pass
 
     msg = "%s should be an integer [%i-%i]." % (text, min_val, max_val)
