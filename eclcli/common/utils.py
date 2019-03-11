@@ -358,7 +358,7 @@ def validate_int_range(text, min_val, max_val):
     if min_val <= int_text <= max_val:
         return int_text
 
-    msg = "%s should be an [%i-%i]." % (text, min_val, max_val)
+    msg = "%s is out of range[%i-%i]." % (text, min_val, max_val)
     raise exceptions.CommandError(msg)
 
 
