@@ -347,6 +347,21 @@ def validate_ipv4(text):
         raise exceptions.CommandError(msg % text)
     return text
 
+
+def validate_int_range(text, min_val, max_val):
+    try:
+        int_text = int(text)
+    except ValueError:
+        msg = "%s is not an integer." % text
+        raise exceptions.CommandError(msg)
+
+    if min_val <= int_text <= max_val:
+        return int_text
+
+    msg = "%s is out of range[%i-%i]." % (text, min_val, max_val)
+    raise exceptions.CommandError(msg)
+
+
 def parse_host_routes(text):
     if not text:
         return {}
