@@ -352,7 +352,7 @@ def validate_int_range(text, min_val, max_val):
     try:
         int_text = int(text)
     except ValueError:
-        msg = "%s should be an integer." % text
+        msg = "%s is not an integer." % text
         raise exceptions.CommandError(msg)
 
     if min_val <= int_text <= max_val:
