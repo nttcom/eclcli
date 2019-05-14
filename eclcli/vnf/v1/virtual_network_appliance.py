@@ -15,12 +15,15 @@ ROWS_FOR_SHOW = [
     'ID',
     'Name',
     'Description',
+    'Tags',
     'Virtual Network Appliance Plan',
     'Appliance Type',
+    'Availability Zone',
     'OS Monitoring Status',
     'OS Login Status',
     'VM Status',
-    'Interfaces'
+    'Operation Status',
+    'Interfaces',
 ]
 
 
@@ -36,10 +39,15 @@ class ListVirtualNetworkAppliance(command.Lister):
         columns = [
             'ID',
             'Name',
+            'Description',
+            'Tags',
             'Virtual Network Appliance Plan',
+            'Appliance Type',
+            'Availability Zone',
             'OS Monitoring Status',
             'OS Login Status',
             'VM Status',
+            'Operation Status',
         ]
         column_headers = copy.deepcopy(columns)
 
@@ -157,12 +165,18 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             'ID',
             'Name',
             'Description',
+            'Tags',
+            'Virtual Network Appliance Plan',
             'Appliance Type',
+            'Default Gateway',
+            'Availability Zone',
             'OS Monitoring Status',
             'OS Login Status',
             'VM Status',
+            'Operation Status',
             'Username',
             'Password',
+            'Interfaces',
         ]
         row_headers = rows
 
@@ -247,6 +261,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             tags=tags,
         )
 
+        _set_interfaces_for_display(data)
+
         return (row_headers, utils.get_item_properties(data, rows))
 
 
@@ -306,12 +322,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
-        rows = [
-            'ID',
-            'Name',
-            'Description',
-            'Tags'
-        ]
+        rows = ROWS_FOR_SHOW
         row_headers = rows
 
         # serialize request parmeter as JSON
