@@ -10,7 +10,6 @@ from eclcli.common import exceptions
 from eclcli.common import utils
 from eclcli.i18n import _  # noqa
 
-
 ROWS_FOR_SHOW = [
     'ID',
     'Name',
@@ -25,6 +24,10 @@ ROWS_FOR_SHOW = [
     'Operation Status',
     'Interfaces',
 ]
+
+
+UUID_PATTERN = '^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-' \
+               '?[a-f0-9]{12}$'
 
 
 class ListVirtualNetworkAppliance(command.Lister):
@@ -92,13 +95,13 @@ class ShowVirtualNetworkAppliance(command.ShowOne):
 
         _set_interfaces_for_display(data)
 
-        return (row_headers, (utils.get_item_properties(data, rows)))
+        return row_headers, (utils.get_item_properties(data, rows))
 
 
 class CreateVirtualNetworkAppliance(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(CreateVirtualNetworkAppliance, self).\
+        parser = super(CreateVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance_plan_id',
@@ -138,8 +141,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             "--tags",
-            help="Tags of virtual network appliance" \
-                " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
+            help="Tags of virtual network appliance"
+                 " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
             metavar='<string>'
         )
 
@@ -190,12 +193,13 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             raise exceptions.CommandError(msg)
 
         interfaces = []
-        VALID_KEYS = ['net-id', 'ip-address', 'name', 'description', 'tags']
+        valid_keys = ['net-id', 'ip-address', 'name', 'description', 'tags']
         for if_str in parsed_args.interface:
             if_info = {}
-            if_info.update(utils.parse_vna_interface(if_str, VALID_KEYS))
+            if_info.update(utils.parse_vna_interface(if_str, valid_keys))
             try:
-                if not bool(if_info["net-id"]) or not bool(if_info["ip-address"]):
+                if not bool(if_info["net-id"]) or \
+                        not bool(if_info["ip-address"]):
                     raise
             except Exception:
                 msg = _("You must specify network uuid and ip address both")
@@ -268,13 +272,13 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         _set_interfaces_for_display(data)
 
-        return (row_headers, utils.get_item_properties(data, rows))
+        return row_headers, utils.get_item_properties(data, rows)
 
 
 class DeleteVirtualNetworkAppliance(command.Command):
 
     def get_parser(self, prog_name):
-        parser = super(DeleteVirtualNetworkAppliance, self).\
+        parser = super(DeleteVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             "virtual_network_appliance_id",
@@ -295,7 +299,7 @@ class DeleteVirtualNetworkAppliance(command.Command):
 class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(UpdateVirtualNetworkApplianceMetaData, self).\
+        parser = super(UpdateVirtualNetworkApplianceMetaData, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -313,8 +317,8 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         )
         parser.add_argument(
             "--tags",
-            help="Tags of virtual network appliance" \
-                " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
+            help="Tags of virtual network appliance"
+                 " (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )",
             metavar='<string>'
         )
 
@@ -323,8 +327,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
     def take_action(self, parsed_args):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
-        target = vnf_client.\
-            get_virtual_network_appliance(
+        target = vnf_client.get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
         rows = ROWS_FOR_SHOW
@@ -334,7 +337,8 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         requested_param = {}
         if hasattr(parsed_args, 'name') and parsed_args.name is not None:
             requested_param['name'] = parsed_args.name
-        if hasattr(parsed_args, 'description') and parsed_args.description is not None:
+        if hasattr(parsed_args, 'description') and \
+                parsed_args.description is not None:
             requested_param['description'] = parsed_args.description
         if hasattr(parsed_args, 'tags') and parsed_args.tags is not None:
             tags = parsed_args.tags or '{}'
@@ -354,8 +358,8 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         merged_param = jmp.merge(current_param, requested_param)
         patch = jmp.create_patch(origin_param, merged_param)
 
-        if target.tags != requested_param['tags']:
-            patch[tags] = requested_param['tags']
+        if 'tags' in requested_param and requested_param['tags'] != target.tags:
+            patch['tags'] = requested_param['tags']
 
         if not patch:
             msg = _('No change will be expected')
@@ -369,7 +373,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
             data.virtual_network_appliance_plan_id)
         setattr(data, 'virtual_network_appliance_plan', plan.name)
 
-        _set_interface_names_for_display(data)
+        _set_interfaces_for_display(data)
 
         return row_headers, utils.get_item_properties(data, rows)
 
@@ -377,7 +381,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(UpdateVirtualNetworkApplianceInterfaces, self).\
+        parser = super(UpdateVirtualNetworkApplianceInterfaces, self). \
             get_parser(prog_name)
         parser.add_argument(
             'interface',
@@ -410,20 +414,20 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
     def take_action(self, parsed_args):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
-        target = vnf_client.\
-            get_virtual_network_appliance(
+        target = vnf_client.get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
         rows = ROWS_FOR_SHOW
         row_headers = rows
 
         interfaces = []
-        VALID_KEYS = ['slot-no', 'name', 'description', 'tags', 'net-id', 'fixed-ips']
+        valid_keys = ['slot-no', 'name', 'description', 'tags', 'net-id',
+                      'fixed-ips']
         for if_str in parsed_args.interface:
             # if_info = {"net-id": "", "fixed-ips": "",
             #            "slot-no": ""}
             if_info = {}
-            if_info.update(utils.parse_vna_interface(if_str, VALID_KEYS))
+            if_info.update(utils.parse_vna_interface(if_str, valid_keys))
 
             interfaces.append(if_info)
 
@@ -474,7 +478,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                 fixed_ips = []
                 if fixed_ips_tmp:
                     fixed_ips = [{'ip_address': ip}
-                        for ip in fixed_ips_tmp.split(':')]
+                                 for ip in fixed_ips_tmp.split(':')]
                 each_if_info.update({'fixed_ips': fixed_ips})
 
             interface_tmp = {
@@ -488,7 +492,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         patch = jmp.create_patch(target.interfaces,
                                  merged_interface_object)
 
-        if patch == {} and tag_flag == False:
+        if patch == {} and tag_flag is False:
             msg = _('No change will be expected')
             raise exceptions.CommandError(msg)
 
@@ -502,8 +506,10 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                     else:
                         next_keys = tmp_current.keys()
                         if len(next_keys) > 0:
-                            current[json_key] = __ridding_none_value(next_current, next_keys)
+                            current[json_key] = __ridding_none_value(
+                                next_current, next_keys)
             return current
+
         if len(patch.keys()) > 0:
             patch = __ridding_none_value(patch, patch.keys())
 
@@ -524,34 +530,34 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
         _set_interfaces_for_display(data)
 
-        return (row_headers, utils.get_item_properties(data, rows))
+        return row_headers, utils.get_item_properties(data, rows)
 
 
 class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(UpdateVirtualNetworkApplianceAAPs, self).\
+        parser = super(UpdateVirtualNetworkApplianceAAPs, self). \
             get_parser(prog_name)
         parser.add_argument(
             '--add',
-            metavar="<interface-slot-no=number,ip-address=ip-addr," \
-                "mac-address=mac-addr,type=type,vrid=vrid>",
+            metavar="<interface-slot-no=number,ip-address=ip-addr,"
+                    "mac-address=mac-addr,type=type,vrid=vrid>",
             action='append',
             nargs='?',
             dest='adds',
-            help= _("Specify Allowed Address Pair(A.A.P) parameter for "
-                "virtual network appliance. "
-                "interface-slot-no: sequential number of interface,"
-                "ip-address: IP address of A.A.P, "
-                "mac-address: MAC address of A.A.P, "
-                "type: Type of A.A.P. You can use 'vrrp' or '', "
-                "vrid: VRID of A.A.P. You can use this only in case vrrp, "
-                "You can specify same slot number multiple times."
-                "(e.g: interface-slot-no=1,ip-address=1.1.1.1 "
-                "interface-slot-no=1,ipaddress=2.2.2.2 ...) , "
-                "In this case, all values relates to interface-slot-no=1 "
-                "will be appended as interface_1.allowed_address_pairs "
-                "list."))
+            help=_("Specify Allowed Address Pair(A.A.P) parameter for "
+                   "virtual network appliance. "
+                   "interface-slot-no: sequential number of interface,"
+                   "ip-address: IP address of A.A.P, "
+                   "mac-address: MAC address of A.A.P, "
+                   "type: Type of A.A.P. You can use 'vrrp' or '', "
+                   "vrid: VRID of A.A.P. You can use this only in case vrrp, "
+                   "You can specify same slot number multiple times."
+                   "(e.g: interface-slot-no=1,ip-address=1.1.1.1 "
+                   "interface-slot-no=1,ipaddress=2.2.2.2 ...) , "
+                   "In this case, all values relates to interface-slot-no=1 "
+                   "will be appended as interface_1.allowed_address_pairs "
+                   "list."))
         parser.add_argument(
             '--delete',
             metavar='<interface-slot-no>',
@@ -570,8 +576,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
     def take_action(self, parsed_args):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
-        target = vnf_client.\
-            get_virtual_network_appliance(
+        target = vnf_client.get_virtual_network_appliance(
             parsed_args.virtual_network_appliance)
 
         rows = ROWS_FOR_SHOW
@@ -586,10 +591,11 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
             msg = _("No options are specified.")
             raise exceptions.CommandError(msg)
 
-        VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
+        valid_keys = ['interface-slot-no', 'ip-address', 'mac-address', 'type',
+                      'vrid']
         for aap_str in adds:
             aap_info = {}
-            aap_info.update(utils.parse_vna_interface(aap_str, VALID_KEYS))
+            aap_info.update(utils.parse_vna_interface(aap_str, valid_keys))
             aaps.append(aap_info)
 
         for aap_str in deletes:
@@ -651,7 +657,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
                     msg = 'vrid should be a positive number 1〜255'
                     raise exceptions.CommandError(msg)
 
-            requested_aap_object[if_key]['allowed_address_pairs'].\
+            requested_aap_object[if_key]['allowed_address_pairs']. \
                 append(each_aap_info)
 
             if mac_address and (aap_type == "vrrp" or vrid):
@@ -690,7 +696,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 class StartVirtualNetworkAppliance(command.Command):
 
     def get_parser(self, prog_name):
-        parser = super(StartVirtualNetworkAppliance, self).\
+        parser = super(StartVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -704,14 +710,14 @@ class StartVirtualNetworkAppliance(command.Command):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
         for virtual_network_appliance in parsed_args.virtual_network_appliance:
-            vnf_client.\
-                start_virtual_network_appliance(virtual_network_appliance)
+            vnf_client.start_virtual_network_appliance(
+                virtual_network_appliance)
 
 
 class StopVirtualNetworkAppliance(command.Command):
 
     def get_parser(self, prog_name):
-        parser = super(StopVirtualNetworkAppliance, self).\
+        parser = super(StopVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -725,14 +731,14 @@ class StopVirtualNetworkAppliance(command.Command):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
         for virtual_network_appliance in parsed_args.virtual_network_appliance:
-            vnf_client.\
-                stop_virtual_network_appliance(virtual_network_appliance)
+            vnf_client.stop_virtual_network_appliance(
+                virtual_network_appliance)
 
 
 class RestartVirtualNetworkAppliance(command.Command):
 
     def get_parser(self, prog_name):
-        parser = super(RestartVirtualNetworkAppliance, self).\
+        parser = super(RestartVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -746,14 +752,14 @@ class RestartVirtualNetworkAppliance(command.Command):
         vnf_client = self.app.eclsdk.conn.virtual_network_appliance
 
         for virtual_network_appliance in parsed_args.virtual_network_appliance:
-            vnf_client.\
-                restart_virtual_network_appliance(virtual_network_appliance)
+            vnf_client.restart_virtual_network_appliance(
+                virtual_network_appliance)
 
 
 class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(ResetPasswordVirtualNetworkAppliance, self).\
+        parser = super(ResetPasswordVirtualNetworkAppliance, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -776,13 +782,13 @@ class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
 
         vna = parsed_args.virtual_network_appliance
         data = vnf_client.reset_password_virtual_network_appliance(vna)
-        return (row_headers, utils.get_item_properties(data, rows))
+        return row_headers, utils.get_item_properties(data, rows)
 
 
 class ShowVirtualNetworkApplianceConsole(command.ShowOne):
 
     def get_parser(self, prog_name):
-        parser = super(ShowVirtualNetworkApplianceConsole, self).\
+        parser = super(ShowVirtualNetworkApplianceConsole, self). \
             get_parser(prog_name)
         parser.add_argument(
             'virtual_network_appliance',
@@ -822,15 +828,8 @@ def _set_interfaces_for_display(data):
     setattr(data, 'interfaces', interfaces_json)
 
 
-def _set_interface_names_for_display(data):
-    ifs = {}
-    for if_key, if_obj in data.interfaces.items():
-       ifs[if_key] = {'name': if_obj['name']}
-    setattr(data, 'interface_names', json.dumps(ifs, indent=2))
-
-
 def _type_uuid(uuid):
-    regex = re.compile('^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-?[a-f0-9]{12}\Z', re.I)
+    regex = re.compile(UUID_PATTERN, re.I)
     if not regex.match(uuid):
         msg = _("%r is not a valid uuid")
         raise exceptions.CommandError(msg % uuid)
