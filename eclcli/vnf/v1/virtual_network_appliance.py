@@ -249,7 +249,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             tags = json.loads(tags)
         except Exception:
             msg = _("You must specify JSON object format")
-            raise exceptions.CommandError(msg)        
+            raise exceptions.CommandError(msg)
 
         data = client.create_virtual_network_appliance(
             virtual_network_appliance_plan_id=plan_id,
@@ -260,6 +260,11 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             availability_zone=zone,
             tags=tags,
         )
+
+        # Set plan name
+        plan = client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
 
         _set_interfaces_for_display(data)
 
@@ -358,6 +363,11 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
+
+        # Set plan name
+        plan = vnf_client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
 
         _set_interface_names_for_display(data)
 
@@ -507,6 +517,11 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
 
+        # Set plan name
+        plan = vnf_client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
+
         _set_interfaces_for_display(data)
 
         return (row_headers, utils.get_item_properties(data, rows))
@@ -570,7 +585,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
         if len(adds) == 0 and len(deletes) == 0:
             msg = _("No options are specified.")
             raise exceptions.CommandError(msg)
-            
+
         VALID_KEYS = ['interface-slot-no', 'ip-address', 'mac-address', 'type', 'vrid']
         for aap_str in adds:
             aap_info = {}
@@ -661,6 +676,11 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
+
+        # Set plan name
+        plan = vnf_client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
 
         _set_interfaces_for_display(data)
 
