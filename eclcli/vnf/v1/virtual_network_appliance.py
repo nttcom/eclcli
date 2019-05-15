@@ -364,6 +364,11 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
         data = vnf_client.update_virtual_network_appliance(
             parsed_args.virtual_network_appliance, **patch)
 
+        # Set plan name
+        plan = vnf_client.get_virtual_network_appliance_plan(
+            data.virtual_network_appliance_plan_id)
+        setattr(data, 'virtual_network_appliance_plan', plan.name)
+
         _set_interface_names_for_display(data)
 
         return row_headers, utils.get_item_properties(data, rows)
