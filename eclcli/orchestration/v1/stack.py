@@ -20,7 +20,6 @@ from cliff import command
 from cliff import lister
 from cliff import show
 from eclcli.common import exceptions as exc
-from eclcli.common import parseractions
 from eclcli.common import utils
 from oslo_serialization import jsonutils
 import six
@@ -216,27 +215,27 @@ class UpdateStack(show.ShowOne):
             action='append',
             help=_('Path to the environment. Can be specified multiple times')
         )
-        parser.add_argument(
-            '--pre-update', metavar='<resource>', action='append',
-            help=_('Name of a resource to set a pre-update hook to. Resources '
-                   'in nested stacks can be set using slash as a separator: '
-                   'nested_stack/another/my_resource. You can use wildcards '
-                   'to match multiple stacks or resources: '
-                   'nested_stack/an*/*_resource. This can be specified '
-                   'multiple times')
-        )
+        # parser.add_argument(
+        #     '--pre-update', metavar='<resource>', action='append',
+        #     help=_('Name of a resource to set a pre-update hook to. Resources '
+        #            'in nested stacks can be set using slash as a separator: '
+        #            'nested_stack/another/my_resource. You can use wildcards '
+        #            'to match multiple stacks or resources: '
+        #            'nested_stack/an*/*_resource. This can be specified '
+        #            'multiple times')
+        # )
         parser.add_argument(
             '--timeout', metavar='<timeout>', type=int,
             help=_('Stack update timeout in minutes')
         )
-        parser.add_argument(
-            '--rollback', metavar='<value>',
-            help=_('Set rollback on update failure. '
-                   'Value "enabled" sets rollback to enabled. '
-                   'Value "disabled" sets rollback to disabled. '
-                   'Value "keep" uses the value of existing stack to be '
-                   'updated (default)')
-        )
+        # parser.add_argument(
+        #     '--rollback', metavar='<value>',
+        #     help=_('Set rollback on update failure. '
+        #            'Value "enabled" sets rollback to enabled. '
+        #            'Value "disabled" sets rollback to disabled. '
+        #            'Value "keep" uses the value of existing stack to be '
+        #            'updated (default)')
+        # )
         parser.add_argument(
             '--dry-run', action="store_true",
             help=_('Do not actually perform the stack update, but show what '
@@ -255,25 +254,25 @@ class UpdateStack(show.ShowOne):
                    'would be the content of the file'),
             action='append'
         )
-        parser.add_argument(
-            '--existing', action="store_true",
-            help=_('Re-use the template, parameters and environment of the '
-                   'current stack. If the template argument is omitted then '
-                   'the existing template is used. If no %(env_arg)s is '
-                   'specified then the existing environment is used. '
-                   'Parameters specified in %(arg)s will patch over the '
-                   'existing values in the current stack. Parameters omitted '
-                   'will keep the existing values') % {
-                       'arg': '--parameter', 'env_arg': '--environment'}
-        )
-        parser.add_argument(
-            '--clear-parameter', metavar='<parameter>',
-            help=_('Remove the parameters from the set of parameters of '
-                   'current stack for the %(cmd)s. The default value in the '
-                   'template will be used. This can be specified multiple '
-                   'times') % {'cmd': 'stack-update'},
-            action='append'
-        )
+        # parser.add_argument(
+        #     '--existing', action="store_true",
+        #     help=_('Re-use the template, parameters and environment of the '
+        #            'current stack. If the template argument is omitted then '
+        #            'the existing template is used. If no %(env_arg)s is '
+        #            'specified then the existing environment is used. '
+        #            'Parameters specified in %(arg)s will patch over the '
+        #            'existing values in the current stack. Parameters omitted '
+        #            'will keep the existing values') % {
+        #                'arg': '--parameter', 'env_arg': '--environment'}
+        # )
+        # parser.add_argument(
+        #     '--clear-parameter', metavar='<parameter>',
+        #     help=_('Remove the parameters from the set of parameters of '
+        #            'current stack for the %(cmd)s. The default value in the '
+        #            'template will be used. This can be specified multiple '
+        #            'times') % {'cmd': 'stack-update'},
+        #     action='append'
+        # )
         parser.add_argument(
             'stack', metavar='<stack>',
             help=_('Name or ID of stack to update')
@@ -299,7 +298,8 @@ class UpdateStack(show.ShowOne):
         tpl_files, template = template_utils.process_template_path(
             parsed_args.template,
             object_request=_authenticated_fetcher(client),
-            existing=parsed_args.existing)
+            # existing=parsed_args.existing,
+        )
 
         env_files, env = (
             template_utils.process_multiple_environments_and_files(
@@ -310,14 +310,14 @@ class UpdateStack(show.ShowOne):
             parsed_args.parameter_file,
             parsed_args.template)
 
-        if parsed_args.pre_update:
-            template_utils.hooks_to_env(env, parsed_args.pre_update,
-                                        'pre-update')
+        # if parsed_args.pre_update:
+        #     template_utils.hooks_to_env(env, parsed_args.pre_update,
+        #                                 'pre-update')
 
         fields = {
             'stack_id': parsed_args.stack,
             'parameters': parameters,
-            'existing': parsed_args.existing,
+            # 'existing': parsed_args.existing,
             'template': template,
             'files': dict(list(tpl_files.items()) + list(env_files.items())),
             'environment': env,
@@ -328,16 +328,16 @@ class UpdateStack(show.ShowOne):
             fields['tags'] = parsed_args.tags
         if parsed_args.timeout:
             fields['timeout_mins'] = parsed_args.timeout
-        if parsed_args.clear_parameter:
-            fields['clear_parameters'] = list(parsed_args.clear_parameter)
+        # if parsed_args.clear_parameter:
+        #     fields['clear_parameters'] = list(parsed_args.clear_parameter)
 
-        if parsed_args.rollback:
-            rollback = parsed_args.rollback.strip().lower()
-            if rollback not in ('enabled', 'disabled', 'keep'):
-                msg = _('--rollback invalid value: %s') % parsed_args.rollback
-                raise exc.CommandError(msg)
-            if rollback != 'keep':
-                fields['disable_rollback'] = rollback == 'disabled'
+        # if parsed_args.rollback:
+        #     rollback = parsed_args.rollback.strip().lower()
+        #     if rollback not in ('enabled', 'disabled', 'keep'):
+        #         msg = _('--rollback invalid value: %s') % parsed_args.rollback
+        #         raise exc.CommandError(msg)
+        #     if rollback != 'keep':
+        #         fields['disable_rollback'] = rollback == 'disabled'
 
         if parsed_args.dry_run:
             changes = client.stacks.preview_update(**fields)
