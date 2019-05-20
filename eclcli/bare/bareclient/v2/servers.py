@@ -740,11 +740,14 @@ class ServerManager(base.BootingManagerWithFind):
         return self._delete("/servers/%s/os-server-password"
                             % base.getid(server))
 
-    def stop(self, server):
+    def stop(self, server, body):
         """
         Stop the server.
+        :param server: The :class:`Server` (or its ID) to share onto.
+        :param reboot_type: either :data:`REBOOT_SOFT` for a software-level
+                reboot, or `REBOOT_HARD` for a virtual power cycle hard reboot.
         """
-        return self._action('os-stop', server, None)
+        return self._action('os-stop', server, body)
 
     def force_delete(self, server):
         """
