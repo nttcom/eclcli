@@ -551,21 +551,15 @@ class StopServer(command.ShowOne):
         parser.add_argument(
             "--type",
             metavar="<type>",
-            help="Server shutdown mode. A valid value is HARD (IPMI) or SOFT (ACPI)",
+            choices=["SOFT", "HARD"],
+            help="Server shutdown mode. A valid value is HARD or SOFT.",
         )
         return parser
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
 
-        if parsed_args.type is not None:
-            if parsed_args.type == "SOFT" or parsed_args.type == "HARD":
-                body = {'type': parsed_args.type}
-            else:
-                msg = _("A valid value is HARD or SOFT.")
-                raise exceptions.CommandError(msg)
-        else:
-            body = None
+        body = None if parsed_args.type is None else {'type': parsed_args.type}
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         bare_client.servers.stop(server_obj.id, body)
         return {}, {}

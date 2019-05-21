@@ -744,8 +744,8 @@ class ServerManager(base.BootingManagerWithFind):
         """
         Stop the server.
         :param server: The :class:`Server` (or its ID) to share onto.
-        :param reboot_type: either :data:`REBOOT_SOFT` for a software-level
-                reboot, or `REBOOT_HARD` for a virtual power cycle hard reboot.
+        :param body: Server shutdown mode.(HARD or SOFT)
+                     It becomes SOFT if you do not specify.
         """
         return self._action('os-stop', server, body)
 
