@@ -740,14 +740,14 @@ class ServerManager(base.BootingManagerWithFind):
         return self._delete("/servers/%s/os-server-password"
                             % base.getid(server))
 
-    def stop(self, server, body):
+    def stop(self, server, type=None):
         """
         Stop the server.
         :param server: The :class:`Server` (or its ID) to share onto.
-        :param body: Server shutdown mode.(HARD or SOFT)
-                     It becomes SOFT if you do not specify.
+        :param type: Server shutdown mode(HARD or SOFT).
+                     Default value is SOFT.
         """
-        return self._action('os-stop', server, body)
+        return self._action('os-stop', server, type)
 
     def force_delete(self, server):
         """

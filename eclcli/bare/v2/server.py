@@ -551,7 +551,7 @@ class StopServer(command.ShowOne):
         parser.add_argument(
             "--type",
             metavar="<type>",
-            choices=["SOFT", "HARD"],
+            choices=["HARD", "SOFT"],
             help="Server shutdown mode. A valid value is HARD or SOFT.",
         )
         return parser
@@ -559,9 +559,11 @@ class StopServer(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
 
-        body = None if parsed_args.type is None else {'type': parsed_args.type}
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
-        bare_client.servers.stop(server_obj.id, body)
+        if parsed_args.type is None:
+            bare_client.servers.stop(server_obj.id)
+        else:
+            bare_client.servers.stop(server_obj.id, {"type": parsed_args.type})
         return {}, {}
 
 
