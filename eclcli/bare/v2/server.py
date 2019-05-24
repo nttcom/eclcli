@@ -560,10 +560,7 @@ class StopServer(command.ShowOne):
         bare_client = self.app.client_manager.bare
 
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
-        if parsed_args.type is None:
-            bare_client.servers.stop(server_obj.id)
-        else:
-            bare_client.servers.stop(server_obj.id, {"type": parsed_args.type})
+        bare_client.servers.stop(server_obj.id, parsed_args.type)
         return {}, {}
 
 
