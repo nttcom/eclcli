@@ -260,6 +260,11 @@ class VPNGateway(ESIAPIDictWrapper):
         super(VPNGateway, self).__init__(apiresource)
 
 
+class FICGateway(ESIAPIDictWrapper):
+    def __init__(self, apiresource):
+        super(FICGateway, self).__init__(apiresource)
+
+
 class InterDCGateway(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(InterDCGateway, self).__init__(apiresource)
@@ -278,6 +283,11 @@ class InterDCInterface(ESIAPIDictWrapper):
 class VPNService(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(VPNService, self).__init__(apiresource)
+
+
+class FICService(ESIAPIDictWrapper):
+    def __init__(self, apiresource):
+        super(FICService, self).__init__(apiresource)
 
 
 class StaticRoute(ESIAPIDictWrapper):
@@ -304,6 +314,11 @@ class GwInterface(ESIAPIDictWrapper):
 class VPNInterface(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(VPNInterface, self).__init__(apiresource)
+
+
+class FICInterface(ESIAPIDictWrapper):
+    def __init__(self, apiresource):
+        super(FICInterface, self).__init__(apiresource)
 
 
 class QosOption(ESIAPIDictWrapper):

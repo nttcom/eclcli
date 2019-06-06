@@ -47,6 +47,10 @@ class ListStaticRoute(command.Lister):
             '--vpn_gw_id',
             metavar="vpn_gw_id",
             help="filter by vpn gateway id")
+        parser.add_argument(
+            '--fic_gw_id',
+            metavar="fic_gw_id",
+            help="filter by fic gateway id")
 
         return parser
 
@@ -91,6 +95,8 @@ class ListStaticRoute(command.Lister):
             search_opts.update({"aws_gw_id": parsed_args.aws_gw_id})
         if parsed_args.vpn_gw_id:
             search_opts.update({"vpn_gw_id": parsed_args.vpn_gw_id})
+        if parsed_args.fic_gw_id:
+            search_opts.update({"fic_gw_id": parsed_args.fic_gw_id})
 
         data = [to_obj.StaticRoute(static_route)
                 for static_route in network_client.list_static_routes(
@@ -148,8 +154,8 @@ class CreateStaticRoute(command.ShowOne):
             help='Nexthop of Static Route to create.')
         parser.add_argument(
             '--service_type',
-            metavar='{vpn|internet|interdc}',
-            choices=["vpn", "internet", "interdc"],
+            metavar='{vpn|internet|interdc|fic}',
+            choices=["vpn", "internet", "interdc", "fic"],
             required=True,
             help='SERVICE_TYPE of Static Route to create.')
         group = parser.add_mutually_exclusive_group()
@@ -165,6 +171,10 @@ class CreateStaticRoute(command.ShowOne):
             '--vpn_gw_id',
             metavar='VPN_GATEWAY_ID',
             help='VPN gateway id of Static Route to create.')
+        group.add_argument(
+            '--fic_gw_id',
+            metavar='FIC_GATEWAY_ID',
+            help='FIC gateway id of Static Route to create.')
         return parser
 
     def take_action(self, parsed_args):
@@ -176,7 +186,7 @@ class CreateStaticRoute(command.ShowOne):
             body['static_route'],
             ['name', 'description', 'destination',
              'nexthop', 'service_type', 'internet_gw_id',
-             'interdc_gw_id', 'vpn_gw_id'])
+             'interdc_gw_id', 'vpn_gw_id', 'fic_gw_id'])
 
         dic = network_client.create_static_route(body).get('static_route')
         columns = utils.get_columns(dic)
