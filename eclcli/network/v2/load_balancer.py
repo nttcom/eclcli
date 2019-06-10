@@ -248,7 +248,7 @@ class ResetPasswordLoadBalancer(command.ShowOne):
         parser = super(ResetPasswordLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
             'loadbalancer_id',
-            metavar="LOAD_BALANCER_PLAN_ID",
+            metavar="LOAD_BALANCER_ID",
             help="ID of Load Balancer to show."
         )
         parser.add_argument(
