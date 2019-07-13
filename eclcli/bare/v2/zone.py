@@ -1,8 +1,7 @@
-import six
-
 from eclcli.common import command
 from eclcli.common import utils
 from eclcli.bare import bare_utils
+
 
 class ShowZone(command.Lister):
     """Show availability zone details"""
@@ -27,7 +26,7 @@ class ShowZone(command.Lister):
                            'State',
                            'Hosts',
                            )
-        mixed_case_fields = ['zoneState','zoneName']
+        mixed_case_fields = ['zoneState', 'zoneName']
         return (display_columns,
                 (utils.get_item_properties(
                     s, columns,

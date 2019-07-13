@@ -27,9 +27,9 @@ class ListInstance(command.Lister):
         column_headers = copy.deepcopy(columns)
         data = client.instances()
         return (column_headers,
-            (utils.get_item_properties(d, columns, formatters={
-                'Datastore': utils.format_dict,
-                'Volume': utils.format_dict}) for d in data))
+                (utils.get_item_properties(d, columns, formatters={
+                    'Datastore': utils.format_dict,
+                    'Volume': utils.format_dict}) for d in data))
 
 
 class ShowInstance(command.ShowOne):
@@ -180,7 +180,6 @@ class CreateInstance(command.ShowOne):
                  'new database instance.',
         )
         return parser
-
 
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.database

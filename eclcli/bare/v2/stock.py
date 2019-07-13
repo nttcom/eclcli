@@ -4,7 +4,6 @@ from eclcli.common import utils
 from ..bareclient.v2 import stocks
 
 
-
 class ShowStock(command.ShowOne):
     """Display flavor's stock details"""
 
@@ -28,14 +27,14 @@ class ShowStock(command.ShowOne):
 
         if parsed_args.availability_zone:
             columns = (
-            'Flavor ID',
-            'Availability Zone',
-            'Stock')
+                'Flavor ID',
+                'Availability Zone',
+                'Stock')
         else:
             columns = (
                 'Flavor ID',
                 'Stock',
             )
-        flavor_obj = utils.find_resource(bare_client.flavors,parsed_args.flavor)
-        data = bare_client.stocks.get(flavor_obj.id,parsed_args.availability_zone)
-        return columns,utils.get_item_properties(data, columns)
+        flavor_obj = utils.find_resource(bare_client.flavors, parsed_args.flavor)
+        data = bare_client.stocks.get(flavor_obj.id, parsed_args.availability_zone)
+        return columns, utils.get_item_properties(data, columns)

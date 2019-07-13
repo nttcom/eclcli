@@ -16,17 +16,17 @@ import copy
 import requests
 
 from .. import client as monitoringclient
-import alarms
-import capabilities
-import event_types
-import events
-import meters
-import query
-import resources
-import samples
-import statistics
-import trait_descriptions
-import traits
+from . import alarms
+from . import capabilities
+from . import event_types
+from . import events
+from . import meters
+from . import query
+from . import resources
+from . import samples
+from . import statistics
+from . import trait_descriptions
+from . import traits
 from keystoneauth1 import exceptions as ka_exc
 
 
@@ -57,7 +57,7 @@ class Client(object):
 
         if not kwargs.get('auth_plugin') and not kwargs.get('session'):
             kwargs['auth_plugin'] = monitoringclient.get_auth_plugin(*args,
-                                                                **kwargs)
+                                                                     **kwargs)
 
         self.auth_plugin = kwargs.get('auth_plugin')
 
@@ -75,7 +75,7 @@ class Client(object):
         self.events = events.EventManager(self.http_client)
         self.event_types = event_types.EventTypeManager(self.http_client)
         self.traits = traits.TraitManager(self.http_client)
-        self.trait_descriptions = trait_descriptions.\
+        self.trait_descriptions = trait_descriptions. \
             TraitDescriptionManager(self.http_client)
 
         self.query_samples = query.QuerySamplesManager(

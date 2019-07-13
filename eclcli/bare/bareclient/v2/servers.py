@@ -29,8 +29,6 @@ from six.moves.urllib import parse
 
 from .. import base
 from .. import crypto
-from ..i18n import _
-from pprint import pprint
 
 REBOOT_SOFT, REBOOT_HARD = 'SOFT', 'HARD'
 
@@ -439,7 +437,8 @@ class ServerManager(base.BootingManagerWithFind):
                 "name": name,
                 # "imageRef": str(base.getid(image)) if image else '',
                 "flavorRef": str(base.getid(flavor)),
-        }}
+            }
+        }
         image = str(base.getid(image))
         if image:
             body['server'].update({'imageRef': image})
@@ -535,7 +534,7 @@ class ServerManager(base.BootingManagerWithFind):
             body['server']['networks'] = nics
 
         if disk_config is not None:
-            disk_config_dict= json.loads(disk_config)
+            disk_config_dict = json.loads(disk_config)
             # body['server']['OS-DCF:diskConfig'] = disk_config
             for k, v in disk_config_dict.items():
                 body['server'][k] = v
@@ -1188,36 +1187,36 @@ class ServerManager(base.BootingManagerWithFind):
         """
         self._action('resetNetwork', server)
 
-    #def add_security_group(self, server, security_group):
-    #    """
-    #    Add a Security Group to an baremetal
+    # def add_security_group(self, server, security_group):
+    #     """
+    #     Add a Security Group to an baremetal
 
-    #    :param server: ID of the baremetal.
-    #    :param security_group: The name of security group to add.
+    #     :param server: ID of the baremetal.
+    #     :param security_group: The name of security group to add.
 
-    #    """
-    #    self._action('addSecurityGroup', server, {'name': security_group})
+    #     """
+    #     self._action('addSecurityGroup', server, {'name': security_group})
 
-    #def remove_security_group(self, server, security_group):
-    #    """
-    #    Add a Security Group to an baremetal
+    # def remove_security_group(self, server, security_group):
+    #     """
+    #     Add a Security Group to an baremetal
 
-    #    :param server: ID of the baremetal.
-    #    :param security_group: The name of security group to remove.
+    #     :param server: ID of the baremetal.
+    #     :param security_group: The name of security group to remove.
 
-    #    """
-    #    self._action('removeSecurityGroup', server, {'name': security_group})
+    #     """
+    #     self._action('removeSecurityGroup', server, {'name': security_group})
 
-    #def list_security_group(self, server):
-    #    """
-    #    List Security Group(s) of an baremetal
+    # def list_security_group(self, server):
+    #     """
+    #     List Security Group(s) of an baremetal
 
-    #    :param server: ID of the baremetal.
+    #     :param server: ID of the baremetal.
 
-    #    """
-    #    return self._list('/servers/%s/os-security-groups' %
-    #                      base.getid(server), 'security_groups',
-    #                      security_groups.SecurityGroup)
+    #     """
+    #     return self._list('/servers/%s/os-security-groups' %
+    #                       base.getid(server), 'security_groups',
+    #                       security_groups.SecurityGroup)
 
     def evacuate(self, server, host=None, on_shared_storage=True,
                  password=None):

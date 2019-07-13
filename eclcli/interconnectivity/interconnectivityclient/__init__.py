@@ -1,5 +1,3 @@
-import os
-
 ECC_VERSION = '1.0'
 ECC_FORMAT = ''
 SERVICE_TYPE = 'interconnectivity'

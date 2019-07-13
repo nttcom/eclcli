@@ -36,7 +36,6 @@ from eclcli.orchestration.heatclient.openstack.common import cliutils
 
 LOG = logging.getLogger(__name__)
 
-
 supported_formats = {
     "json": lambda x: jsonutils.dumps(x, indent=2),
     "yaml": yaml.safe_dump
@@ -54,6 +53,7 @@ def link_formatter(links):
             return "%s (%s)" % (l.get('href', ''), l.get('rel', ''))
         else:
             return "%s" % (l.get('href', ''))
+
     return '\n'.join(format_link(l) for l in links or [])
 
 
@@ -162,12 +162,12 @@ def find_resource(manager, name_or_id):
         return manager.find(name=name_or_id)
     except exc.NotFound:
         msg = (
-            _("No %(name)s with a name or ID of "
-              "'%(name_or_id)s' exists.")
-            % {
-                'name': manager.resource_class.__name__.lower(),
-                'name_or_id': name_or_id
-            })
+                _("No %(name)s with a name or ID of "
+                  "'%(name_or_id)s' exists.")
+                % {
+                    'name': manager.resource_class.__name__.lower(),
+                    'name_or_id': name_or_id
+                })
         raise exc.CommandError(msg)
 
 
@@ -179,7 +179,7 @@ def import_versioned_module(version, submodule=None):
 
 
 def format_parameters(params, parse_semicolon=True):
-    '''Reformat parameters into dict of format expected by the API.'''
+    """Reformat parameters into dict of format expected by the API."""
 
     if not params:
         return {}
@@ -193,7 +193,7 @@ def format_parameters(params, parse_semicolon=True):
     parameters = {}
     for p in params:
         try:
-            (n, v) = p.split(('='), 1)
+            (n, v) = p.split('=', 1)
         except ValueError:
             msg = _('Malformed parameter(%s). Use the key=value format.') % p
             raise exc.CommandError(msg)
@@ -221,7 +221,7 @@ def format_all_parameters(params, param_files,
 
 def format_parameter_file(param_files, template_file=None,
                           template_url=None):
-    '''Reformat file parameters into dict of format expected by the API.'''
+    """Reformat file parameters into dict of format expected by the API."""
     if not param_files:
         return {}
     params = format_parameters(param_files, False)
@@ -233,8 +233,8 @@ def format_parameter_file(param_files, template_file=None,
 
     param_file = {}
     for key, value in six.iteritems(params):
-                param_file[key] = resolve_param_get_file(value,
-                                                         template_base_url)
+        param_file[key] = resolve_param_get_file(value,
+                                                 template_base_url)
     return param_file
 
 

@@ -34,7 +34,7 @@ from eclcli.orchestration.heatclient.openstack.common._i18n import _
 from eclcli.orchestration.heatclient.openstack.common._i18n import _LI
 from eclcli.orchestration.heatclient.openstack.common._i18n import _LW
 
-import heatclient.exc as exc
+from eclcli.orchestration.heatclient import exc
 
 logger = logging.getLogger(__name__)
 

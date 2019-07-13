@@ -16,7 +16,7 @@
 from eclcli.common import command
 from eclcli.common import utils
 from .. import monitoring_utils
-import six
+
 
 class ListSample(command.Lister):
     """Lists samples in a specified time range."""

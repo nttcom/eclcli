@@ -19,9 +19,9 @@ Base utilities to build API operation managers and objects on top of.
 
 import copy
 
-import exc
-from ecl.common.apiclient import base
-from ecl.common.apiclient import exceptions
+from . import exc
+from .ecl.common.apiclient import base
+from .ecl.common.apiclient import exceptions
 
 
 def getid(obj):
@@ -55,7 +55,7 @@ class Manager(object):
     def _create(self, url, body):
 
         body = self.api.post(url, json=body).json()
-        #print body
+        # print body
 
         if body:
             if type(body) == list and body != []:

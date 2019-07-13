@@ -15,7 +15,6 @@
 
 import logging
 
-from eclcli.common import exceptions
 from eclcli.common import utils
 
 LOG = logging.getLogger(__name__)
@@ -35,7 +34,7 @@ def make_client(instance):
     """Returns a monitoring service client."""
 
     # Defer client import until we actually need them
-    from monitoringclient import client as monitoring_client
+    from .monitoringclient import client as monitoring_client
 
     if _monitoring_api_version is not None:
         version = _monitoring_api_version

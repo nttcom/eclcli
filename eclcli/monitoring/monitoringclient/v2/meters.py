@@ -30,10 +30,10 @@ class MeterManager(base.Manager):
         params = []
 
         if page:
-            params.append('page=%s' %str(page))
+            params.append('page=%s' % str(page))
 
         if per_page:
-            params.append('per_page=%s' %str(per_page))
+            params.append('per_page=%s' % str(per_page))
 
         if unique:
             params.append('unique=%s' % str(unique))
@@ -55,25 +55,25 @@ class MeterManager(base.Manager):
         path = '/v2/meters'
         path += '/' + str(custom_meter_name)
         body = {
-            "counter_name":counter_name,
-            "resource_id":resource_id,
+            "counter_name": counter_name,
+            "resource_id": resource_id,
         }
         if project_id:
-            body.update({"project_id":project_id})
+            body.update({"project_id": project_id})
         if counter_type:
-            body.update({"counter_type":counter_type})
+            body.update({"counter_type": counter_type})
         if counter_unit:
-            body.update({"counter_unit":counter_unit})
+            body.update({"counter_unit": counter_unit})
         if display_name:
-            body.update({"resource_metadata":{"display_name":display_name}})
+            body.update({"resource_metadata": {"display_name": display_name}})
         if display_name:
-            body.update({"timestamp":timestamp})
+            body.update({"timestamp": timestamp})
         if counter_volume:
-            body.update({"counter_volume":counter_volume})
+            body.update({"counter_volume": counter_volume})
         if recorded_at:
-            body.update({"recorded_at":recorded_at})
+            body.update({"recorded_at": recorded_at})
         if namespace:
-            body.update({"namespace":namespace})
+            body.update({"namespace": namespace})
         body = [body]
 
         return self._create(path, body)

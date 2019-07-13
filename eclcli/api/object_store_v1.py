@@ -31,8 +31,8 @@ class APIv1(api.BaseAPI):
         super(APIv1, self).__init__(**kwargs)
 
     def container_create(
-        self,
-        container=None,
+            self,
+            container=None,
     ):
         """Create a container
 
@@ -51,8 +51,8 @@ class APIv1(api.BaseAPI):
         return data
 
     def container_delete(
-        self,
-        container=None,
+            self,
+            container=None,
     ):
         """Delete a container
 
@@ -64,13 +64,13 @@ class APIv1(api.BaseAPI):
             self.delete(urllib.parse.quote(container))
 
     def container_list(
-        self,
-        all_data=False,
-        limit=None,
-        marker=None,
-        end_marker=None,
-        prefix=None,
-        **params
+            self,
+            all_data=False,
+            limit=None,
+            marker=None,
+            end_marker=None,
+            prefix=None,
+            **params
     ):
         """Get containers in an account
 
@@ -124,8 +124,8 @@ class APIv1(api.BaseAPI):
         return self.list('', **params)
 
     def container_save(
-        self,
-        container=None,
+            self,
+            container=None,
     ):
         """Save all the content from a container
 
@@ -138,9 +138,9 @@ class APIv1(api.BaseAPI):
             self.object_save(container=container, object=object['name'])
 
     def container_set(
-        self,
-        container,
-        properties,
+            self,
+            container,
+            properties,
     ):
         """Set container properties
 
@@ -155,8 +155,8 @@ class APIv1(api.BaseAPI):
             self.create(urllib.parse.quote(container), headers=headers)
 
     def container_show(
-        self,
-        container=None,
+            self,
+            container=None,
     ):
         """Get container details
 
@@ -193,9 +193,9 @@ class APIv1(api.BaseAPI):
         return data
 
     def container_unset(
-        self,
-        container,
-        properties,
+            self,
+            container,
+            properties,
     ):
         """Unset container properties
 
@@ -211,12 +211,12 @@ class APIv1(api.BaseAPI):
             self.create(urllib.parse.quote(container), headers=headers)
 
     def object_copy(
-        self,
-        container=None,
-        object=None,
-        dest_container=None,
-        dest_object=None,
-        ):
+            self,
+            container=None,
+            object=None,
+            dest_container=None,
+            dest_object=None,
+    ):
         """Copy object
 
         :param string container:
@@ -232,7 +232,7 @@ class APIv1(api.BaseAPI):
         """
 
         if container is None or object is None or \
-            dest_container is None:
+                dest_container is None:
             # TODO(dtroyer): What exception to raise here?
             return {}
 
@@ -241,16 +241,15 @@ class APIv1(api.BaseAPI):
 
         headers = {"X-Copy-From": "/".join([container, object])}
         if headers:
-            self.create("%s/%s" %
-                (urllib.parse.quote(dest_container),
-                urllib.parse.quote(dest_object)),
-                method="PUT",
-                headers=headers)
+            self.create("%s/%s" % (urllib.parse.quote(dest_container),
+                                   urllib.parse.quote(dest_object)),
+                        method="PUT",
+                        headers=headers)
 
     def object_create(
-        self,
-        container=None,
-        object=None,
+            self,
+            container=None,
+            object=None,
     ):
         """Create an object inside a container
 
@@ -285,9 +284,9 @@ class APIv1(api.BaseAPI):
         return data
 
     def object_delete(
-        self,
-        container=None,
-        object=None,
+            self,
+            container=None,
+            object=None,
     ):
         """Delete an object from a container
 
@@ -304,15 +303,15 @@ class APIv1(api.BaseAPI):
                                urllib.parse.quote(object)))
 
     def object_list(
-        self,
-        container=None,
-        all_data=False,
-        limit=None,
-        marker=None,
-        end_marker=None,
-        delimiter=None,
-        prefix=None,
-        **params
+            self,
+            container=None,
+            all_data=False,
+            limit=None,
+            marker=None,
+            end_marker=None,
+            delimiter=None,
+            prefix=None,
+            **params
     ):
         """List objects in a container
 
@@ -381,10 +380,10 @@ class APIv1(api.BaseAPI):
         return self.list(urllib.parse.quote(container), **params)
 
     def object_save(
-        self,
-        container=None,
-        object=None,
-        file=None,
+            self,
+            container=None,
+            object=None,
+            file=None,
     ):
         """Save an object stored in a container
 
@@ -414,10 +413,10 @@ class APIv1(api.BaseAPI):
                     f.write(chunk)
 
     def object_set(
-        self,
-        container,
-        object,
-        properties,
+            self,
+            container,
+            object,
+            properties,
     ):
         """Set object properties
 
@@ -436,10 +435,10 @@ class APIv1(api.BaseAPI):
                         headers=headers)
 
     def object_unset(
-        self,
-        container,
-        object,
-        properties,
+            self,
+            container,
+            object,
+            properties,
     ):
         """Unset object properties
 
@@ -458,9 +457,9 @@ class APIv1(api.BaseAPI):
                         headers=headers)
 
     def object_show(
-        self,
-        container=None,
-        object=None,
+            self,
+            container=None,
+            object=None,
     ):
         """Get object details
 
@@ -505,8 +504,8 @@ class APIv1(api.BaseAPI):
         return data
 
     def account_set(
-        self,
-        properties,
+            self,
+            properties,
     ):
         """Set account properties
 
@@ -542,8 +541,8 @@ class APIv1(api.BaseAPI):
         return data
 
     def account_unset(
-        self,
-        properties,
+            self,
+            properties,
     ):
         """Unset account properties
 

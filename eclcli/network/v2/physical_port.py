@@ -22,8 +22,8 @@ class ListPhysicalPort(command.Lister):
             'Status',
         )
 
-        data = [to_obj.PhysicalPort(pport)
-            for pport in network_client.list_physical_ports().get('physical_ports')]
+        data = [to_obj.PhysicalPort(pport) for pport
+                in network_client.list_physical_ports().get('physical_ports')]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -37,7 +37,7 @@ class ShowPhysicalPort(command.ShowOne):
         parser.add_argument(
             'physical_port_id',
             metavar="<uuid>",
-            help=("Physical Port ID to show.")
+            help="Physical Port ID to show."
         )
         return parser
 
@@ -50,5 +50,5 @@ class ShowPhysicalPort(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.PhysicalPort(dic)
         data = utils.get_item_properties(
-            obj, columns,)
-        return (columns, data)
+            obj, columns, )
+        return columns, data

@@ -21,6 +21,7 @@ from eclcli.common import utils
 
 from eclcli.orchestration.heatclient.common import utils as heat_utils
 
+
 class BuildInfo(show.ShowOne):
     """Retrieve build information."""
 

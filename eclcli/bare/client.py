@@ -1,6 +1,5 @@
 import logging
 
-from eclcli.common import exceptions
 from eclcli.common import utils
 
 LOG = logging.getLogger(__name__)
@@ -20,7 +19,7 @@ def make_client(instance):
     """Returns a compute service client."""
 
     # Defer client import until we actually need them
-    from bareclient import client as bare_client
+    from .bareclient import client as bare_client
 
     if _bare_api_version is not None:
         version = _bare_api_version

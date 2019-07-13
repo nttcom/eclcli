@@ -25,7 +25,7 @@ from six import moves
 
 from .. import utils
 from .. import exc
-import options
+from . import options
 
 
 ALARM_STATES = ['ok', 'alarm', 'insufficient data']

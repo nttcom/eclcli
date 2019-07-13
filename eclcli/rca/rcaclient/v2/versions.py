@@ -1,5 +1,6 @@
 from .. import base
 
+
 def getversion(obj):
     try:
         return obj.version

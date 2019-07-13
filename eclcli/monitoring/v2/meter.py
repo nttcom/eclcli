@@ -16,7 +16,9 @@
 from eclcli.common import command
 from eclcli.common import utils
 from .. import monitoring_utils
-import six, datetime
+import six
+import datetime
+
 
 class ListMeter(command.Lister):
     """List all metadata for server"""
@@ -71,7 +73,7 @@ class ListMeter(command.Lister):
             per_page=parsed_args.per_page,
         )
 
-        columns=(
+        columns = (
             'meter_id',
             'name',
             'display_name',
@@ -84,6 +86,7 @@ class ListMeter(command.Lister):
         return (columns,
                 (utils.get_item_properties(
                     s, columns) for s in data))
+
 
 class ListMeterStatistics(command.Lister):
     """Computes and lists statistics for samples in a specified time range."""
@@ -142,17 +145,17 @@ class ListMeterStatistics(command.Lister):
 
     def take_action(self, parsed_args):
         q = monitoring_utils._make_query(parsed_args)
-        if q == None:
-            print "query required"
+        if q is None:
+            print("query required")
             return False
 
         monitoring_client = self.app.client_manager.monitoring
         data = monitoring_client.statistics.list(
-            meter_name = parsed_args.meter_name,
-            q = q,
-            period = parsed_args.period,
-            page = parsed_args.page,
-            per_page = parsed_args.per_page,
+            meter_name=parsed_args.meter_name,
+            q=q,
+            period=parsed_args.period,
+            page=parsed_args.page,
+            per_page=parsed_args.per_page,
         )
 
         columns = (
@@ -172,6 +175,7 @@ class ListMeterStatistics(command.Lister):
         return (columns,
                 (utils.get_item_properties(
                     s, columns) for s in data))
+
 
 class CreateMeter(command.ShowOne):
     """Create a custom meter, and put a sample value into the specified custom meter"""
@@ -255,17 +259,17 @@ class CreateMeter(command.ShowOne):
             timestamp = datetime.datetime.now().isoformat()
 
         data = monitoring_client.meters.create(
-            custom_meter_name = parsed_args.custom_meter_name,
-            project_id = parsed_args.project_id,
-            namespace = parsed_args.namespace,
-            resource_id = parsed_args.resource_id,
-            counter_name = parsed_args.counter_name,
-            counter_type = parsed_args.counter_type,
-            counter_unit = parsed_args.counter_unit,
-            display_name = parsed_args.display_name,
-            timestamp = timestamp,
-            counter_volume = parsed_args.counter_volume,
-            recorded_at = parsed_args.recorded_at,
+            custom_meter_name=parsed_args.custom_meter_name,
+            project_id=parsed_args.project_id,
+            namespace=parsed_args.namespace,
+            resource_id=parsed_args.resource_id,
+            counter_name=parsed_args.counter_name,
+            counter_type=parsed_args.counter_type,
+            counter_unit=parsed_args.counter_unit,
+            display_name=parsed_args.display_name,
+            timestamp=timestamp,
+            counter_volume=parsed_args.counter_volume,
+            recorded_at=parsed_args.recorded_at,
         )
         info = monitoring_utils._tidy_data_info(data._info)
         return zip(*sorted(six.iteritems(info)))

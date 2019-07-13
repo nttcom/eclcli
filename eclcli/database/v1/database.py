@@ -59,7 +59,6 @@ class CreateDatabase(command.Command):
         )
         return parser
 
-
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.database
 

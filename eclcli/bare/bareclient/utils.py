@@ -23,8 +23,8 @@ import prettytable
 import six
 
 from . import exceptions
-from i18n import _
-from ecl.common import cliutils
+from .i18n import _
+from .ecl.common import cliutils
 
 
 VALID_KEY_REGEX = re.compile(r"[\w\.\- :]+$", re.UNICODE)

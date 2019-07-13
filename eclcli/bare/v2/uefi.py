@@ -1,6 +1,5 @@
 import json
 
-
 from eclcli.common import command
 from eclcli.bare import bare_utils
 from eclcli.common import utils
@@ -34,10 +33,10 @@ class ShowUEFI(command.ShowOne):
             'Status',
         )
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         data = bare_client.uefis.get(server_obj.id)
 
-        return columns,utils.get_item_properties(
+        return columns, utils.get_item_properties(
                 data,
                 columns,
                 mixed_case_fields=[],
@@ -45,6 +44,7 @@ class ShowUEFI(command.ShowOne):
                     'Setting': bare_utils._format_dicts_list_generic
                 }
                 )
+
 
 class UpdateUEFI(command.ShowOne):
     """Update UEFI settings for a server"""
@@ -67,10 +67,10 @@ class UpdateUEFI(command.ShowOne):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
 
-        body = {"uefi": {"setting" :{}}}
+        body = {"uefi": {"setting": {}}}
         if parsed_args.settings:
             body['uefi']['settings'] = json.loads(parsed_args.settings)
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
-        bare_client.uefis.update(server_obj.id,body)
-        return {},{}
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        bare_client.uefis.update(server_obj.id, body)
+        return {}, {}

@@ -24,7 +24,7 @@ from eclcli.common import utils
 
 from eclcli.orchestration.heatclient.common import format_utils
 from eclcli.orchestration.heatclient import exc as heat_exc
-from openstackclient.i18n import _
+from eclcli.orchestration.heatclient.openstack.common._i18n import _
 
 
 class ListSnapshot(lister.Lister):
@@ -175,7 +175,7 @@ class CreateSnapshot(show.ShowOne):
             'data',
             'creation_time'
         ]
-        return (columns, utils.get_dict_properties(data, columns))
+        return columns, utils.get_dict_properties(data, columns)
 
 
 class DeleteSnapshot(command.Command):

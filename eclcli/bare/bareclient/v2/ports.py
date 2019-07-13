@@ -12,7 +12,7 @@ class NicPhysicalPortManager(base.Manager):
     resource_class = NicPhysicalPort
 
     def get(self, server_id, port_id):
-        url = "/servers/%s/nic_physical_ports/%s" % (server_id,port_id)
+        url = "/servers/%s/nic_physical_ports/%s" % (server_id, port_id)
         return self._get(url, "nic_physical_port")
 
     def list(self, server_id):

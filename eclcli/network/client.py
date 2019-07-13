@@ -1,7 +1,5 @@
 import logging
 
-from ecl import connection
-
 from eclcli.common import utils
 
 
@@ -17,7 +15,7 @@ API_VERSIONS = {
 
 
 def make_client(instance):
-    from networkclient.v2 import client as network_client
+    from .networkclient.v2 import client as network_client
     c = network_client.Client(session=instance.session)
     return c
 

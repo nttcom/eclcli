@@ -50,8 +50,11 @@ class ListInternetService(command.Lister):
         if parsed_args.zone:
             search_opts.update({"zone": parsed_args.zone})
 
-        data = [to_obj.InternetService(inetsv)
-            for inetsv in network_client.list_internet_services(**search_opts).get('internet_services')]
+        data = [
+            to_obj.InternetService(inetsv)
+            for inetsv in network_client.list_internet_services(
+                **search_opts).get('internet_services')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(

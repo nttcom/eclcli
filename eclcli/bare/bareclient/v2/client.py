@@ -12,6 +12,7 @@ from . import metadata
 from . import ports
 from .. import SERVICE_TYPE
 
+
 class Client(object):
     """
     Top-level object to access the NTT Com Cloud Baremetal API.
@@ -77,7 +78,7 @@ class Client(object):
         :param str proxy_token: Proxy Token
         :param str region_name: Region Name
         :param str endpoint_type: Endpoint Type
-        :param str extensions: Exensions
+        :param str extensions: Extensions
         :param str service_type: Service Type
         :param str service_name: Service Name
         :param str volume_service_name: Volume Service Name
@@ -119,41 +120,41 @@ class Client(object):
         self.ports = ports.NicPhysicalPortManager(self)
 
         # extensions
-        #self.agents = agents.AgentsManager(self)
-        #self.dns_domains = floating_ip_dns.FloatingIPDNSDomainManager(self)
-        #self.dns_entries = floating_ip_dns.FloatingIPDNSEntryManager(self)
-        #self.cloudpipe = cloudpipe.CloudpipeManager(self)
-        #self.certs = certs.CertificateManager(self)
-        #self.floating_ips = floating_ips.FloatingIPManager(self)
-        #self.floating_ip_pools = floating_ip_pools.FloatingIPPoolManager(self)
-        #self.fping = fping.FpingManager(self)
+        # self.agents = agents.AgentsManager(self)
+        # self.dns_domains = floating_ip_dns.FloatingIPDNSDomainManager(self)
+        # self.dns_entries = floating_ip_dns.FloatingIPDNSEntryManager(self)
+        # self.cloudpipe = cloudpipe.CloudpipeManager(self)
+        # self.certs = certs.CertificateManager(self)
+        # self.floating_ips = floating_ips.FloatingIPManager(self)
+        # self.floating_ip_pools = floating_ip_pools.FloatingIPPoolManager(self)
+        # self.fping = fping.FpingManager(self)
         # self.volumes = volumes.VolumeManager(self)
-        #self.volume_snapshots = volume_snapshots.SnapshotManager(self)
-        #self.volume_types = volume_types.VolumeTypeManager(self)
+        # self.volume_snapshots = volume_snapshots.SnapshotManager(self)
+        # self.volume_types = volume_types.VolumeTypeManager(self)
         self.keypairs = keypairs.KeypairManager(self)
-        #self.networks = networks.NetworkManager(self)
-        #self.quota_classes = quota_classes.QuotaClassSetManager(self)
-        #self.quotas = quotas.QuotaSetManager(self)
-        #self.security_groups = security_groups.SecurityGroupManager(self)
-        #self.security_group_rules = \
-        #    security_group_rules.SecurityGroupRuleManager(self)
-        #self.security_group_default_rules = \
-        #    security_group_default_rules.SecurityGroupDefaultRuleManager(self)
-        #self.usage = usage.UsageManager(self)
-        #self.virtual_interfaces = \
-        #    virtual_interfaces.VirtualInterfaceManager(self)
-        #self.aggregates = aggregates.AggregateManager(self)
-        #self.hosts = hosts.HostManager(self)
-        #self.hypervisors = hypervisors.HypervisorManager(self)
-        #self.hypervisor_stats = hypervisors.HypervisorStatsManager(self)
-        #self.services = services.ServiceManager(self)
-        #self.fixed_ips = fixed_ips.FixedIPsManager(self)
-        #self.floating_ips_bulk = floating_ips_bulk.FloatingIPBulkManager(self)
+        # self.networks = networks.NetworkManager(self)
+        # self.quota_classes = quota_classes.QuotaClassSetManager(self)
+        # self.quotas = quotas.QuotaSetManager(self)
+        # self.security_groups = security_groups.SecurityGroupManager(self)
+        # self.security_group_rules = \
+        #     security_group_rules.SecurityGroupRuleManager(self)
+        # self.security_group_default_rules = \
+        #     security_group_default_rules.SecurityGroupDefaultRuleManager(self)
+        # self.usage = usage.UsageManager(self)
+        # self.virtual_interfaces = \
+        #     virtual_interfaces.VirtualInterfaceManager(self)
+        # self.aggregates = aggregates.AggregateManager(self)
+        # self.hosts = hosts.HostManager(self)
+        # self.hypervisors = hypervisors.HypervisorManager(self)
+        # self.hypervisor_stats = hypervisors.HypervisorStatsManager(self)
+        # self.services = services.ServiceManager(self)
+        # self.fixed_ips = fixed_ips.FixedIPsManager(self)
+        # self.floating_ips_bulk = floating_ips_bulk.FloatingIPBulkManager(self)
         self.os_cache = os_cache or not no_cache
         self.availability_zones = availability_zones.AvailabilityZoneManager(self)
         self.stocks = stocks.StockManager(self)
         self.uefis = uefis.UEFIManager(self)
-        #self.server_groups = server_groups.ServerGroupsManager(self)
+        # self.server_groups = server_groups.ServerGroupsManager(self)
 
         # Add in any extensions...
         if extensions:

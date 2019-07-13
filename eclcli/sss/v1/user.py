@@ -33,7 +33,7 @@ class ListUser(command.Lister):
         users_dict = sss_client.list_users()
         contract_id = users_dict.get('contract_id')
         users = users_dict.get('users')
-        map(lambda user:user.update({'contract_id': contract_id}), users)
+        map(lambda user: user.update({'contract_id': contract_id}), users)
 
         data = [objectify(user) for user in users]
 

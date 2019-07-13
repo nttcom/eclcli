@@ -11,7 +11,6 @@ from ..common import serializer
 from ..common import utils
 from ..i18n import _
 
-
 _logger = logging.getLogger(__name__)
 
 
@@ -70,6 +69,7 @@ class APIParamsCall(object):
             ret = self.function(instance, *args, **kwargs)
             instance.format = _format
             return ret
+
         return with_params
 
 
@@ -83,7 +83,7 @@ class ClientBase(object):
         self.httpclient = client.construct_http_client(**kwargs)
         self.version = '2.0'
         self.format = 'json'
-        self.action_prefix = "/v%s" % (self.version)
+        self.action_prefix = "/v%s" % self.version
         self.retry_interval = 1
 
     def _handle_fault_response(self, status_code, response_body):
@@ -152,7 +152,7 @@ class ClientBase(object):
 
     def content_type(self, _format=None):
         _format = _format or self.format
-        return "application/%s" % (_format)
+        return "application/%s" % _format
 
     def retry_request(self, method, action, body=None,
                       headers=None, params=None):
@@ -223,7 +223,6 @@ class ClientBase(object):
 
 
 class Client(ClientBase):
-
     networks_path = "/networks"
     network_path = "/networks/%s"
     ports_path = "/ports"
@@ -307,19 +306,19 @@ class Client(ClientBase):
     _cfgw_plural = _cfgw_singular + 's'
 
     common_function_gateways_path = '/%s' % _cfgw_plural
-    common_function_gateway_path = common_function_gateways_path +'/%s'
+    common_function_gateway_path = common_function_gateways_path + '/%s'
 
     _common_function_pool_singular = 'common_function_pool'
     _common_function_pool_plural = _common_function_pool_singular + 's'
 
     common_function_pools_path = '/%s' % _common_function_pool_plural
-    common_function_pool_path = common_function_pools_path +'/%s'
+    common_function_pool_path = common_function_pools_path + '/%s'
 
     _common_function_singular = 'common_function'
     _common_function_plural = _common_function_singular + 's'
 
     common_functions_path = '/%s' % _common_function_plural
-    common_function_path = common_functions_path +'/%s'
+    common_function_path = common_functions_path + '/%s'
 
     reserve_addresses_path = "/reserve_addresses"
     reserve_address_path = "/reserve_addresses/%s"
@@ -328,19 +327,19 @@ class Client(ClientBase):
     _colo_logical_link_plural = _colo_logical_link_singular + 's'
 
     colocation_logical_links_path = '/%s' % _colo_logical_link_plural
-    colocation_logical_link_path = colocation_logical_links_path +'/%s'
+    colocation_logical_link_path = colocation_logical_links_path + '/%s'
 
     _colo_physical_link_singular = 'colocation_physical_link'
     _colo_physical_link_plural = _colo_physical_link_singular + 's'
 
     colocation_physical_links_path = '/%s' % _colo_physical_link_plural
-    colocation_physical_link_path = colocation_physical_links_path +'/%s'
+    colocation_physical_link_path = colocation_physical_links_path + '/%s'
 
     _colo_space_singular = 'colocation_space'
     _colo_space_plural = _colo_space_singular + 's'
 
     colocation_spaces_path = '/%s' % _colo_space_plural
-    colocation_space_path = colocation_spaces_path +'/%s'
+    colocation_space_path = colocation_spaces_path + '/%s'
 
     EXTED_PLURALS = {'routers': 'router',
                      'floatingips': 'floatingip',
@@ -383,15 +382,15 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_quota(self, tenant_id, **_params):
-        return self.get(self.quota_path % (tenant_id), params=_params)
+        return self.get(self.quota_path % tenant_id, params=_params)
 
     @APIParamsCall
     def update_quota(self, tenant_id, body=None):
-        return self.put(self.quota_path % (tenant_id), body=body)
+        return self.put(self.quota_path % tenant_id, body=body)
 
     @APIParamsCall
     def delete_quota(self, tenant_id):
-        return self.delete(self.quota_path % (tenant_id))
+        return self.delete(self.quota_path % tenant_id)
 
     @APIParamsCall
     def list_extensions(self, **_params):
@@ -408,7 +407,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_port(self, port, **_params):
-        return self.get(self.port_path % (port), params=_params)
+        return self.get(self.port_path % port, params=_params)
 
     @APIParamsCall
     def create_port(self, body=None):
@@ -416,11 +415,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_port(self, port, body=None):
-        return self.put(self.port_path % (port), body=body)
+        return self.put(self.port_path % port, body=body)
 
     @APIParamsCall
     def delete_port(self, port):
-        return self.delete(self.port_path % (port))
+        return self.delete(self.port_path % port)
 
     @APIParamsCall
     def list_physical_ports(self, retrieve_all=True, **_params):
@@ -431,7 +430,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_physical_port(self, port, **_params):
-        return self.get(self.physical_port_path % (port), params=_params)
+        return self.get(self.physical_port_path % port, params=_params)
 
     @APIParamsCall
     def list_networks(self, retrieve_all=True, **_params):
@@ -440,7 +439,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_network(self, network, **_params):
-        return self.get(self.network_path % (network), params=_params)
+        return self.get(self.network_path % network, params=_params)
 
     @APIParamsCall
     def create_network(self, body=None):
@@ -448,11 +447,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_network(self, network, body=None):
-        return self.put(self.network_path % (network), body=body)
+        return self.put(self.network_path % network, body=body)
 
     @APIParamsCall
     def delete_network(self, network):
-        return self.delete(self.network_path % (network))
+        return self.delete(self.network_path % network)
 
     @APIParamsCall
     def list_subnets(self, retrieve_all=True, **_params):
@@ -461,7 +460,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_subnet(self, subnet, **_params):
-        return self.get(self.subnet_path % (subnet), params=_params)
+        return self.get(self.subnet_path % subnet, params=_params)
 
     @APIParamsCall
     def create_subnet(self, body=None):
@@ -469,11 +468,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_subnet(self, subnet, body=None):
-        return self.put(self.subnet_path % (subnet), body=body)
+        return self.put(self.subnet_path % subnet, body=body)
 
     @APIParamsCall
     def delete_subnet(self, subnet):
-        return self.delete(self.subnet_path % (subnet))
+        return self.delete(self.subnet_path % subnet)
 
     @APIParamsCall
     def list_internet_gateways(self, **_params):
@@ -481,7 +480,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_internet_gateway(self, internet_gateway_id, **_params):
-        return self.get(self.internet_gateway_path % (internet_gateway_id), params=_params)
+        return self.get(self.internet_gateway_path % internet_gateway_id, params=_params)
 
     @APIParamsCall
     def create_internet_gateway(self, body=None):
@@ -489,11 +488,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_internet_gateway(self, internet_gateway_id, body=None):
-        return self.put(self.internet_gateway_path % (internet_gateway_id), body=body)
+        return self.put(self.internet_gateway_path % internet_gateway_id, body=body)
 
     @APIParamsCall
     def delete_internet_gateway(self, internet_gateway_id):
-        return self.delete(self.internet_gateway_path % (internet_gateway_id))
+        return self.delete(self.internet_gateway_path % internet_gateway_id)
 
     @APIParamsCall
     def list_vpn_gateways(self, **_params):
@@ -501,7 +500,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_vpn_gateway(self, vpn_gateway_id, **_params):
-        return self.get(self.vpn_gateway_path % (vpn_gateway_id), params=_params)
+        return self.get(self.vpn_gateway_path % vpn_gateway_id, params=_params)
 
     @APIParamsCall
     def create_vpn_gateway(self, body=None):
@@ -509,11 +508,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_vpn_gateway(self, vpn_gateway_id, body=None):
-        return self.put(self.vpn_gateway_path % (vpn_gateway_id), body=body)
+        return self.put(self.vpn_gateway_path % vpn_gateway_id, body=body)
 
     @APIParamsCall
     def delete_vpn_gateway(self, vpn_gateway_id):
-        return self.delete(self.vpn_gateway_path % (vpn_gateway_id))
+        return self.delete(self.vpn_gateway_path % vpn_gateway_id)
 
     @APIParamsCall
     def list_interdc_services(self, **_params):
@@ -553,7 +552,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_interdc_interface(self, interdc_interface_id, **_params):
-        return self.get(self.interdc_interface_path % (interdc_interface_id),
+        return self.get(self.interdc_interface_path % interdc_interface_id,
                         **_params)
 
     @APIParamsCall
@@ -562,7 +561,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def delete_interdc_interface(self, interdc_interface_id):
-        return self.delete(self.interdc_interface_path % (interdc_interface_id))
+        return self.delete(self.interdc_interface_path % interdc_interface_id)
 
     @APIParamsCall
     def update_interdc_interface(self, interdc_interface_id, body=None):
@@ -574,7 +573,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_gw_interface(self, gw_interface_id, **_params):
-        return self.get(self.gw_interface_path % (gw_interface_id), params=_params)
+        return self.get(self.gw_interface_path % gw_interface_id, params=_params)
 
     @APIParamsCall
     def create_gw_interface(self, body=None):
@@ -582,11 +581,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_gw_interface(self, gw_interface_id, body=None):
-        return self.put(self.gw_interface_path % (gw_interface_id), body=body)
+        return self.put(self.gw_interface_path % gw_interface_id, body=body)
 
     @APIParamsCall
     def delete_gw_interface(self, gw_interface_id):
-        return self.delete(self.gw_interface_path % (gw_interface_id))
+        return self.delete(self.gw_interface_path % gw_interface_id)
 
     @APIParamsCall
     def list_vpn_interfaces(self, **_params):
@@ -594,7 +593,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_vpn_interface(self, vpn_interface_id, **_params):
-        return self.get(self.vpn_interface_path % (vpn_interface_id), params=_params)
+        return self.get(self.vpn_interface_path % vpn_interface_id, params=_params)
 
     @APIParamsCall
     def create_vpn_interface(self, body=None):
@@ -602,11 +601,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_vpn_interface(self, vpn_interface_id, body=None):
-        return self.put(self.vpn_interface_path % (vpn_interface_id), body=body)
+        return self.put(self.vpn_interface_path % vpn_interface_id, body=body)
 
     @APIParamsCall
     def delete_vpn_interface(self, vpn_interface_id):
-        return self.delete(self.vpn_interface_path % (vpn_interface_id))
+        return self.delete(self.vpn_interface_path % vpn_interface_id)
 
     @APIParamsCall
     def list_static_routes(self, **_params):
@@ -615,7 +614,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_static_route(self, static_route_id, **_params):
-        return self.get(self.static_route_path % (static_route_id), params=_params)
+        return self.get(self.static_route_path % static_route_id, params=_params)
 
     @APIParamsCall
     def create_static_route(self, body=None):
@@ -623,11 +622,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_static_route(self, static_route_id, body=None):
-        return self.put(self.static_route_path % (static_route_id), body=body)
+        return self.put(self.static_route_path % static_route_id, body=body)
 
     @APIParamsCall
     def delete_static_route(self, static_route_id):
-        return self.delete(self.static_route_path % (static_route_id))
+        return self.delete(self.static_route_path % static_route_id)
 
     @APIParamsCall
     def list_public_ips(self, **_params):
@@ -636,7 +635,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_public_ip(self, public_ip_id, **_params):
-        return self.get(self.public_ip_path % (public_ip_id), params=_params)
+        return self.get(self.public_ip_path % public_ip_id, params=_params)
 
     @APIParamsCall
     def create_public_ip(self, body=None):
@@ -644,11 +643,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_public_ip(self, public_ip_id, body=None):
-        return self.put(self.public_ip_path % (public_ip_id), body=body)
+        return self.put(self.public_ip_path % public_ip_id, body=body)
 
     @APIParamsCall
     def delete_public_ip(self, public_ip_id):
-        return self.delete(self.public_ip_path % (public_ip_id))
+        return self.delete(self.public_ip_path % public_ip_id)
 
     @APIParamsCall
     def list_internet_services(self, **_params):
@@ -656,8 +655,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_internet_service(self, internet_service_id, **_params):
-        return self.get(self.internet_service_path % (internet_service_id), params=_params)
-
+        return self.get(self.internet_service_path % internet_service_id, params=_params)
 
     @APIParamsCall
     def list_vpn_services(self, **_params):
@@ -665,7 +663,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_vpn_service(self, vpn_service_id, **_params):
-        return self.get(self.vpn_service_path % (vpn_service_id), params=_params)
+        return self.get(self.vpn_service_path % vpn_service_id, params=_params)
 
     @APIParamsCall
     def list_public_ip_pools(self, **_params):
@@ -674,7 +672,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_public_ip_pool(self, public_ip_pool_id, **_params):
-        return self.get(self.public_ip_pool_path % (public_ip_pool_id), params=_params)
+        return self.get(self.public_ip_pool_path % public_ip_pool_id, params=_params)
 
     @APIParamsCall
     def list_qos_options(self, **_params):
@@ -683,7 +681,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_qos_option(self, qos_option_id, **_params):
-        return self.get(self.qos_option_path % (qos_option_id), params=_params)
+        return self.get(self.qos_option_path % qos_option_id, params=_params)
 
     @APIParamsCall
     def list_firewalls(self, **_params):
@@ -695,23 +693,23 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_firewall(self, firewall_id, **_params):
-        return self.get(self.firewall_path % (firewall_id), params=_params)
+        return self.get(self.firewall_path % firewall_id, params=_params)
 
     @APIParamsCall
     def update_firewall(self, firewall_id, body=None):
-        return self.put(self.firewall_path % (firewall_id), body=body)
+        return self.put(self.firewall_path % firewall_id, body=body)
 
     @APIParamsCall
     def delete_firewall(self, firewall_id):
-        return self.delete(self.firewall_path % (firewall_id))
+        return self.delete(self.firewall_path % firewall_id)
 
     @APIParamsCall
     def reboot_firewall(self, firewall_id, body=None):
-        return self.post(self.firewall_path % (firewall_id) + "/reboot", body=body)
+        return self.post(self.firewall_path % firewall_id + "/reboot", body=body)
 
     @APIParamsCall
     def reset_password_firewall(self, firewall_id, body=None):
-        return self.post(self.firewall_path % (firewall_id) + "/reset_password", body=body)
+        return self.post(self.firewall_path % firewall_id + "/reset_password", body=body)
 
     @APIParamsCall
     def list_firewall_interfaces(self, **_params):
@@ -719,11 +717,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_firewall_interface(self, firewall_interface_id, **_params):
-        return self.get(self.firewall_interface_path % (firewall_interface_id), params=_params)
+        return self.get(self.firewall_interface_path % firewall_interface_id, params=_params)
 
     @APIParamsCall
     def update_firewall_interface(self, firewall_interface_id, body=None):
-        return self.put(self.firewall_interface_path % (firewall_interface_id), body=body)
+        return self.put(self.firewall_interface_path % firewall_interface_id, body=body)
 
     @APIParamsCall
     def list_firewall_plans(self, **_params):
@@ -731,7 +729,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_firewall_plan(self, firewall_plan_id, **_params):
-        return self.get(self.firewall_plan_path % (firewall_plan_id), params=_params)
+        return self.get(self.firewall_plan_path % firewall_plan_id, params=_params)
 
     @APIParamsCall
     def list_loadbalancers(self, **_params):
@@ -743,19 +741,19 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_loadbalancer(self, loadbalancer_id, **_params):
-        return self.get(self.loadbalancer_path % (loadbalancer_id), params=_params)
+        return self.get(self.loadbalancer_path % loadbalancer_id, params=_params)
 
     @APIParamsCall
     def update_loadbalancer(self, loadbalancer_id, body=None):
-        return self.put(self.loadbalancer_path % (loadbalancer_id), body=body)
+        return self.put(self.loadbalancer_path % loadbalancer_id, body=body)
 
     @APIParamsCall
     def delete_loadbalancer(self, loadbalancer_id):
-        return self.delete(self.loadbalancer_path % (loadbalancer_id))
+        return self.delete(self.loadbalancer_path % loadbalancer_id)
 
     @APIParamsCall
     def reboot_loadbalancer(self, loadbalancer_id, body=None):
-        response = self.post(self.loadbalancer_path % (loadbalancer_id) + "/reboot", body=body)
+        response = self.post(self.loadbalancer_path % loadbalancer_id + "/reboot", body=body)
 
     @APIParamsCall
     def list_loadbalancer_plans(self, **_params):
@@ -767,15 +765,15 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_loadbalancer_plan(self, loadbalancerplan_id, **_params):
-        return self.get(self.loadbalancer_plan_path % (loadbalancerplan_id), params=_params)
+        return self.get(self.loadbalancer_plan_path % loadbalancerplan_id, params=_params)
 
     @APIParamsCall
     def update_loadbalancer_plan(self, loadbalancerplan_id, body=None):
-        return self.put(self.loadbalancer_plan_path % (loadbalancerplan_id), body=body)
+        return self.put(self.loadbalancer_plan_path % loadbalancerplan_id, body=body)
 
     @APIParamsCall
     def delete_loadbalancer_plan(self, loadbalancerplan_id):
-        return self.delete(self.loadbalancer_plan_path % (loadbalancerplan_id))
+        return self.delete(self.loadbalancer_plan_path % loadbalancerplan_id)
 
     @APIParamsCall
     def list_loadbalancer_interfaces(self, **_params):
@@ -783,15 +781,15 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_loadbalancer_interface(self, loadbalancer_interface_id, **_params):
-        return self.get(self.loadbalancer_interface_path % (loadbalancer_interface_id), params=_params)
+        return self.get(self.loadbalancer_interface_path % loadbalancer_interface_id, params=_params)
 
     @APIParamsCall
     def update_loadbalancer_interface(self, loadbalancer_interface_id, body=None):
-        return self.put(self.loadbalancer_interface_path % (loadbalancer_interface_id), body=body)
+        return self.put(self.loadbalancer_interface_path % loadbalancer_interface_id, body=body)
 
     @APIParamsCall
     def reset_password_loadbalancer(self, loadbalancer_id, body=None):
-        return self.post(self.loadbalancer_path % (loadbalancer_id) + "/reset_password", body=body)
+        return self.post(self.loadbalancer_path % loadbalancer_id + "/reset_password", body=body)
 
     @APIParamsCall
     def list_loadbalancer_syslog_servers(self, **_params):
@@ -819,7 +817,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_cfgw(self, cfgw_id, **_params):
-        return self.get(self.common_function_gateway_path % (cfgw_id), params=_params)
+        return self.get(self.common_function_gateway_path % cfgw_id, params=_params)
 
     @APIParamsCall
     def create_cfgw(self, body=None):
@@ -827,11 +825,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def update_cfgw(self, cfgw_id, body=None):
-        return self.put(self.common_function_gateway_path % (cfgw_id), body=body)
+        return self.put(self.common_function_gateway_path % cfgw_id, body=body)
 
     @APIParamsCall
     def delete_cfgw(self, cfgw_id):
-        return self.delete(self.common_function_gateway_path % (cfgw_id))
+        return self.delete(self.common_function_gateway_path % cfgw_id)
 
     @APIParamsCall
     def list_common_function_pools(self, **_params):
@@ -840,7 +838,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_common_function_pool(self, cfp_id, **_params):
-        return self.get(self.common_function_pool_path % (cfp_id), params=_params)
+        return self.get(self.common_function_pool_path % cfp_id, params=_params)
 
     @APIParamsCall
     def list_common_functions(self, **_params):
@@ -849,7 +847,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_common_function(self, cfp_id, **_params):
-        return self.get(self.common_function_path % (cfp_id), params=_params)
+        return self.get(self.common_function_path % cfp_id, params=_params)
 
     @APIParamsCall
     def list_reserve_addresses(self, **_params):
@@ -857,7 +855,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_reserve_address(self, tenant_id, **_params):
-        ra = self.get(self.reserve_address_path % (tenant_id), params=_params)
+        ra = self.get(self.reserve_address_path % tenant_id, params=_params)
         return ra
 
     @APIParamsCall
@@ -868,7 +866,7 @@ class Client(ClientBase):
     @APIParamsCall
     def show_colo_logical_link(self, colo_logical_link_id, **_params):
         return self.get(
-            self.colocation_logical_link_path % (colo_logical_link_id),
+            self.colocation_logical_link_path % colo_logical_link_id,
             params=_params)
 
     @APIParamsCall
@@ -879,12 +877,12 @@ class Client(ClientBase):
     @APIParamsCall
     def update_colo_logical_link(self, colo_logical_link_id, body=None):
         return self.put(self.colocation_logical_link_path %
-                        (colo_logical_link_id), body=body)
+                        colo_logical_link_id, body=body)
 
     @APIParamsCall
     def delete_colo_logical_link(self, colo_logical_link_id):
         return self.delete(self.colocation_logical_link_path %
-                           (colo_logical_link_id))
+                           colo_logical_link_id)
 
     @APIParamsCall
     def list_colo_physical_links(self, **_params):
@@ -894,7 +892,7 @@ class Client(ClientBase):
     @APIParamsCall
     def show_colo_physical_link(self, colo_physical_link_id, **_params):
         return self.get(
-            self.colocation_physical_link_path % (colo_physical_link_id),
+            self.colocation_physical_link_path % colo_physical_link_id,
             params=_params)
 
     @APIParamsCall
@@ -905,5 +903,5 @@ class Client(ClientBase):
     @APIParamsCall
     def show_colo_space(self, colo_space_id, **_params):
         return self.get(
-            self.colocation_space_path % (colo_space_id),
+            self.colocation_space_path % colo_space_id,
             params=_params)

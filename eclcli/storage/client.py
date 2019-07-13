@@ -13,7 +13,7 @@ API_VERSIONS = {
 
 
 def make_client(instance):
-    from storageclient.v2 import client as storage_client
+    from .storageclient.v2 import client as storage_client
 
     http_log_debug = utils.get_effective_log_level() <= logging.DEBUG
     kwargs = utils.build_kwargs_dict('endpoint_type', instance._interface)

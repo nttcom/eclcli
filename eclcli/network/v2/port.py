@@ -23,7 +23,7 @@ class ListPort(command.Lister):
         )
 
         data = [to_obj.Port(port)
-            for port in network_client.list_ports().get('ports')]
+                for port in network_client.list_ports().get('ports')]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -37,7 +37,7 @@ class ShowPort(command.ShowOne):
         parser.add_argument(
             'port_id',
             metavar="<uuid>",
-            help=("Port ID to show.")
+            help="Port ID to show."
         )
         return parser
 
@@ -50,8 +50,8 @@ class ShowPort(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.Port(dic)
         data = utils.get_item_properties(
-            obj, columns,)
-        return (columns, data)
+            obj, columns, )
+        return columns, data
 
 
 class CreatePort(command.ShowOne):
@@ -158,8 +158,8 @@ class CreatePort(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.Port(dic)
         data = utils.get_item_properties(
-            obj, columns,)
-        return (columns, data)
+            obj, columns, )
+        return columns, data
 
 
 class SetPort(command.ShowOne):
@@ -261,8 +261,8 @@ class SetPort(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.Port(dic)
         data = utils.get_item_properties(
-            obj, columns,)
-        return (columns, data)
+            obj, columns, )
+        return columns, data
 
 
 class DeletePort(command.Command):
@@ -272,7 +272,7 @@ class DeletePort(command.Command):
             'port_id',
             metavar="<uuid>",
             nargs="+",
-            help=("Port(s) ID to delete.")
+            help="Port(s) ID to delete."
         )
         return parser
 

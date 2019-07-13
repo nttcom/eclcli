@@ -29,9 +29,9 @@ import logging
 import time
 
 try:
-    import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    import simplejson as json
 
 from oslo_utils import importutils
 import requests

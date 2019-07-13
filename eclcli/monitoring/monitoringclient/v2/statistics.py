@@ -14,7 +14,7 @@
 import six
 
 from .. import base
-import options
+from . import options
 
 
 class Statistics(base.Resource):
@@ -49,29 +49,29 @@ class StatisticsManager(base.Manager):
         path = '/v2/meters/' + str(meter_name) + '/statistics'
         params = []
         if period:
-            params.append('period=%s' %str(period))
+            params.append('period=%s' % str(period))
         if groupby:
-            params.append('groupby=%s' %str(groupby))
+            params.append('groupby=%s' % str(groupby))
         if aggregate:
-            params.append('aggregate=%s' %str(aggregate))
+            params.append('aggregate=%s' % str(aggregate))
         if page:
-            params.append('page=%s' %str(page))
+            params.append('page=%s' % str(page))
         if per_page:
-            params.append('per_page=%s' %str(per_page))
+            params.append('per_page=%s' % str(per_page))
 
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
 
             path = options.build_url(path, q, params)
 
-            return self._list((path))
+            return self._list(path)
 
-        #groupby = groupby or []
-        #aggregates = aggregates or []
-        #p = ['period=%s' % period] if period else []
-        #if isinstance(groupby, six.string_types):
-        #    groupby = [groupby]
-        #p.extend(['groupby=%s' % g for g in groupby] if groupby else [])
-        #p.extend(self._build_aggregates(aggregates))
-        #return self._list(options.build_url(
-        #    '/v2/meters/' + meter_name + '/statistics',
-        #    q, p))
+        # groupby = groupby or []
+        # aggregates = aggregates or []
+        # p = ['period=%s' % period] if period else []
+        # if isinstance(groupby, six.string_types):
+        #     groupby = [groupby]
+        # p.extend(['groupby=%s' % g for g in groupby] if groupby else [])
+        # p.extend(self._build_aggregates(aggregates))
+        # return self._list(options.build_url(
+        #     '/v2/meters/' + meter_name + '/statistics',
+        #     q, p))

@@ -13,8 +13,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from storageclient import base
-from storageclient import utils
+from . import base
+from . import utils
 
 
 class Extension(utils.HookableMixin):

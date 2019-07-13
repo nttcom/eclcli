@@ -2,6 +2,7 @@ from eclcli.common import command
 from eclcli.common import utils
 from eclcli.bare import bare_utils
 
+
 class ListFlavor(command.Lister):
     """List all baremetal flavors"""
 
@@ -19,7 +20,7 @@ class ListFlavor(command.Lister):
             'Disk',
             'RAM',
             'vCPUs'
-            )
+        )
 
         column_headers = (
             'ID',
@@ -27,12 +28,12 @@ class ListFlavor(command.Lister):
             'Disk',
             'RAM',
             'VCPUs'
-            )
+        )
 
         data = bare_client.flavors.list()
         return (column_headers,
-            (utils.get_item_properties(
-                s, columns) for s in data))
+                (utils.get_item_properties(
+                    s, columns) for s in data))
 
 
 class ShowFlavor(command.ShowOne):
@@ -60,11 +61,9 @@ class ShowFlavor(command.ShowOne):
             'Links',
         )
 
-        data = utils.find_resource(bare_client.flavors,parsed_args.flavor)
+        data = utils.find_resource(bare_client.flavors, parsed_args.flavor)
 
-        return (columns,utils.get_item_properties
-                (data, columns, mixed_case_fields = [],
-                    formatters = {
-                        'Links': bare_utils._format_dicts_list_generic
-                    }
-                ))
+        return (columns, utils.get_item_properties(
+            data, columns, mixed_case_fields=[],
+            formatters={'Links': bare_utils._format_dicts_list_generic})
+        )

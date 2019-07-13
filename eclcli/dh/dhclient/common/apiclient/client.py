@@ -9,11 +9,15 @@ import logging
 import time
 
 try:
-    import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    import simplejson as json
 
-from oslo.utils import importutils
+try:
+    from oslo_utils import importutils
+except ImportError:
+    from oslo.utils import importutils
+
 import requests
 
 from .._i18n import _

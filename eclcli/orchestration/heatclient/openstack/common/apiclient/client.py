@@ -30,12 +30,11 @@ import logging
 import time
 
 try:
-    import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    import simplejson as json
 
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+from oslo_utils import encodeutils, importutils
 import requests
 
 from eclcli.orchestration.heatclient.openstack.common._i18n import _

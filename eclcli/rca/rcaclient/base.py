@@ -1,9 +1,13 @@
 import abc
 import contextlib
 import hashlib
-import inspect
 import os
 import threading
+
+try:
+    from inspect import getfullargspec as get_args
+except ImportError:
+    from inspect import getargspec as get_args
 
 import six
 
@@ -192,7 +196,7 @@ class ManagerWithFind(Manager):
         detailed = True
         list_kwargs = {}
 
-        list_argspec = inspect.getargspec(self.list)
+        list_argspec = get_args(self.list)
         if 'detailed' in list_argspec.args:
             detailed = ("human_id" not in kwargs and
                         "name" not in kwargs and

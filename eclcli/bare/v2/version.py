@@ -1,10 +1,3 @@
-import argparse
-import getpass
-import io
-import os
-import six
-import sys
-
 from eclcli.common import command
 from eclcli.bare import bare_utils
 from eclcli.common import utils
@@ -31,9 +24,8 @@ class ListVersion(command.Lister):
 
         data = bare_client.versions.list()
         return (columns,
-                (utils.get_item_properties(s, columns) 
-                for s in data))
-
+                (utils.get_item_properties(s, columns)
+                 for s in data))
 
 
 class ShowVersion(command.ShowOne):
@@ -59,13 +51,11 @@ class ShowVersion(command.ShowOne):
         )
 
         data = bare_client.versions.get(parsed_args.version)
-        return (columns,utils.get_item_properties(
+        return (columns, utils.get_item_properties(
             data,
             columns,
-            mixed_case_fields = [],
-            formatters = {
+            mixed_case_fields=[],
+            formatters={
                 'Links': bare_utils._format_links
             }
         ))
-
-

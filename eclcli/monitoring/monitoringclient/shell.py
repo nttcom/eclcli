@@ -23,10 +23,10 @@ import sys
 from oslo_utils import encodeutils
 import six
 
-import __init__
-import client as monitoringclient
-import utils
-import exc
+from . import __init__
+from . import client as monitoringclient
+from . import utils
+from . import exc
 
 
 def _positive_non_zero_int(argument_value):
@@ -300,6 +300,7 @@ def main(args=None):
     except KeyboardInterrupt:
         print("Stopping Ceilometer Client", file=sys.stderr)
         sys.exit(130)
+
 
 if __name__ == "__main__":
     main()

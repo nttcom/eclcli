@@ -136,7 +136,7 @@ class UpdateCIC(command.ShowOne):
         optional = ('cic_name',)
         body = get_request_body(parsed_args, required, optional)
         try:
-            cic = ecc_client.update_cic(body=body, mcic_id=parsed_args.mcic_id,cic_id=parsed_args.cic_id, )
+            cic = ecc_client.update_cic(body=body, mcic_id=parsed_args.mcic_id, cic_id=parsed_args.cic_id, )
             printout = cic
         except exceptions.ClientException as clientexp:
             printout = {"message": clientexp.message,

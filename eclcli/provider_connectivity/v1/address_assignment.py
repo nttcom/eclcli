@@ -30,7 +30,7 @@ class ListAddressAssignment(command.Lister):
             'Network ID',
             'Fixed IPs',
             'Allowed Address Pairs',
-          ]
+        ]
         column_headers = copy.deepcopy(columns)
 
         data = client.address_assignments(request_id)
@@ -87,7 +87,7 @@ class ListICCSubnet(command.Lister):
             'CIDR',
             'Gateway IP',
             'Status',
-          ]
+        ]
         column_headers = copy.deepcopy(columns)
 
         data = client.icc_subnets(request_id)

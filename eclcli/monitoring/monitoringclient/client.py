@@ -22,12 +22,12 @@ from keystoneauth1 import session
 from oslo_utils import strutils
 import six.moves.urllib.parse as urlparse
 
-import utils
-import exc
+from . import utils
+from . import exc
 from .. import monitoring_utils
-from ecl.common.apiclient import auth
-from ecl.common.apiclient import client
-from ecl.common.apiclient import exceptions
+from .ecl.common.apiclient import auth
+from .ecl.common.apiclient import client
+from .ecl.common.apiclient import exceptions
 
 
 def _discover_auth_versions(session, auth_url):
@@ -95,7 +95,6 @@ def _get_keystone_session(**kwargs):
     user_domain_id = kwargs.pop('user_domain_id', None)
     project_domain_name = kwargs.pop('project_domain_name', None)
     project_domain_id = kwargs.pop('project_domain_id', None)
-    auth = None
 
     use_domain = (user_domain_id or user_domain_name or
                   project_domain_id or project_domain_name)
@@ -308,12 +307,12 @@ def _adjust_kwargs(kwargs):
 
 def Client(version, *args, **kwargs):
     client_kwargs = _adjust_kwargs(kwargs)
-    from v2.client import Client
+    from .v2.client import Client
     return Client(*args, **client_kwargs)
-    #client_kwargs = _adjust_kwargs(kwargs)
-    #module = utils.import_versioned_module(version, 'client')
-    #client_class = getattr(module, 'Client')
-    #return client_class(*args, **client_kwargs)
+    # client_kwargs = _adjust_kwargs(kwargs)
+    # module = utils.import_versioned_module(version, 'client')
+    # client_class = getattr(module, 'Client')
+    # return client_class(*args, **client_kwargs)
 
 
 def get_client(version, **kwargs):
@@ -473,6 +472,6 @@ class SessionClient(adapter.LegacyJsonAdapter):
                                                             raise_exc=False,
                                                             **kwargs)
         if raise_exc and resp.status_code >= 400:
-            print monitoring_utils._print_resp_error(resp.json()['error'])
+            print(monitoring_utils._print_resp_error(resp.json()['error']))
             raise exc.from_response(resp, body)
         return resp

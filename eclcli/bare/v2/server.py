@@ -1,4 +1,3 @@
-
 import six
 import sys
 
@@ -33,14 +32,14 @@ def _format_servers_list_power_state(state):
     :rtype: a string mapped to the power state number
     """
     power_states = [
-        'NOSTATE',      # 0x00
-        'Running',      # 0x01
-        '',             # 0x02
-        'Paused',       # 0x03
-        'Shutdown',     # 0x04
-        '',             # 0x05
-        'Crashed',      # 0x06
-        'Suspended'     # 0x07
+        'NOSTATE',  # 0x00
+        'Running',  # 0x01
+        '',  # 0x02
+        'Paused',  # 0x03
+        'Shutdown',  # 0x04
+        '',  # 0x05
+        'Crashed',  # 0x06
+        'Suspended'  # 0x07
     ]
 
     try:
@@ -50,36 +49,36 @@ def _format_servers_list_power_state(state):
 
 
 def _get_ip_address(addresses, address_type, ip_address_family):
-        # Old style addresses
-        if address_type in addresses:
-            for addy in addresses[address_type]:
+    # Old style addresses
+    if address_type in addresses:
+        for addy in addresses[address_type]:
+            if int(addy['version']) in ip_address_family:
+                return addy['addr']
+
+    # New style addresses
+    new_address_type = address_type
+    if address_type == 'public':
+        new_address_type = 'floating'
+    if address_type == 'private':
+        new_address_type = 'fixed'
+    for network in addresses:
+        for addy in addresses[network]:
+            # Case where it is list of strings
+            if isinstance(addy, six.string_types):
+                if new_address_type == 'fixed':
+                    return addresses[network][0]
+                else:
+                    return addresses[network][-1]
+            # Case where it is a dict
+            if 'OS-EXT-IPS:type' not in addy:
+                continue
+            if addy['OS-EXT-IPS:type'] == new_address_type:
                 if int(addy['version']) in ip_address_family:
                     return addy['addr']
-
-        # New style addresses
-        new_address_type = address_type
-        if address_type == 'public':
-            new_address_type = 'floating'
-        if address_type == 'private':
-            new_address_type = 'fixed'
-        for network in addresses:
-            for addy in addresses[network]:
-                # Case where it is list of strings
-                if isinstance(addy, six.string_types):
-                    if new_address_type == 'fixed':
-                        return addresses[network][0]
-                    else:
-                        return addresses[network][-1]
-                # Case where it is a dict
-                if 'OS-EXT-IPS:type' not in addy:
-                    continue
-                if addy['OS-EXT-IPS:type'] == new_address_type:
-                    if int(addy['version']) in ip_address_family:
-                        return addy['addr']
-        raise exceptions.CommandError(
-            "ERROR: No %s IP version %s address found" %
-            (address_type, ip_address_family)
-        )
+    raise exceptions.CommandError(
+        "ERROR: No %s IP version %s address found" %
+        (address_type, ip_address_family)
+    )
 
 
 def _prep_server_detail(compute_client, server):
@@ -193,13 +192,13 @@ class ListServer(command.Lister):
         bare_client = self.app.client_manager.bare
 
         search_opts = {
-            "changes-since":parsed_args.changes_since,
-            "marker":parsed_args.marker,
-            "limit":parsed_args.limit,
-            "name":parsed_args.name,
-            "image":parsed_args.image,
-            "flavor":parsed_args.flavor,
-            "status":parsed_args.status
+            "changes-since": parsed_args.changes_since,
+            "marker": parsed_args.marker,
+            "limit": parsed_args.limit,
+            "name": parsed_args.name,
+            "image": parsed_args.image,
+            "flavor": parsed_args.flavor,
+            "status": parsed_args.status
         }
         self.log.debug('search options: %s', search_opts)
 
@@ -233,7 +232,7 @@ class ListServer(command.Lister):
             )
         mixed_case_fields = []
 
-        data = bare_client.servers.list(search_opts=search_opts,detailed=parsed_args.detail)
+        data = bare_client.servers.list(search_opts=search_opts, detailed=parsed_args.detail)
         return (column_headers,
                 (utils.get_item_properties(
                     s, columns,
@@ -244,7 +243,7 @@ class ListServer(command.Lister):
                         'Networks': _format_servers_list_networks,
                         'Metadata': utils.format_dict,
                         'Filesystems': bare_utils._format_dicts_list_generic,
-                        'Chassis-Status':bare_utils._format_dicts_list_generic,
+                        'Chassis-Status': bare_utils._format_dicts_list_generic,
                     },
                 ) for s in data))
 
@@ -315,9 +314,9 @@ class ShowServer(command.ShowOne):
         mixed_case_fields = ['OS-EXT-STS:power_state',
                              'OS-EXT-STS:task_state',
                              'OS-EXT-STS:vm_state',
-                             'OS-EXT-AZ:availability_zone',]
+                             'OS-EXT-AZ:availability_zone', ]
 
-        data = utils.find_resource(bare_client.servers,parsed_args.server)
+        data = utils.find_resource(bare_client.servers, parsed_args.server)
         return column_headers, utils.get_item_properties(
             data, columns, mixed_case_fields, formatters={
                 'flavor': bare_utils._format_imageORflavor,
@@ -478,17 +477,20 @@ class CreateServer(command.ShowOne):
                                           files=parsed_args.personality,
                                           disk_config=str(disk_config)
                                           )
-        return (columns, utils.get_item_properties(data, columns, mixed_case_fields, formatters=
-                {
-                    'flavor': bare_utils._format_imageORflavor,
-                    'Image': bare_utils._format_imageORflavor,
-                    'Links': bare_utils._format_links,
-                    'Metadata': bare_utils._format_dicts_list_generic,
-                    'Nic Physical Ports': bare_utils._format_dicts_list_generic,
-                    'Raid Arrays': bare_utils._format_dicts_list_generic,
-                    'Filesystems': bare_utils._format_dicts_list_generic,
-                    'Chassis-Status': bare_utils._format_dicts_list_generic
-                }))
+        return (columns,
+                utils.get_item_properties(
+                    data, columns, mixed_case_fields,
+                    formatters={
+                        'flavor': bare_utils._format_imageORflavor,
+                        'Image': bare_utils._format_imageORflavor,
+                        'Links': bare_utils._format_links,
+                        'Metadata': bare_utils._format_dicts_list_generic,
+                        'Nic Physical Ports': bare_utils._format_dicts_list_generic,
+                        'Raid Arrays': bare_utils._format_dicts_list_generic,
+                        'Filesystems': bare_utils._format_dicts_list_generic,
+                        'Chassis-Status': bare_utils._format_dicts_list_generic
+                    })
+                )
 
 
 class DeleteServer(command.ShowOne):
@@ -505,7 +507,7 @@ class DeleteServer(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         bare_client.servers.delete(server_obj.id)
         return {}, {}
 
@@ -530,9 +532,9 @@ class StartServer(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         if parsed_args.boot_mode:
-            data = bare_client.servers.start_with_mode(server_obj.id,{"boot_mode":parsed_args.boot_mode})
+            data = bare_client.servers.start_with_mode(server_obj.id, {"boot_mode": parsed_args.boot_mode})
         else:
             data = bare_client.servers.start(server_obj.id)
         return {}, {}
@@ -593,8 +595,8 @@ class RebootServer(command.ShowOne):
         body = {'type': parsed_args.type}
         if parsed_args.boot_mode:
             body['boot_mode'] = parsed_args.boot_mode
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
-        bare_client.servers.reboot_with_mode(server_obj.id,body)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        bare_client.servers.reboot_with_mode(server_obj.id, body)
         return {}, {}
 
 
@@ -620,6 +622,6 @@ class GetConsoleServer(command.ShowOne):
             'Password',
         )
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         data = bare_client.servers.get_management_console(server_obj.id)['console']
         return columns, utils.get_dict_properties(data, columns)

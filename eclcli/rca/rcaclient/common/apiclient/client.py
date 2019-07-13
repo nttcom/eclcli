@@ -29,15 +29,19 @@ import logging
 import time
 
 try:
-    import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    import simplejson as json
 
-from oslo.utils import importutils
+try:
+    from oslo_utils import importutils
+except ImportError:
+    from oslo.utils import importutils
+
 import requests
 
-from icgwclient.openstack.common._i18n import _
-from icgwclient.openstack.common.apiclient import exceptions
+from .._i18n import _
+from . import exceptions
 
 
 _logger = logging.getLogger(__name__)
@@ -62,7 +66,7 @@ class HTTPClient(object):
       into terminal and send the same request with curl.
     """
 
-    user_agent = "icgwclient.openstack.common.apiclient"
+    user_agent = "rcaclient.openstack.common.apiclient"
 
     def __init__(self,
                  auth_plugin,

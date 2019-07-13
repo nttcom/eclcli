@@ -98,6 +98,7 @@ class BadGateway(ClientException):
     http_status = 502
     message = "Bad Gateway"
 
+
 # In Python 2.4 Exception is old-style and thus doesn't have a __subclasses__()
 # so we can do this:
 #     _code_map = dict((c.http_status, c)

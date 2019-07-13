@@ -19,8 +19,8 @@
 
 import logging
 
-from eccclient import client
-from eccclient.ecc import client as ecc_client
+from .. import client
+from ... import client as ecc_client
 
 
 LOG = logging.getLogger(__name__)

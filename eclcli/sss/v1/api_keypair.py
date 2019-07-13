@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from eclcli.common import command
-from eclcli.common import exceptions
 from eclcli.common import utils
-from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 
@@ -13,7 +11,7 @@ class SetAPIKeypair(command.ShowOne):
         parser.add_argument(
             'user_id',
             metavar="<uuid>",
-            help=(""),
+            help="",
         )
         return parser
 
@@ -24,5 +22,4 @@ class SetAPIKeypair(command.ShowOne):
         columns    = utils.get_columns(keypair)
         obj        = objectify(keypair)
         data       = utils.get_item_properties(obj, columns)
-        return (columns, data)
-
+        return columns, data

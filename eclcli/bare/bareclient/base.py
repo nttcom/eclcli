@@ -22,16 +22,19 @@ Base utilities to build API operation managers and objects on top of.
 import abc
 import contextlib
 import hashlib
-import inspect
 import os
 import threading
 import json
+try:
+    from inspect import getfullargspec as get_args
+except ImportError:
+    from inspect import getargspec as get_args
 
 import six
 
 from . import exceptions
-from ecl.common.apiclient import base
-from ecl.common import cliutils
+from .ecl.common.apiclient import base
+from .ecl.common import cliutils
 
 Resource = base.Resource
 
@@ -170,7 +173,7 @@ class Manager(base.HookableMixin):
             if resp_content:
                 resp_dict = json.loads(resp_content)
                 admin_pass = resp_dict.get('server', {}).get('adminPass', '')
-        except:
+        except Exception:
             admin_pass = None
 
         if return_raw:
@@ -230,7 +233,7 @@ class ManagerWithFind(Manager):
         detailed = True
         list_kwargs = {}
 
-        list_argspec = inspect.getargspec(self.list)
+        list_argspec = get_args(self.list)
         if 'detailed' in list_argspec.args:
             detailed = ("human_id" not in kwargs and
                         "name" not in kwargs and

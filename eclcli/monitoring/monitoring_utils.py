@@ -1,8 +1,9 @@
-#Functions used to do the format work
+# Functions used to do the format work
 from six.moves import urllib
 
-def _format_subdict(dict_x, list_it = True):
-    if dict_x == None:
+
+def _format_subdict(dict_x, list_it=True):
+    if dict_x is None:
         return None
 
     if len(dict_x) == 0:
@@ -50,8 +51,8 @@ def _format_subdict(dict_x, list_it = True):
     return out
 
 
-def _format_sublist(list_x, list_it = True):
-    if list_x == None:
+def _format_sublist(list_x, list_it=True):
+    if list_x is None:
         return None
 
     if len(list_x) == 0:
@@ -100,6 +101,7 @@ def _format_sublist(list_x, list_it = True):
 
     return out
 
+
 def _format_show_dictionary(dict_x):
     """
     Return a formatted string instead output a dictionary directly
@@ -123,8 +125,9 @@ def _format_show_dictionary(dict_x):
                 pairs += _format_subdict(dict_x[_keyName], False) + '\n'
         return pairs[:-1]
 
-    except:
+    except Exception:
         return dict_x
+
 
 def _format_show_dicts_list(list_x):
     """
@@ -136,7 +139,7 @@ def _format_show_dicts_list(list_x):
     """
 
     try:
-        if list_x == None:
+        if list_x is None:
             return None
 
         if type(list_x) == dict:
@@ -150,7 +153,7 @@ def _format_show_dicts_list(list_x):
 
             if len(list_x) == 1:
                 if type(list_x[0]) == dict:
-                    out +=  _format_show_dictionary(list_x[0])
+                    out += _format_show_dictionary(list_x[0])
                 if type(list_x[0]) == list:
                     out += _format_show_dicts_list[list_x[0]]
                 if type(list_x[0]) != dict and type(list_x[0]) != list:
@@ -165,7 +168,7 @@ def _format_show_dicts_list(list_x):
 
                 if type(elem) == dict:
                     temp = ""
-                    if inline == False:
+                    if inline is False:
                         temp += '\n'
                     temp += _format_subdict(elem)
                     temp += " \n"
@@ -173,7 +176,7 @@ def _format_show_dicts_list(list_x):
 
                 if type(elem) == list:
                     temp = ""
-                    if inline == False:
+                    if inline is False:
                         temp += '\n'
                     temp += _format_sublist(elem)
                     temp += " \n"
@@ -186,7 +189,7 @@ def _format_show_dicts_list(list_x):
 
             return out
 
-    except:
+    except Exception:
         return list_x
 
 
@@ -200,8 +203,9 @@ def _format_links(link_x):
             pairs += _dict['rel'] + '-> ' + _dict['href'] + '\n'
         return pairs[:-1]
 
-    except:
+    except Exception:
         return link_x
+
 
 def _format_links_resource(data):
     """
@@ -211,7 +215,7 @@ def _format_links_resource(data):
     try:
 
         for elem in data:
-            elem._info.setdefault(u'meter_links',[])
+            elem._info.setdefault(u'meter_links', [])
             _dicts = elem._info[u'links']
             i = 0
 
@@ -223,8 +227,9 @@ def _format_links_resource(data):
                     i -= 1
                 i += 1
         return data
-    except:
+    except Exception:
         return data
+
 
 def get_dict_properties(item, fields, formatters=None):
     if formatters is None:
@@ -240,6 +245,7 @@ def get_dict_properties(item, fields, formatters=None):
             row.append(data)
     return tuple(row)
 
+
 def _dictionary2string(dict_x):
     """
     :param dict_x: a dictionary
@@ -254,6 +260,7 @@ def _dictionary2string(dict_x):
                    + str(dict_x[_keyName]) + ', '
     return pairs
 
+
 def _tidy_data_info(info):
     """
     format json data
@@ -267,8 +274,9 @@ def _tidy_data_info(info):
                 info[_key] = _format_show_dicts_list(info[_key])
         return info
 
-    except:
+    except Exception:
         return info
+
 
 def _make_query(parsed_args):
     """
@@ -283,25 +291,24 @@ def _make_query(parsed_args):
         try:
             types = parsed_args.type.split(',')
             ops = parsed_args.op.split(',')
-        except:
+        except Exception:
             types = ["string"]
             ops = ["eq"]
 
-
         if len(fields) != len(values):
-            print "Error: mismatched fields and values"
+            print("Error: mismatched fields and values")
             return False
         for i in range(len(fields)):
             try:
                 if ops[i] == "":
                     ops[i] = "eq"
-            except:
+            except Exception:
                 ops.append("eq")
 
             try:
                 if types[i] == "":
                     types[i] = "string"
-            except:
+            except Exception:
                 types.append("string")
 
         q = []
@@ -314,6 +321,7 @@ def _make_query(parsed_args):
     else:
         return None
 
+
 def _qparams2url(qparams):
     """
     parse qparams to make url segment
@@ -321,12 +329,12 @@ def _qparams2url(qparams):
     :return: parsed url segment
     """
     try:
-        if qparams == []:
+        if len(qparams) == 0:
             return ""
         assert len(qparams) == 4
         num = len(qparams[0][1])
 
-        path=""
+        path = ""
         for i in range(num):
             for j in range(4):
                 path += str(qparams[j][0]) + '=' + str(qparams[j][1][i]) + "&"
@@ -334,17 +342,18 @@ def _qparams2url(qparams):
         path = path[:-1]
         return path
 
-    except:
+    except Exception:
         return urllib.parse.urlencode(qparams, doseq=True)
+
 
 def _print_resp_error(body):
     try:
-       info = {"message": body["message"],
-               "details": body["title"],
-               "code": body["code"]}
-       error_msg = "---------error message---------\n"
-       error_msg += _format_show_dictionary(info) + '\n'
-       error_msg += "-------------------------------"
-       return error_msg
-    except:
+        info = {"message": body["message"],
+                "details": body["title"],
+                "code": body["code"]}
+        error_msg = "---------error message---------\n"
+        error_msg += _format_show_dictionary(info) + '\n'
+        error_msg += "-------------------------------"
+        return error_msg
+    except Exception:
         return body

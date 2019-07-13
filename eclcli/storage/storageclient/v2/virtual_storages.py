@@ -2,7 +2,7 @@ import six
 try:
     from urllib import urlencode
 except ImportError:
-    from urllib.parse import urlencode
+    from six.moves.urllib.parse import urlencode
 
 from .. import base
 
@@ -50,7 +50,7 @@ class VirtualStorageManager(base.ManagerWithFind):
         return self._get("/virtual_storages/%s" % virtual_storage_id, "virtual_storage")
 
     def _format_sort_param(self, sort):
-        '''Formats the sort information into the sort query string parameter.
+        """Formats the sort information into the sort query string parameter.
 
         The input sort information can be any of the following:
         - Comma-separated string in the form of <key[:dir]>
@@ -66,7 +66,7 @@ class VirtualStorageManager(base.ManagerWithFind):
         :returns: Formatted query string parameter or None
         :raise ValueError: If an invalid sort direction or invalid sort key is
                            given
-        '''
+        """
         if not sort:
             return None
 
@@ -168,14 +168,14 @@ class VirtualStorageManager(base.ManagerWithFind):
         """
         Delete a virtual storage.
 
-        :param volume: The :class:`VirtualStorage` to delete.
+        :param virtual_storage: The :class:`VirtualStorage` to delete.
         """
         return self._delete("/virtual_storages/%s" % base.getid(virtual_storage))
 
     def update(self, virtual_storage, **kwargs):
-        """Update the name or description for a volume.
+        """Update the name or description for a virtual storage.
 
-        :param volume: The :class:`Volume` to update.
+        :param virtual_storage: The :class:`VirtualStorage` to update.
         """
         if not kwargs:
             return

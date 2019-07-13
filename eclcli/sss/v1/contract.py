@@ -2,9 +2,7 @@
 
 import json
 from eclcli.common import command
-from eclcli.common import exceptions
 from eclcli.common import utils
-from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 
@@ -14,7 +12,7 @@ class ListContract(command.Lister):
         parser.add_argument(
             'channel_id',
             metavar="<uuid>",
-            help=("Target channel_id under own contract.")
+            help="Target channel_id under own contract."
         )
         parser.add_argument(
             '--include_deleted',
@@ -35,8 +33,10 @@ class ListContract(command.Lister):
         )
 
         channel_id = parsed_args.channel_id
-        data = [objectify(contract)
-            for contract in sss_client.list_contracts(channel_id).get('contracts')]
+        data = [
+            objectify(contract) for contract
+            in sss_client.list_contracts(channel_id).get('contracts')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -134,10 +134,11 @@ class CreateContract(command.ShowOne):
             body['external_reference_id'] = str(parsed_args.external_reference_id)
 
         contract = sss_client.create_contract(body)
-        columns  = utils.get_columns(contract)
-        obj      = objectify(contract)
-        data     = utils.get_item_properties(obj, columns)
-        return (columns, data)
+        columns = utils.get_columns(contract)
+        obj = objectify(contract)
+        data = utils.get_item_properties(obj, columns)
+        return columns, data
+
 
 class DeleteContract(command.Command):
     def get_parser(self, prog_name):
@@ -146,7 +147,7 @@ class DeleteContract(command.Command):
             'contract_id',
             metavar="<uuid>",
             nargs="+",
-            help=("Contract ID of Delete target")
+            help="Contract ID of Delete target"
         )
         return parser
 
@@ -163,12 +164,12 @@ class ShowBilling(command.ShowOne):
         parser.add_argument(
             'contract_id',
             metavar="<uuid>",
-            help=("The contract ID getting more information")
+            help="The contract ID getting more information"
         )
         parser.add_argument(
             'target_month',
             metavar="<target_month>",
-            help=("target billing month with YYYY-MM format")
+            help="target billing month with YYYY-MM format"
         )
         return parser
 
@@ -181,10 +182,10 @@ class ShowBilling(command.ShowOne):
         obj = objectify(billing)
 
         try:
-            obj.charge_data=json.dumps(obj.charge_data, indent=2)
-        except:
+            obj.charge_data = json.dumps(obj.charge_data, indent=2)
+        except Exception:
             # Ignore prettify if exception raised
             pass
-            
+
         data = utils.get_item_properties(obj, columns)
-        return (columns, data)
+        return columns, data

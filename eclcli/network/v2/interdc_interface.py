@@ -102,9 +102,11 @@ class ListInterDCInterface(command.Lister):
             search_opts.update({"status": parsed_args.status})
         if parsed_args.vrid:
             search_opts.update({"vrid": parsed_args.vrid})
-        data = [to_obj.InterDCInterface(idcif)
+        data = [
+            to_obj.InterDCInterface(idcif)
             for idcif in network_client.list_interdc_interfaces(
-                **search_opts).get('interdc_interfaces')]
+                **search_opts).get('interdc_interfaces')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -132,7 +134,7 @@ class ShowInterDCInterface(command.ShowOne):
         obj = to_obj.InterDCInterface(dic)
         data = utils.get_item_properties(
             obj, columns,)
-        return (columns, data)
+        return columns, data
 
 
 class CreateInterDCInterface(command.ShowOne):
