@@ -2,7 +2,10 @@ import logging
 from xml.etree import ElementTree as etree
 from xml.parsers import expat
 
-from oslo_serialization import jsonutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
 
 from builtins import int
 import six

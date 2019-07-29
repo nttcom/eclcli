@@ -6,7 +6,6 @@ import re
 import socket
 import time
 
-# from keystoneclient import adapter
 from keystoneauth1 import adapter
 
 from oslo_utils import importutils, netutils

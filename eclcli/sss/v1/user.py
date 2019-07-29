@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from eclcli.common import command
-from eclcli.common import exceptions
-from eclcli.common import utils
-from eclcli.identity import common as identity_common
+from eclcli.common import command, utils
 from ..sssclient.common.utils import objectify
 
 
@@ -49,7 +46,7 @@ class ShowUser(command.ShowOne):
         parser.add_argument(
             'user_id',
             metavar="<uuid>",
-            help=("user's id which you need to get information. (ecidXXXXXXXXX)")
+            help="user's id which you need to get information. (ecidXXXXXXXXX)"
         )
         return parser
 
@@ -118,7 +115,7 @@ class DeleteUser(command.Command):
             'user_id',
             metavar="<uuid>",
             nargs="+",
-            help=("Delete target users user id.")
+            help="Delete target users user id."
         )
         return parser
 

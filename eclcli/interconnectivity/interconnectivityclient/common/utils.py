@@ -2,8 +2,11 @@ import argparse
 import logging
 import os
 
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+try:
+    from oslo_utils import encodeutils, importutils
+except ImportError:
+    from oslo.utils import encodeutils, importutils
+
 import six
 
 from . import exceptions

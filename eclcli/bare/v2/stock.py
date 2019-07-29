@@ -1,8 +1,6 @@
 from eclcli.common import command
 from eclcli.common import utils
 
-from ..bareclient.v2 import stocks
-
 
 class ShowStock(command.ShowOne):
     """Display flavor's stock details"""
@@ -23,7 +21,6 @@ class ShowStock(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         if parsed_args.availability_zone:
             columns = (

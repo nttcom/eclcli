@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import copy
-from eclcli.common import command
-from eclcli.common import utils
+from eclcli.common import command, utils
 
 
 class ListVirtualNetworkAppliancePlan(command.Lister):

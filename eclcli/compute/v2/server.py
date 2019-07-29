@@ -22,18 +22,10 @@ import os
 import six
 import sys
 
-from eclcli.common import command
+from novaclient.v2 import servers
+from novaclient.v2.servers import ServerManager
 
-try:
-    from novaclient.v2 import servers
-    from novaclient.v2.servers import ServerManager
-except ImportError:
-    from novaclient.v1_1 import servers
-    from novaclient.v1_1.servers import ServerManager
-
-from eclcli.common import exceptions
-from eclcli.common import parseractions
-from eclcli.common import utils
+from eclcli.common import command, exceptions, parseractions, utils
 from eclcli.i18n import _  # noqa
 from eclcli.identity import common as identity_common
 

@@ -7,8 +7,12 @@ import socket
 import time
 
 from keystoneauth1 import adapter
-from oslo_utils import importutils
-from oslo_utils import netutils
+
+try:
+    from oslo_utils import importutils, netutils
+except ImportError:
+    from oslo.utils import importutils, netutils
+
 import requests
 from requests import adapters
 

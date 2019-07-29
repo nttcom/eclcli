@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import copy
 import six
 from eclcli.common import command

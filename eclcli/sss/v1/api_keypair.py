@@ -17,9 +17,9 @@ class SetAPIKeypair(command.ShowOne):
 
     def take_action(self, parsed_args):
         sss_client = self.app.client_manager.sss
-        user_id    = parsed_args.user_id
-        keypair    = sss_client.set_api_keypair(user_id)
-        columns    = utils.get_columns(keypair)
-        obj        = objectify(keypair)
-        data       = utils.get_item_properties(obj, columns)
+        user_id = parsed_args.user_id
+        keypair = sss_client.set_api_keypair(user_id)
+        columns = utils.get_columns(keypair)
+        obj = objectify(keypair)
+        data = utils.get_item_properties(obj, columns)
         return columns, data

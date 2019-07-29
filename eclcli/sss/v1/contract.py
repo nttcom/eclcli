@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import json
-from eclcli.common import command
-from eclcli.common import utils
+try:
+    import json
+except ImportError:
+    import simplejson as json
+from eclcli.common import command, utils
 from ..sssclient.common.utils import objectify
 
 

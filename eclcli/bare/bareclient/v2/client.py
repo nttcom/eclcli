@@ -18,43 +18,6 @@ class Client(object):
     Top-level object to access the NTT Com Cloud Baremetal API.
 
     Create an instance with your creds::
-
-        >>> client = Client(USERNAME, PASSWORD, PROJECT_ID, AUTH_URL)
-
-    Or, alternatively, you can create a client instance using the
-    keystoneclient.session API::
-
-        >>> from keystoneclient.auth.identity import v2
-        >>> from keystoneclient import session
-        >>> from bearclient.client import Client
-        >>> auth = v2.Password(auth_url=AUTH_URL,
-                               username=USERNAME,
-                               password=PASSWORD,
-                               tenant_name=PROJECT_ID)
-        >>> sess = session.Session(auth=auth)
-        >>> bear = client.Client(VERSION, session=sess)
-
-    Then call methods on its managers::
-
-        >>> client.servers.list()
-        ...
-        >>> client.flavors.list()
-        ...
-
-    It is also possible to use an instance as a context manager in which
-    case there will be a session kept alive for the duration of the with
-    statement::
-
-        >>> with Client(USERNAME, PASSWORD, PROJECT_ID, AUTH_URL) as client:
-        ...     client.servers.list()
-        ...     client.flavors.list()
-        ...
-
-    It is also possible to have a permanent (process-long) connection pool,
-    by passing a connection_pool=True::
-
-        >>> client = Client(USERNAME, PASSWORD, PROJECT_ID,
-        ...     AUTH_URL, connection_pool=True)
     """
     def __init__(self, username=None, api_key=None, project_id=None,
                  auth_url=None, insecure=False, timeout=None,

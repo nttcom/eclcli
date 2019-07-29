@@ -18,9 +18,16 @@ from __future__ import print_function
 import os
 import textwrap
 
-from oslo_serialization import jsonutils
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import encodeutils, importutils
+except ImportError:
+    from oslo.utils import encodeutils, importutils
+
 import prettytable
 import six
 from six.moves import zip

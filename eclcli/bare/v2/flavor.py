@@ -12,7 +12,6 @@ class ListFlavor(command.Lister):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         columns = (
             'ID',
@@ -50,7 +49,6 @@ class ShowFlavor(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         columns = (
             'ID',

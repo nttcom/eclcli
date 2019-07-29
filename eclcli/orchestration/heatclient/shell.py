@@ -25,11 +25,11 @@ from oslo_utils import importutils
 import six
 import six.moves.urllib.parse as urlparse
 
-from keystoneclient.auth.identity import v2 as v2_auth
-from keystoneclient.auth.identity import v3 as v3_auth
+from keystoneauth1 import session as kssession
+from keystoneauth1.identity import v2 as v2_auth
+from keystoneauth1.identity import v3 as v3_auth
 from keystoneclient import discover
 from keystoneclient import exceptions as ks_exc
-from keystoneclient import session as kssession
 
 from eclcli.orchestration import heatclient
 

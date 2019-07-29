@@ -1,10 +1,7 @@
 import six
 import sys
 
-from eclcli.common import command
-
-from eclcli.common import exceptions
-from eclcli.common import utils
+from eclcli.common import command, exceptions, utils
 from eclcli.i18n import _  # noqa
 from eclcli.bare import bare_utils
 

@@ -24,7 +24,12 @@ import contextlib
 import hashlib
 import os
 import threading
-import json
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 try:
     from inspect import getfullargspec as get_args
 except ImportError:

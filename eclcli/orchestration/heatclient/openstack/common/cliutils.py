@@ -28,8 +28,11 @@ try:
 except ImportError:
     from inspect import getargspec as get_args
 
-from oslo_utils import encodeutils
-from oslo_utils import strutils
+try:
+    from oslo_utils import encodeutils, strutils
+except ImportError:
+    from oslo.utils import encodeutils, strutils
+
 import prettytable
 import six
 from six import moves

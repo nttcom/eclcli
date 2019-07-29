@@ -6,7 +6,10 @@ import re
 import six
 import time
 
-from oslo_utils import importutils
+try:
+    from oslo_utils import importutils
+except ImportError:
+    from oslo.utils import importutils
 
 from eclcli.common import exceptions
 

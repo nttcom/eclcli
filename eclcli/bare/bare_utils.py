@@ -1,5 +1,9 @@
 # Functions used to do the format work
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import six
 
 

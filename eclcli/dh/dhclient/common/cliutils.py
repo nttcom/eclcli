@@ -10,8 +10,11 @@ try:
 except ImportError:
     from inspect import getargspec as get_args
 
-from oslo_utils import encodeutils
-from oslo_utils import strutils
+try:
+    from oslo_utils import encodeutils, strutils
+except ImportError:
+    from oslo.utils import encodeutils, strutils
+
 import prettytable
 import six
 from six import moves
@@ -40,7 +43,7 @@ def validate_args(fn, *args, **kwargs):
     MissingArgs: Missing argument(s): b, d
 
     :param fn: the function to check
-    :param arg: the positional arguments supplied
+    :param args: the positional arguments supplied
     :param kwargs: the keyword arguments supplied
     """
     argspec = get_args(fn)

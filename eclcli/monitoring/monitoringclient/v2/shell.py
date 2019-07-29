@@ -16,10 +16,17 @@
 
 import argparse
 import functools
-import json
 
-from oslo_serialization import jsonutils
-from oslo_utils import strutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import strutils
+except ImportError:
+    from oslo.utils import strutils
+
 import six
 from six import moves
 

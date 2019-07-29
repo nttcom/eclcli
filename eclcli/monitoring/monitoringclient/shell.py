@@ -20,7 +20,11 @@ import argparse
 import logging
 import sys
 
-from oslo_utils import encodeutils
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import six
 
 from . import __init__

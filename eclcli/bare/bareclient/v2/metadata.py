@@ -27,7 +27,7 @@ class MetadataManager(base.Manager):
         url = "/servers/%s/metadata/%s" % (server_id, key)
         return self._update(url, body, "metadata")
 
-# Temporary bug fix , Currently update is replacing the metadata and create is merging the data
+    # Temporary bug fix , Currently update is replacing the metadata and create is merging the data
     def replace(self, server_id, body):
         url = "/servers/%s/metadata" % server_id
         return self._update(url, body, "metadata")

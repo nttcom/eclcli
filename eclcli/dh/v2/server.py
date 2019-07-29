@@ -1,5 +1,4 @@
-from eclcli.common import command
-from eclcli.common import utils
+from eclcli.common import command, utils
 
 
 class ListServer(command.Lister):
@@ -84,7 +83,8 @@ class ListServer(command.Lister):
 
         mixed_case_fields = ['imageRef']
 
-        data = dh_client.servers.list(search_opts=search_opts, detailed=parsed_args.detail)
+        data = dh_client.servers.list(search_opts=search_opts,
+                                      detailed=parsed_args.detail)
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -150,7 +150,9 @@ class CreateServer(command.ShowOne):
 
         parser.add_argument(
             "networks",
-            help="Comma separated list of upto 2 Logical Network ID(s) which belong to different plane(Data/Storage), eg UUID1,UUID2",
+            help="Comma separated list of upto 2 Logical Network ID(s) "
+                 "which belong to different plane(Data/Storage), "
+                 "eg UUID1,UUID2",
             metavar='<networks>'
         )
 
@@ -174,13 +176,15 @@ class CreateServer(command.ShowOne):
 
         parser.add_argument(
             "--availability_zone",
-            help="The availability zone name in which to launch the server. If omit this parameter, target availability zone is random",
+            help="The availability zone name in which to launch the server. "
+                 "If omit this parameter, target availability zone is random",
             metavar='<availability-zone>'
         )
 
         parser.add_argument(
             "--metadata",
-            help="Metadata key and value pairs. The maximum size of the metadata key and value is 255 bytes each",
+            help="Metadata key and value pairs. The maximum size of "
+                 "the metadata key and value is 255 bytes each",
             metavar='<metadata>'
         )
 
@@ -204,11 +208,15 @@ class CreateServer(command.ShowOne):
 
         mixed_case_fields = ['adminPass']
 
-        data = dh_client.servers.create(name=parsed_args.name, networks=nics, image_id=parsed_args.imageRef,
-                                        flavor_id=parsed_args.flavorRef,
-                                        admin_pass=parsed_args.adminPass, metadata=parsed_args.metadata,
-                                        availability_zone=parsed_args.availability_zone,
-                                        description=parsed_args.description)
+        data = dh_client.servers.create(
+            name=parsed_args.name,
+            networks=nics,
+            image_id=parsed_args.imageRef,
+            flavor_id=parsed_args.flavorRef,
+            admin_pass=parsed_args.adminPass, metadata=parsed_args.metadata,
+            availability_zone=parsed_args.availability_zone,
+            description=parsed_args.description
+        )
 
         return (row_headers,
                 utils.get_item_properties(

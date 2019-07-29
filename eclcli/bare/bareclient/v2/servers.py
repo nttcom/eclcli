@@ -20,10 +20,18 @@ Server interface.
 """
 
 import base64
-import json
 import os
 
-from oslo_utils import encodeutils
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import six
 from six.moves.urllib import parse
 
