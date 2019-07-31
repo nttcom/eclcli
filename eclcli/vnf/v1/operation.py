@@ -5,7 +5,6 @@ try:
 except ImportError:
     import simplejson as json
 import copy
-import six
 from eclcli.common import command
 from eclcli.common import utils
 from eclcli.i18n import _  # noqa
@@ -89,4 +88,4 @@ class ShowOperation(command.ShowOne):
             req_body_dict = json.loads(req_body)
             setattr(data, 'request_body', json.dumps(req_body_dict, indent=2))
 
-        return (row_headers, (utils.get_item_properties(data, rows)))
+        return row_headers, (utils.get_item_properties(data, rows))

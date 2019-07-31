@@ -16,6 +16,10 @@
 
 import argparse
 import functools
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 try:
     from oslo_serialization import jsonutils
