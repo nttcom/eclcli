@@ -299,7 +299,11 @@ def build_kwargs_dict(arg_name, value):
 
 def is_ascii(string):
     try:
-        string.decode('ascii')
+        if six.PY2:
+            string.decode('ascii')
+        else:
+            if type(string) != six.text_type:
+                return False
         return True
     except UnicodeDecodeError:
         return False

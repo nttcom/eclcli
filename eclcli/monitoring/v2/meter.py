@@ -147,7 +147,7 @@ class ListMeterStatistics(command.Lister):
         q = monitoring_utils._make_query(parsed_args)
         if q is None:
             print("query required")
-            return False
+            return {}, {}
 
         monitoring_client = self.app.client_manager.monitoring
         data = monitoring_client.statistics.list(

@@ -109,8 +109,8 @@ class CancelCopyImage(command.ShowOne):
     def take_action(self, parsed_args):
         image_client = self.app.client_manager.image
         job_id = parsed_args.job_id
-
-        image = image_client.extension.cancel_copy(job_id)
+        image_client.extension.cancel_copy(job_id)
+        image = image_client.extension.detail(job_id)
 
         return zip(*sorted(six.iteritems(image)))
 

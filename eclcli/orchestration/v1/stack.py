@@ -618,6 +618,7 @@ class DeleteStack(command.Command):
             if not parsed_args.yes and sys.stdin.isatty():
                 sys.stdout.write(
                     _("Are you sure you want to delete this stack(s) [y/N]? "))
+                sys.stdout.flush()
                 prompt_response = sys.stdin.readline().lower()
                 if not prompt_response.startswith('y'):
                     self.log.info(_LI('User did not confirm stack delete so '
