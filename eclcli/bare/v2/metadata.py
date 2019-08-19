@@ -21,7 +21,10 @@ class ListMetadata(command.ShowOne):
         identity_client = self.app.client_manager.identity
 
         data = bare_client.metadata.list(parsed_args.server)
-        return zip(*sorted(six.iteritems(data._info)))
+        if len(data._info) == 0:
+            return {}, {}
+        else:
+            return zip(*sorted(six.iteritems(data._info)))
 
 
 class ShowMetadata(command.ShowOne):
