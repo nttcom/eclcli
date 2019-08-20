@@ -1,5 +1,6 @@
-import exceptions
+from . import exceptions
 from . import SERVICE_TYPE
+
 
 class ServiceCatalog(object):
     """Helper methods for dealing with a Keystone Service Catalog."""
@@ -30,7 +31,7 @@ class ServiceCatalog(object):
                             endpoint.get('versionId') in (None, '1.1', '2'):
                         matching_endpoints.append(endpoint)
             if not matching_endpoints:
-                raise dhclient.exceptions.EndpointNotFound()
+                raise exceptions.EndpointNotFound()
 
         # We don't always get a service catalog back ...
         if 'serviceCatalog' not in self.catalog['access']:
@@ -63,9 +64,9 @@ class ServiceCatalog(object):
                     matching_endpoints.append(endpoint)
 
         if not matching_endpoints:
-            raise dhclient.exceptions.EndpointNotFound()
+            raise exceptions.EndpointNotFound()
         elif len(matching_endpoints) > 1:
-            raise dhclient.exceptions.AmbiguousEndpoints(
+            raise exceptions.AmbiguousEndpoints(
                 endpoints=matching_endpoints)
         else:
             return matching_endpoints[0][endpoint_type]

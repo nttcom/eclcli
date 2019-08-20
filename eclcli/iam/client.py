@@ -1,6 +1,5 @@
 import logging
 
-from eclcli.common import exceptions
 from eclcli.common import utils
 
 LOG = logging.getLogger(__name__)
@@ -17,7 +16,7 @@ _iam_api_version = None
 
 
 def make_client(instance):
-    from sssclient import client as iam_client
+    from eclcli.sss.sssclient.v1 import client as iam_client
 
     if _iam_api_version is not None:
         version = _iam_api_version

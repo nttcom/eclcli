@@ -6,11 +6,9 @@ import re
 import socket
 import time
 
-# from keystoneclient import adapter
 from keystoneauth1 import adapter
 
-from oslo_utils import importutils
-from oslo_utils import netutils
+from oslo_utils import importutils, netutils
 import requests
 from requests import adapters
 
@@ -709,5 +707,5 @@ def _construct_http_client(username=None, password=None, project_id=None,
 
 
 def Client(version, *args, **kwargs):
-    from v2.client import Client
+    from .v2.client import Client
     return Client(*args, **kwargs)

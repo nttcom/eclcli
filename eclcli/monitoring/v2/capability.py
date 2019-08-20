@@ -14,9 +14,9 @@
 #
 
 from eclcli.common import command
-from eclcli.common import utils
 from .. import monitoring_utils
 import six
+
 
 class ListCapability(command.ShowOne):
     """Lists information for API and storage capabilities of the ECL2.0 Monitoring service."""

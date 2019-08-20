@@ -1,8 +1,5 @@
 __all__ = ['__version__']
 
-import pbr.version
-import os
-
 DEFAULT_VERSION = 'v1.0'
 SERVICE_TYPE = 'storage'
 

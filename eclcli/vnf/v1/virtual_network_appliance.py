@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 import json_merge_patch as jmp
 import copy
 import re
 import six
-from eclcli.common import command
-from eclcli.common import exceptions
-from eclcli.common import utils
+from eclcli.common import command, exceptions, utils
 from eclcli.i18n import _  # noqa
 
 ROWS_FOR_SHOW = [

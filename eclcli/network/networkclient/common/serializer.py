@@ -2,8 +2,12 @@ import logging
 from xml.etree import ElementTree as etree
 from xml.parsers import expat
 
-from oslo_serialization import jsonutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
 
+from builtins import int
 import six
 
 from . import constants
@@ -11,9 +15,6 @@ from . import exceptions as exception
 from ..i18n import _
 
 LOG = logging.getLogger(__name__)
-
-if six.PY3:
-    long = int
 
 
 class ActionDispatcher(object):
@@ -38,6 +39,7 @@ class JSONDictSerializer(DictSerializer):
     def default(self, data):
         def sanitizer(obj):
             return six.text_type(obj)
+
         return jsonutils.dumps(data, default=sanitizer)
 
 
@@ -140,10 +142,6 @@ class XMLDictSerializer(DictSerializer):
                 result.set(
                     constants.TYPE_ATTR,
                     constants.TYPE_INT)
-            elif isinstance(data, long):
-                result.set(
-                    constants.TYPE_ATTR,
-                    constants.TYPE_LONG)
             elif isinstance(data, float):
                 result.set(
                     constants.TYPE_ATTR,
@@ -256,13 +254,11 @@ class XMLDeserializer(TextDeserializer):
                 return ''
         elif (len(node) == 0 and node.text):
             converters = {constants.TYPE_BOOL:
-                          lambda x: x.lower() == 'true',
+                              lambda x: x.lower() == 'true',
                           constants.TYPE_INT:
-                          lambda x: int(x),
-                          constants.TYPE_LONG:
-                          lambda x: long(x),
+                              lambda x: int(x),
                           constants.TYPE_FLOAT:
-                          lambda x: float(x)}
+                              lambda x: float(x)}
             if attrType and attrType in converters:
                 return converters[attrType](node.text)
             else:

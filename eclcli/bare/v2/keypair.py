@@ -1,6 +1,7 @@
 from eclcli.common import command
 from eclcli.common import utils
 
+
 class CreateKeypair(command.ShowOne):
     """Create/Import keypair with/without a SSH public key"""
 
@@ -8,13 +9,13 @@ class CreateKeypair(command.ShowOne):
         parser = super(CreateKeypair, self).get_parser(prog_name)
         parser.add_argument(
             "keypair",
-            metavar = "<keypair>",
-            help = "keypair name",
+            metavar="<keypair>",
+            help="keypair name",
         )
         parser.add_argument(
             "--public-key",
-            metavar = "<public-key>",
-            help = "public key to import",
+            metavar="<public-key>",
+            help="public key to import",
         )
         return parser
 
@@ -42,7 +43,8 @@ class CreateKeypair(command.ShowOne):
             )
             data = bare_client.keypairs.create(parsed_args.keypair)
 
-        return (columns, utils.get_item_properties(data,columns))
+        return columns, utils.get_item_properties(data, columns)
+
 
 class DeleteKeypair(command.ShowOne):
     """Delete keypair"""
@@ -51,8 +53,8 @@ class DeleteKeypair(command.ShowOne):
         parser = super(DeleteKeypair, self).get_parser(prog_name)
         parser.add_argument(
             "keypair",
-            metavar = "<keypair>",
-            help = "Keypair name",
+            metavar="<keypair>",
+            help="Keypair name",
         )
         return parser
 
@@ -61,7 +63,8 @@ class DeleteKeypair(command.ShowOne):
         identity_client = self.app.client_manager.identity
 
         bare_client.keypairs.delete(parsed_args.keypair)
-        return {},{}
+        return {}, {}
+
 
 class ShowKeypair(command.ShowOne):
     """Show keypair's detail"""
@@ -85,8 +88,9 @@ class ShowKeypair(command.ShowOne):
             'Public Key',
         )
 
-        data = utils.find_resource(bare_client.keypairs,parsed_args.keypair)
-        return (columns, utils.get_item_properties(data, columns))
+        data = utils.find_resource(bare_client.keypairs, parsed_args.keypair)
+        return columns, utils.get_item_properties(data, columns)
+
 
 class ListKeypair(command.Lister):
     """List all keypairs"""
@@ -96,7 +100,6 @@ class ListKeypair(command.Lister):
         return parser
 
     def take_action(self, parsed_args):
-
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
 

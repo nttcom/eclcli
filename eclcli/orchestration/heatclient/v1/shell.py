@@ -15,8 +15,16 @@
 
 import logging
 
-from oslo_serialization import jsonutils
-from oslo_utils import strutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import strutils
+except ImportError:
+    from oslo.utils import strutils
+
 import six
 from six.moves.urllib import request
 import sys
@@ -34,7 +42,7 @@ from eclcli.orchestration.heatclient.openstack.common._i18n import _
 from eclcli.orchestration.heatclient.openstack.common._i18n import _LI
 from eclcli.orchestration.heatclient.openstack.common._i18n import _LW
 
-import heatclient.exc as exc
+from eclcli.orchestration.heatclient import exc
 
 logger = logging.getLogger(__name__)
 
@@ -305,6 +313,7 @@ def do_stack_delete(hc, args):
         if not args.yes and sys.stdin.isatty():
             sys.stdout.write(
                 _("Are you sure you want to delete this stack(s) [y/N]? "))
+            sys.stdout.flush()
             prompt_response = sys.stdin.readline().lower()
             if not prompt_response.startswith('y'):
                 logger.info(_LI(

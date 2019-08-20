@@ -22,10 +22,10 @@ class Usage(base.Resource):
 class UsageManager(base.BootingManagerWithFind):
     resource_class = Usage
 
-    def get_histories(self,usage,search_opts=None):
+    def get_histories(self, usage, search_opts=None):
 
         if search_opts is None:
-           search_opts = {}
+            search_opts = {}
 
         qparams = {}
 
@@ -42,9 +42,9 @@ class UsageManager(base.BootingManagerWithFind):
         else:
             query_string = ""
         
-        return self._get_histories("/usages/%s/histories%s" % (usage ,query_string), "histories")
+        return self._get_histories("/usages/%s/histories%s" % (usage, query_string), "histories")
 
-    def list(self,search_opts=None):
+    def list(self, search_opts=None):
 
         if search_opts is None:
             search_opts = {}
@@ -64,4 +64,4 @@ class UsageManager(base.BootingManagerWithFind):
         else:
             query_string = ""
  
-        return self._list("/usages%s" % (query_string), "usages")
+        return self._list("/usages%s" % query_string, "usages")

@@ -18,20 +18,19 @@ import warnings
 from .. import base
 from .. import utils
 from .. import exc
-import options
-
+from . import options
 
 UPDATABLE_ATTRIBUTES = [
-    'name', #
-    'description',#
-    'type',#
+    'name',
+    'description',
+    'type',
     'state',
-    'severity',#
-    'enabled',#
-    'alarm_actions',#
-    'ok_actions',#
+    'severity',
+    'enabled',
+    'alarm_actions',
+    'ok_actions',
     'insufficient_data_actions',
-    'repeat_actions',#
+    'repeat_actions',
     'project_id',
     'user_id'
 ]
@@ -122,29 +121,29 @@ class AlarmManager(base.Manager):
             kwargs['type'] = 'threshold'
 
         for field in ['period', 'evaluation_periods', 'threshold',
-                      'statistic', 'comparison_operator', 'meter_name','query']:
+                      'statistic', 'comparison_operator', 'meter_name', 'query']:
             if field in kwargs:
-                if field == "query" and kwargs[field] == None:
+                if field == "query" and kwargs[field] is None:
                     del kwargs[field]
                     continue
                 if create:
                     kwargs.setdefault('threshold_rule', {})[field] = kwargs[field]
                     del kwargs[field]
                 else:
-                    if kwargs[field] != None:
+                    if kwargs[field] is not None:
                         kwargs.setdefault('threshold_rule', {})[field] = kwargs[field]
                         del kwargs[field]
                     else:
                         del kwargs[field]
 
-        #if 'matching_metadata' in kwargs:
-        #    query = []
-        #    for key in kwargs['matching_metadata']:
-        #        query.append({'field': key,
-        #                      'op': 'eq',
-        #                      'value': kwargs['matching_metadata'][key]})
-        #    del kwargs['matching_metadata']
-        #    kwargs['threshold_rule']['query'] = query
+        # if 'matching_metadata' in kwargs:
+        #     query = []
+        #     for key in kwargs['matching_metadata']:
+        #         query.append({'field': key,
+        #                       'op': 'eq',
+        #                       'value': kwargs['matching_metadata'][key]})
+        #     del kwargs['matching_metadata']
+        #     kwargs['threshold_rule']['query'] = query
 
     @staticmethod
     def _merge_time_constraints(existing_tcs, kwargs):
@@ -170,8 +169,8 @@ class AlarmManager(base.Manager):
     def create(self, **kwargs):
         self._compat_legacy_alarm_kwargs(kwargs, create=True)
         new = dict((key, value) for (key, value) in kwargs.items()
-                   if value != None and (key in CREATION_ATTRIBUTES
-                       or key.endswith('_rule')))
+                   if value is not None and (key in CREATION_ATTRIBUTES
+                                             or key.endswith('_rule')))
         return self._create(self._path(), new)
 
     def update(self, alarm_id, **kwargs):
@@ -179,21 +178,21 @@ class AlarmManager(base.Manager):
         path += "/" + str(alarm_id)
         self._compat_legacy_alarm_kwargs(kwargs)
         update = dict((key, value) for (key, value) in kwargs.items()
-                   if value != None and (key in CREATION_ATTRIBUTES
-                       or key.endswith('_rule')))
+                      if value is not None and (key in CREATION_ATTRIBUTES
+                                                or key.endswith('_rule')))
         return self._update(path, update)
-        #alarm = self.get(alarm_id)
-        #if alarm is None:
-        #    raise exc.CommandError('Alarm not found: %s' % alarm_id)
-        #updated = alarm.to_dict()
-        #updated['time_constraints'] = self._merge_time_constraints(
-        #    updated.get('time_constraints', []), kwargs)
-        #kwargs = dict((k, v) for k, v in kwargs.items()
-        #              if k in updated and v != None
-        #              and (k in UPDATABLE_ATTRIBUTES
-        #                                   or k.endswith('_rule')))
-        #utils.merge_nested_dict(updated, kwargs, depth=1)
-        #return self._update(self._path(alarm_id), updated)
+        # alarm = self.get(alarm_id)
+        # if alarm is None:
+        #     raise exc.CommandError('Alarm not found: %s' % alarm_id)
+        # updated = alarm.to_dict()
+        # updated['time_constraints'] = self._merge_time_constraints(
+        #     updated.get('time_constraints', []), kwargs)
+        # kwargs = dict((k, v) for k, v in kwargs.items()
+        #               if k in updated and v != None
+        #               and (k in UPDATABLE_ATTRIBUTES
+        #                                    or k.endswith('_rule')))
+        # utils.merge_nested_dict(updated, kwargs, depth=1)
+        # return self._update(self._path(alarm_id), updated)
 
     def delete(self, alarm_id):
         return self._delete(self._path(alarm_id))

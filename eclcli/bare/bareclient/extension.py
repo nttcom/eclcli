@@ -13,9 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from bearclient import base
-from bearclient.openstack.common.apiclient import base as common_base
-from bearclient import utils
+from . import base
+from .ecl.common.apiclient import base as common_base
+from . import utils
 
 
 class Extension(common_base.HookableMixin):

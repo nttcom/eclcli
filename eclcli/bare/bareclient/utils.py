@@ -11,20 +11,32 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import re
 import textwrap
 import uuid
 
-from oslo_serialization import jsonutils
-from oslo_utils import encodeutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import pkg_resources
 import prettytable
 import six
 
 from . import exceptions
-from i18n import _
-from ecl.common import cliutils
+from .i18n import _
+from .ecl.common import cliutils
 
 
 VALID_KEY_REGEX = re.compile(r"[\w\.\- :]+$", re.UNICODE)

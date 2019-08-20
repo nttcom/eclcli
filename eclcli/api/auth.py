@@ -132,7 +132,7 @@ def build_auth_params(auth_plugin_name, cmd_options):
         for option in plugin_options:
             LOG.debug('fetching option %s', option)
             auth_params[option] = getattr(cmd_options.auth, option, None)
-    return (auth_plugin_class, auth_params)
+    return auth_plugin_class, auth_params
 
 
 def check_valid_auth_options(options, auth_plugin_name, required_scope=True):

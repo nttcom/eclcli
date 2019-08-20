@@ -61,8 +61,11 @@ class ListInternetGateway(command.Lister):
         if parsed_args.status:
             search_opts.update({"status": parsed_args.status})
 
-        data = [to_obj.InternetGateway(inetgw)
-            for inetgw in network_client.list_internet_gateways(**search_opts).get('internet_gateways')]
+        data = [
+            to_obj.InternetGateway(inetgw)
+            for inetgw in network_client.list_internet_gateways(
+                **search_opts).get('internet_gateways')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(
@@ -86,7 +89,7 @@ class ShowInternetGateway(command.ShowOne):
         internet_gateway_id = parsed_args.internet_gateway_id
 
         dic = network_client.show_internet_gateway(internet_gateway_id).get('internet_gateway')
-        columns = dic #utils.get_columns(dic)
+        columns = dic  # utils.get_columns(dic)
         obj = to_obj.InternetGateway(dic)
         data = utils.get_item_properties(
             obj, columns,)

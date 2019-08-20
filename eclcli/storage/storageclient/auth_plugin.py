@@ -19,8 +19,8 @@ import pkg_resources
 
 import six
 
-from storageclient import exceptions
-from storageclient import utils
+from . import exceptions
+from . import utils
 
 
 logger = logging.getLogger(__name__)

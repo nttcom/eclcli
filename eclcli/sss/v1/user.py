@@ -1,9 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from eclcli.common import command
-from eclcli.common import exceptions
-from eclcli.common import utils
-from eclcli.identity import common as identity_common
+from eclcli.common import command, utils
 from ..sssclient.common.utils import objectify
 
 
@@ -33,7 +30,7 @@ class ListUser(command.Lister):
         users_dict = sss_client.list_users()
         contract_id = users_dict.get('contract_id')
         users = users_dict.get('users')
-        map(lambda user:user.update({'contract_id': contract_id}), users)
+        map(lambda user: user.update({'contract_id': contract_id}), users)
 
         data = [objectify(user) for user in users]
 
@@ -49,7 +46,7 @@ class ShowUser(command.ShowOne):
         parser.add_argument(
             'user_id',
             metavar="<uuid>",
-            help=("user's id which you need to get information. (ecidXXXXXXXXX)")
+            help="user's id which you need to get information. (ecidXXXXXXXXX)"
         )
         return parser
 
@@ -118,7 +115,7 @@ class DeleteUser(command.Command):
             'user_id',
             metavar="<uuid>",
             nargs="+",
-            help=("Delete target users user id.")
+            help="Delete target users user id."
         )
         return parser
 

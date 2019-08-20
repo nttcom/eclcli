@@ -76,8 +76,11 @@ class ListLoadBalancer(command.Lister):
         if parsed_args.status:
             search_opts.update({"status": parsed_args.status})
 
-        data = [to_obj.LoadBalancer(loadbalancer)
-            for loadbalancer in network_client.list_loadbalancers().get('load_balancers')]
+        data = [
+            to_obj.LoadBalancer(loadbalancer)
+            for loadbalancer in network_client.list_loadbalancers().get(
+                'load_balancers')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(

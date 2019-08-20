@@ -6,7 +6,10 @@ import re
 import six
 import time
 
-from oslo_utils import importutils
+try:
+    from oslo_utils import importutils
+except ImportError:
+    from oslo.utils import importutils
 
 from eclcli.common import exceptions
 
@@ -90,6 +93,7 @@ def format_list_of_dicts(data):
 def format_versions(data):
     return '\n'.join(i["name"] for i in data)
 
+
 def get_field(item, field):
     try:
         if isinstance(item, dict):
@@ -102,7 +106,7 @@ def get_field(item, field):
 
 
 def get_columns(item):
-    columns = item.keys()
+    columns = list(item.keys())
     if 'tenant_id' in columns:
         columns.remove('tenant_id')
         columns.append('project_id')
@@ -123,6 +127,8 @@ def get_item_properties(item, fields, mixed_case_fields=None, formatters=None):
         else:
             field_name = field.lower().replace(' ', '_')
         data = getattr(item, field_name, '')
+        if data == '' and field_name == 'project_id':
+            data = getattr(item, 'tenant_id', '')
         if field in formatters:
             row.append(formatters[field](data))
         else:
@@ -293,7 +299,11 @@ def build_kwargs_dict(arg_name, value):
 
 def is_ascii(string):
     try:
-        string.decode('ascii')
+        if six.PY2:
+            string.decode('ascii')
+        else:
+            if type(string) != six.text_type:
+                return False
         return True
     except UnicodeDecodeError:
         return False
@@ -339,9 +349,12 @@ def parse_allocation_pools(text):
         'end': lst[1]
     }
 
+
 def validate_ipv4(text):
     try:
-        ipaddress.IPv4Address(unicode(text))
+        if type(text) is not six.text_type:
+            text = six.u(text)
+        ipaddress.IPv4Address(text)
     except ipaddress.AddressValueError:
         msg = "%r is not a valid IPv4 address"
         raise exceptions.CommandError(msg % text)

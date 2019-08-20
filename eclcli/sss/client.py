@@ -1,7 +1,5 @@
 import logging
 
-from ecl import connection
-
 from eclcli.common import utils
 
 
@@ -17,7 +15,7 @@ API_VERSIONS = {
 
 def make_client(instance):
     """Returns a network proxy"""
-    from sssclient.v1 import client as sss_client
+    from .sssclient.v1 import client as sss_client
     c = sss_client.Client(session=instance.session)
     return c
 

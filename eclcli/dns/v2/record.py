@@ -124,6 +124,7 @@ class DeleteRecordSet(command.Command):
         dns_client = self.app.eclsdk.conn.dns
         dns_client.delete_recordset(parsed_args.zone_id, parsed_args.recordset_id)
 
+
 class DeleteMultipleRecordSets(command.Command):
 
     def get_parser(self, prog_name):
@@ -181,7 +182,8 @@ class ShowRecordSet(command.ShowOne):
         ]
         recordset = dns_client.get_recordset(parsed_args.zone_id, parsed_args.recordset_id)
 
-        return (row, utils.get_item_properties(recordset, row))
+        return row, utils.get_item_properties(recordset, row)
+
 
 class ListRecordSet(command.Lister):
 
@@ -236,6 +238,7 @@ class ListRecordSet(command.Lister):
                     s, columns,
                     formatters={'Metadata': utils.format_dict},
                 ) for s in recordsets))
+
 
 class UpdateRecordSet(command.ShowOne):
 
@@ -303,7 +306,7 @@ class UpdateRecordSet(command.ShowOne):
             'type',
         ]
 
-        return (row, utils.get_item_properties(recordset, row))
+        return row, utils.get_item_properties(recordset, row)
 
 
 def call_limit_validate_int_range(text):

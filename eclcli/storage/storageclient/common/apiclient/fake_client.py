@@ -30,7 +30,7 @@ import requests
 import six
 from six.moves.urllib import parse
 
-from storageclient.common.apiclient import client
+from . import client
 
 
 def assert_has_keys(dct, required=[], optional=[]):
@@ -79,7 +79,7 @@ class FakeHTTPClient(client.HTTPClient):
     def __init__(self, *args, **kwargs):
         self.callstack = []
         self.fixtures = kwargs.pop("fixtures", None) or {}
-        if not args and not "auth_plugin" in kwargs:
+        if not args and "auth_plugin" not in kwargs:
             args = (None, )
         super(FakeHTTPClient, self).__init__(*args, **kwargs)
 

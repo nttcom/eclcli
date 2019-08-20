@@ -1,13 +1,20 @@
 from __future__ import print_function
 
 import getpass
-import inspect
 import os
 import sys
 import textwrap
 
-from oslo_utils import encodeutils
-from oslo_utils import strutils
+try:
+    from inspect import getfullargspec as get_args
+except ImportError:
+    from inspect import getargspec as get_args
+
+try:
+    from oslo_utils import encodeutils, strutils
+except ImportError:
+    from oslo.utils import encodeutils, strutils
+
 import prettytable
 import six
 from six import moves
@@ -36,10 +43,10 @@ def validate_args(fn, *args, **kwargs):
     MissingArgs: Missing argument(s): b, d
 
     :param fn: the function to check
-    :param arg: the positional arguments supplied
+    :param args: the positional arguments supplied
     :param kwargs: the keyword arguments supplied
     """
-    argspec = inspect.getargspec(fn)
+    argspec = get_args(fn)
 
     num_defaults = len(argspec.defaults or [])
     required_args = argspec.args[:len(argspec.args) - num_defaults]
@@ -242,5 +249,5 @@ def pretty_choice_list(l):
 
 def exit(msg=''):
     if msg:
-        print (msg, file=sys.stderr)
+        print(msg, file=sys.stderr)
     sys.exit(1)

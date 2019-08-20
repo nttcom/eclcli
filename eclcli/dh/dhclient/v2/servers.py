@@ -7,7 +7,6 @@ import six
 from six.moves.urllib import parse
 
 
-
 def getname(obj):
     """
     Abstracts the common pattern of allowing both an object or an object's NAME
@@ -101,7 +100,6 @@ class ServerManager(base.BootingManagerWithFind):
             detail = "/detail"
         return self._list("/servers%s%s" % (detail, query_string), "servers")
 
-
     def create(self, name, networks, image_id, flavor_id,
                admin_pass=None, metadata=None, availability_zone=None,
                description=None, **kwargs):
@@ -134,10 +132,8 @@ class ServerManager(base.BootingManagerWithFind):
 
         return self._create("/servers", body, "server")
 
-
     def delete(self, server_id):
         """
         Delete (i.e. shut down and delete the image) this server.
         """
         return self._delete("/servers/%s" % server_id)
-

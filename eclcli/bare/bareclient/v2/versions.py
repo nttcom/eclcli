@@ -17,7 +17,7 @@ class VersionManager(base.Manager):
         # NOTE: "show version" API needs to be accessed without base
         endpoint = self.api.client.get_endpoint()
         url = urllib.parse.urlparse(endpoint)
-        version_url = '%s://%s/%s' % (url.scheme, url.netloc,version)
+        version_url = '%s://%s/%s' % (url.scheme, url.netloc, version)
         return self._get(version_url, "version")
 
     def list(self):
@@ -28,4 +28,4 @@ class VersionManager(base.Manager):
         endpoint = self.api.client.get_endpoint()
         url = urllib.parse.urlparse(endpoint)
         version_url = '%s://%s/' % (url.scheme, url.netloc)
-        return self._list(version_url,"versions")
+        return self._list(version_url, "versions")

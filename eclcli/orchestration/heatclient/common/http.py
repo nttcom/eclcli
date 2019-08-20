@@ -20,8 +20,7 @@ import os
 import socket
 
 from oslo_serialization import jsonutils
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+from oslo_utils import encodeutils, importutils
 import requests
 import six
 from six.moves.urllib import parse
@@ -30,7 +29,7 @@ from eclcli.orchestration.heatclient.common import utils
 from eclcli.orchestration.heatclient import exc
 from eclcli.orchestration.heatclient.openstack.common._i18n import _
 from eclcli.orchestration.heatclient.openstack.common._i18n import _LW
-from keystoneclient import adapter
+from keystoneauth1 import adapter
 
 LOG = logging.getLogger(__name__)
 USER_AGENT = 'python-heatclient'
@@ -293,9 +292,9 @@ class HTTPClient(object):
 class SessionClient(adapter.LegacyJsonAdapter):
     """HTTP client based on Keystone client session."""
     def __init__(self, *args, **kwargs):
-        self.username = kwargs.pop('username',None)
+        self.username = kwargs.pop('username', None)
         self.password = kwargs.pop('password', None)
-        super(SessionClient, self).__init__(*args,**kwargs)
+        super(SessionClient, self).__init__(*args, **kwargs)
 
     def request(self, url, method, **kwargs):
         redirect = kwargs.get('redirect')
@@ -332,7 +331,7 @@ class SessionClient(adapter.LegacyJsonAdapter):
             raise exc.InvalidEndpoint(message=message)
         if (self.endpoint_override is not None and
                 location.lower().startswith(self.endpoint_override.lower())):
-                return location[len(self.endpoint_override):]
+            return location[len(self.endpoint_override):]
         else:
             return location
 

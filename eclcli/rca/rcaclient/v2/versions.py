@@ -1,5 +1,6 @@
 from .. import base
 
+
 def getversion(obj):
     try:
         return obj.version
@@ -20,4 +21,3 @@ class VersionManager(base.ManagerWithFind):
 
     def get(self, version):
         return self._get("../../%s" % getversion(version), "version")
-

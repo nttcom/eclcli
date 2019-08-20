@@ -96,7 +96,7 @@ def _print(pt, order):
 
 
 def print_list(objs, fields, formatters=None, sortby_index=0):
-    '''Prints a list of objects.
+    """Prints a list of objects.
 
     @param objs: Objects to print
     @param fields: Fields on each object to be printed
@@ -104,7 +104,7 @@ def print_list(objs, fields, formatters=None, sortby_index=0):
     @param sortby_index: Results sorted against the key in the fields list at
                          this index; if None then the object order is not
                          altered
-    '''
+    """
     formatters = formatters or {}
     mixed_case_fields = ['serverId']
     pt = prettytable.PrettyTable([f for f in fields], caching=False)
@@ -221,7 +221,7 @@ def _set_request_body(args, param_list=[]):
 def format_ip_addr_pool(ip_addr_pool):
     try:
         address_range = ip_addr_pool.split(",")
-    except:
+    except Exception:
         address_range = None
 
     if address_range and len(address_range) == 2:

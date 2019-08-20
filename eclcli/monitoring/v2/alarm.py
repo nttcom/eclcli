@@ -19,9 +19,10 @@ from eclcli.common import exceptions
 from .. import monitoring_utils
 import six
 
+
 class CreateAlarm(command.ShowOne):
     def get_parser(self, prog_name):
-        "create an alarm"
+        """create an alarm"""
 
         parser = super(CreateAlarm, self).get_parser(prog_name)
         parser.add_argument(
@@ -80,7 +81,7 @@ class CreateAlarm(command.ShowOne):
             metavar="<user_id>",
             help="User who created the alarm")
 
-        #-----threshold_rules-----#
+        # -----threshold_rules----- #
         parser.add_argument(
             "--meter_name",
             metavar="<meter_name>",
@@ -116,7 +117,7 @@ class CreateAlarm(command.ShowOne):
             default='gt'
         )
 
-        #---query---#
+        # ---query--- #
         parser.add_argument(
             "--field",
             metavar="<field>",
@@ -144,11 +145,11 @@ class CreateAlarm(command.ShowOne):
         else:
             parsed_args.repeat_actions = False
 
-        alarm_actions=None
+        alarm_actions = None
         if parsed_args.alarm_actions:
             alarm_actions = parsed_args.alarm_actions.split(',')
 
-        ok_actions=None
+        ok_actions = None
         if parsed_args.ok_actions:
             ok_actions = parsed_args.ok_actions.split(',')
 
@@ -177,10 +178,11 @@ class CreateAlarm(command.ShowOne):
 
         except exceptions.ClientException as cli_exp:
             info = {"message": cli_exp.message,
-                        "details": cli_exp.details,
-                        "code": cli_exp.code}
+                    "details": cli_exp.details,
+                    "code": cli_exp.code}
 
         return zip(*sorted(six.iteritems(info)))
+
 
 class UpdateAlarm(command.ShowOne):
     def get_parser(self, prog_name):
@@ -304,11 +306,11 @@ class UpdateAlarm(command.ShowOne):
         else:
             query = None
 
-        alarm_actions=None
+        alarm_actions = None
         if parsed_args.alarm_actions:
             alarm_actions = parsed_args.alarm_actions.split(',')
 
-        ok_actions=None
+        ok_actions = None
         if parsed_args.ok_actions:
             ok_actions = parsed_args.ok_actions.split(',')
 
@@ -336,6 +338,7 @@ class UpdateAlarm(command.ShowOne):
         info = monitoring_utils._tidy_data_info(data._info)
         return zip(*sorted(six.iteritems(info)))
 
+
 class DeleteAlarm(command.Command):
     """Delete an alarm"""
 
@@ -353,8 +356,10 @@ class DeleteAlarm(command.Command):
         monitoring_client.alarms.delete(parsed_args.alarm_id)
         return
 
+
 class ListAlarm(command.Lister):
     """Lists alarms, based on a query."""
+
     def get_parser(self, prog_name):
         parser = super(ListAlarm, self).get_parser(prog_name)
 
@@ -430,9 +435,9 @@ class ListAlarm(command.Lister):
             return (columns, (utils.get_item_properties(
                 s, columns,
                 formatters={
-                    'threshold_rule':monitoring_utils._format_show_dicts_list,
-                    'alarm_actions':monitoring_utils._format_show_dicts_list,
-                    'ok_actions':monitoring_utils._format_show_dicts_list,
+                    'threshold_rule': monitoring_utils._format_show_dicts_list,
+                    'alarm_actions': monitoring_utils._format_show_dicts_list,
+                    'ok_actions': monitoring_utils._format_show_dicts_list,
                 }) for s in data))
         else:
             columns = (
@@ -446,10 +451,12 @@ class ListAlarm(command.Lister):
                 'deleted',
             )
         return (columns, (utils.get_item_properties(
-                    s, columns) for s in data))
+            s, columns) for s in data))
+
 
 class ShowAlarmHistory(command.Lister):
     """Show the history for an alarm, by alarm ID"""
+
     def get_parser(self, prog_name):
         parser = super(ShowAlarmHistory, self).get_parser(prog_name)
         parser.add_argument(
@@ -499,8 +506,10 @@ class ShowAlarmHistory(command.Lister):
                 (utils.get_item_properties(
                     s, columns) for s in data))
 
+
 class ListOverallAlarmHistories(command.Lister):
     """Show the history for an alarm, by alarm ID"""
+
     def get_parser(self, prog_name):
         parser = super(ListOverallAlarmHistories, self).get_parser(prog_name)
 

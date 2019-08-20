@@ -216,7 +216,7 @@ class HTTPClient(object):
                 data = strutils.mask_password(kwargs['data'])
             else:
                 data = kwargs['data']
-            string_parts.append(" -d '%s'" % (data))
+            string_parts.append(" -d '%s'" % data)
         self._logger.debug("\nREQ: %s\n" % "".join(string_parts))
 
     def http_log_resp(self, resp):
@@ -544,6 +544,7 @@ def _construct_http_client(username=None, password=None, project_id=None,
                           auth_system=auth_system,
                           auth_plugin=auth_plugin,
                           )
+
 
 def get_client_class(version):
     client_path = 'storageclient.v2.client.Client'

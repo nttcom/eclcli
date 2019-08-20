@@ -17,6 +17,7 @@ from eclcli.common import command
 from eclcli.common import utils
 from .. import monitoring_utils
 
+
 class ListResource(command.Lister):
     """Lists all metering resources."""
     def get_parser(self, prog_name):
@@ -87,15 +88,12 @@ class ListResource(command.Lister):
             data = monitoring_utils._format_links_resource(data)
 
             return (columns,
-                    (monitoring_utils.get_dict_properties
-                         (
+                    (monitoring_utils.get_dict_properties(
                          s._info, columns,
                          formatters={
                              'links': monitoring_utils._format_links,
                              'meter_links': monitoring_utils._format_links,
-                         }
-                     ) for s in data
-                     )
+                         }) for s in data)
                     )
 
         columns = (
@@ -110,9 +108,10 @@ class ListResource(command.Lister):
                 (utils.get_item_properties(
                     s, columns,
                     formatters={
-                        'links':monitoring_utils._format_links
+                        'links': monitoring_utils._format_links
                     }
                 ) for s in data))
+
 
 class ShowResource(command.ShowOne):
     """Show details of the specified resource."""
@@ -141,6 +140,6 @@ class ShowResource(command.ShowOne):
                 utils.get_item_properties(
                     data, columns,
                     formatters={
-                        'links':monitoring_utils._format_links
+                        'links': monitoring_utils._format_links
                     }
                 ))

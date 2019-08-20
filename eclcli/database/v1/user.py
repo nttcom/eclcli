@@ -90,7 +90,6 @@ class CreateUser(command.Command):
         )
         return parser
 
-
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.database
 
@@ -164,7 +163,6 @@ class GrantUser(command.Command):
             parsed_args.name,
             parsed_args.databases,
         )
-
 
 
 class RevokeUser(command.Command):

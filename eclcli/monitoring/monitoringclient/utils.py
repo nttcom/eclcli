@@ -18,13 +18,21 @@ from __future__ import print_function
 import os
 import textwrap
 
-from oslo_serialization import jsonutils
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import encodeutils, importutils
+except ImportError:
+    from oslo.utils import encodeutils, importutils
+
 import prettytable
 import six
+from six.moves import zip
 
-import exc
+from . import exc
 
 
 # Decorator for cli-args
@@ -65,7 +73,7 @@ def print_list(objs, fields, field_labels, formatters=None, sortby=0):
         return lambda o: getattr(o, field, '')
 
     new_formatters = {}
-    for field, field_label in six.moves.zip(fields, field_labels):
+    for field, field_label in zip(fields, field_labels):
         if field in formatters:
             new_formatters[field_label] = formatters[field]
         else:
@@ -146,7 +154,6 @@ def import_versioned_module(version, submodule=None):
     if submodule:
         module = '.'.join((module, submodule))
     return importutils.import_module(module)
-
 
 
 def args_array_to_dict(kwargs, key_to_convert):

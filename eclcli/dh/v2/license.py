@@ -1,6 +1,3 @@
-import copy
-import six
-
 from eclcli.common import command
 from eclcli.common import utils
  
@@ -22,10 +19,10 @@ class ListLicense(command.Lister):
         dh_client = self.app.client_manager.dh
 
         search_opts = {
-            "license_type":parsed_args.license_type
+            "license_type": parsed_args.license_type
         }
 
-        self.log.debug('search options: %s',search_opts)
+        self.log.debug('search options: %s', search_opts)
 
         columns = [
              
@@ -33,8 +30,7 @@ class ListLicense(command.Lister):
         ]
 
         column_headers = columns
-        
- 
+
         data = dh_client.licenses.list(search_opts=search_opts)
  
         return (column_headers,
@@ -52,14 +48,12 @@ class ListLicenseType(command.Lister):
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
-
         columns = [
              
             'ID', 'Name', 'Has License Key', 'Unit', 'Description'
         ]
         
         column_headers = columns
-        
  
         data = dh_client.licenses.list_license_types()
  
@@ -67,6 +61,7 @@ class ListLicenseType(command.Lister):
                 (utils.get_item_properties(
                     s, columns
                 ) for s in data)) 
+
 
 class CreateLicense(command.ShowOne):
  
@@ -83,7 +78,7 @@ class CreateLicense(command.ShowOne):
  
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
-        self.log.debug('license type: %s',parsed_args.license_type)
+        self.log.debug('license type: %s', parsed_args.license_type)
 
         rows = [
             "ID",
@@ -100,6 +95,7 @@ class CreateLicense(command.ShowOne):
                 utils.get_item_properties(
                     data, rows
                     ))
+
 
 class DeleteLicense(command.Command):
  
@@ -119,7 +115,7 @@ class DeleteLicense(command.Command):
 
         dh_client = self.app.client_manager.dh
 
-        self.log.debug('license id: %s',parsed_args.license_ids)
+        self.log.debug('license id: %s', parsed_args.license_ids)
         
         for license_id in parsed_args.license_ids:
-        	dh_client.licenses.delete(license_id)
+            dh_client.licenses.delete(license_id)

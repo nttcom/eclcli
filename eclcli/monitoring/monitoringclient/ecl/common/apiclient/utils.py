@@ -11,7 +11,11 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from oslo.utils import encodeutils
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import six
 
 from .._i18n import _

@@ -4,7 +4,7 @@ import six
 try:
     from urllib import urlencode
 except ImportError:
-    from urllib.parse import urlencode
+    from six.moves.urllib.parse import urlencode
 
 from .. import base
 
@@ -106,7 +106,7 @@ class VolumeManager(base.ManagerWithFind):
         # SG-1015 リスト/オブジェクト双方適合バージョン
         try:
             return self._get("/volumes/%s" % volume_id, "volume")
-        except:
+        except Exception:
             vl = self._list("/volumes/%s" % volume_id, "volume")
             if len(vl) > 0:
                 return vl[0]
@@ -114,7 +114,7 @@ class VolumeManager(base.ManagerWithFind):
                 return
 
     def _format_sort_param(self, sort):
-        '''Formats the sort information into the sort query string parameter.
+        """Formats the sort information into the sort query string parameter.
 
         The input sort information can be any of the following:
         - Comma-separated string in the form of <key[:dir]>
@@ -130,7 +130,7 @@ class VolumeManager(base.ManagerWithFind):
         :returns: Formatted query string parameter or None
         :raise ValueError: If an invalid sort direction or invalid sort key is
                            given
-        '''
+        """
         if not sort:
             return None
 
@@ -243,7 +243,7 @@ class VolumeManager(base.ManagerWithFind):
             return
         if kwargs.get("initiator_iqns"):
             iqns = kwargs.get("initiator_iqns")
-            kwargs["initiator_iqns"] = filter(lambda iqn:iqn != '', iqns)
+            kwargs["initiator_iqns"] = filter(lambda iqn: iqn != '', iqns)
 
         body = {"volume": kwargs}
 
@@ -256,4 +256,3 @@ class VolumeManager(base.ManagerWithFind):
         self.run_hooks('modify_body_for_action', body, **kwargs)
         url = '/volumes/%s/action' % base.getid(volume)
         return self.api.client.post(url, body=body)
-

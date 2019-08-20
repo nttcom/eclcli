@@ -1,10 +1,8 @@
-
 import six
 
 from eclcli.common import command
 from eclcli.common import exceptions
 from eclcli.common import utils
-from eclcli.identity import common as identity_common
 from ..interconnectivityclient.common.utils import objectify
 
 
@@ -29,7 +27,7 @@ class ListMCIC(command.Lister):
 
         tenant_id = self.app.client_manager.session.get_project_id()
         data = [objectify(mcic)
-            for mcic in connectivity_client.list_mcics(tenant_id)]
+                for mcic in connectivity_client.list_mcics(tenant_id)]
 
         return (column_headers,
                 (utils.get_item_properties(
