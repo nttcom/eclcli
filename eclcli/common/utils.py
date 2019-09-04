@@ -110,6 +110,7 @@ def get_columns(item):
     if 'tenant_id' in columns:
         columns.remove('tenant_id')
         columns.append('project_id')
+        item['project_id'] = item.pop('tenant_id')
     return tuple(sorted(columns))
 
 

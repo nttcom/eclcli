@@ -40,6 +40,10 @@ class ListGwInterface(command.Lister):
             metavar="vpn_gw_id",
             help="filter by vpn gateway id")
         parser.add_argument(
+            '--fic_gw_id',
+            metavar="fic_gw_id",
+            help="filter by fic gateway id")
+        parser.add_argument(
             '--netmask',
             metavar="netmask",
             help="filter by netmask")
@@ -112,6 +116,8 @@ class ListGwInterface(command.Lister):
             search_opts.update({"aws_gw_id": parsed_args.aws_gw_id})
         if parsed_args.vpn_gw_id:
             search_opts.update({"vpn_gw_id": parsed_args.vpn_gw_id})
+        if parsed_args.fic_gw_id:
+            search_opts.update({"fic_gw_id": parsed_args.fic_gw_id})
         if parsed_args.netmask:
             search_opts.update({"netmask": parsed_args.netmask})
         if parsed_args.network_id:
@@ -176,8 +182,8 @@ class CreateGwInterface(command.ShowOne):
             help='Description of Gateway interface to create.')
         parser.add_argument(
             '--service_type',
-            metavar='{vpn|internet|interdc}',
-            choices=["vpn", "internet", "interdc"],
+            metavar='{vpn|internet|interdc|fic}',
+            choices=["vpn", "internet", "interdc", "fic"],
             required=True,
             help='Service type of Gateway interface to create')
         parser.add_argument(
@@ -225,6 +231,10 @@ class CreateGwInterface(command.ShowOne):
             '--vpn_gw_id',
             metavar='VPN_GATEWAY_ID',
             help='VPN Gateway ID of Gateway interface to create.')
+        group.add_argument(
+            '--fic_gw_id',
+            metavar='FIC_GATEWAY_ID',
+            help='FIC Gateway ID of Gateway interface to create.')
         parser.add_argument(
             '--primary_ipv6',
             metavar='<ipv6>',
@@ -247,10 +257,10 @@ class CreateGwInterface(command.ShowOne):
             parsed_args,
             body['gw_interface'],
             ['name', 'description', 'service_type',
-             'primary_ipv4', 'secondary_ipv4', 'gw_vipv4',
-             'internet_gw_id', 'vpn_gw_id', 'interdc_gw_id',
-             'primary_ipv6', 'secondary_ipv6', 'gw_vipv6',
-             'vrid', 'network_id', 'netmask'])
+            'primary_ipv4', 'secondary_ipv4', 'gw_vipv4',
+            'internet_gw_id', 'vpn_gw_id', 'fic_gw_id', 'interdc_gw_id',
+            'primary_ipv6', 'secondary_ipv6', 'gw_vipv6',
+            'vrid', 'network_id', 'netmask'])
 
         dic = network_client.create_gw_interface(body).get('gw_interface')
         columns = utils.get_columns(dic)

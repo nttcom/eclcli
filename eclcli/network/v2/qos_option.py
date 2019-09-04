@@ -21,7 +21,7 @@ class ListQosOption(command.Lister):
         parser.add_argument(
             '--service_type',
             metavar="service_type",
-            help="filter by service_type: aws, interdc, internet, vpn")
+            help="filter by service_type: aws, interdc, internet, vpn, fic")
         parser.add_argument(
             '--aws_service_id',
             metavar="aws_service_id",
@@ -38,6 +38,10 @@ class ListQosOption(command.Lister):
             '--vpn_service_id',
             metavar="vpn_service_id",
             help="filter by vpn service id")
+        parser.add_argument(
+            '--fic_service_id',
+            metavar="fic_service_id",
+            help="filter by fic service id")
         parser.add_argument(
             '--status',
             metavar="status",
@@ -81,6 +85,8 @@ class ListQosOption(command.Lister):
             params.update({"internet_service_id": parsed_args.internet_service_id})
         if parsed_args.vpn_service_id:
             params.update({"vpn_service_id": parsed_args.vpn_service_id})
+        if parsed_args.fic_service_id:
+            params.update({"fic_service_id": parsed_args.fic_service_id})
         if parsed_args.status:
             params.update({"status": parsed_args.status})
         if parsed_args.bandwidth:

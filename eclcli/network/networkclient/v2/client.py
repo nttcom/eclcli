@@ -245,6 +245,9 @@ class Client(ClientBase):
     vpn_interfaces_path = '/vpn_interfaces'
     vpn_interface_path = '/vpn_interfaces/%s'
 
+    fic_interfaces_path = '/fic_interfaces'
+    fic_interface_path = '/fic_interfaces/%s'
+
     static_routes_path = '/static_routes'
     static_route_path = '/static_routes/%s'
 
@@ -254,11 +257,17 @@ class Client(ClientBase):
     vpn_services_path = '/vpn_services'
     vpn_service_path = '/vpn_services/%s'
 
+    fic_services_path = '/fic_services'
+    fic_service_path = '/fic_services/%s'
+
     internet_gateways_path = '/internet_gateways'
     internet_gateway_path = '/internet_gateways/%s'
 
     vpn_gateways_path = '/vpn_gateways'
     vpn_gateway_path = '/vpn_gateways/%s'
+
+    fic_gateways_path = '/fic_gateways'
+    fic_gateway_path = '/fic_gateways/%s'
 
     interdc_gateways_path = "/interdc_gateways"
     interdc_gateway_path = "/interdc_gateways/%s"
@@ -515,6 +524,14 @@ class Client(ClientBase):
         return self.delete(self.vpn_gateway_path % vpn_gateway_id)
 
     @APIParamsCall
+    def list_fic_gateways(self, **_params):
+        return self.list('fic_gateways', self.fic_gateways_path, **_params)
+
+    @APIParamsCall
+    def show_fic_gateway(self, fic_gateway_id, **_params):
+        return self.get(self.fic_gateway_path % fic_gateway_id, params=_params)
+
+    @APIParamsCall
     def list_interdc_services(self, **_params):
         return self.list('interdc_services', self.interdc_services_path, **_params)
 
@@ -608,6 +625,15 @@ class Client(ClientBase):
         return self.delete(self.vpn_interface_path % vpn_interface_id)
 
     @APIParamsCall
+    def list_fic_interfaces(self, **_params):
+        return self.list('fic_interfaces', self.fic_interfaces_path, **_params)
+
+    @APIParamsCall
+    def show_fic_interface(self, fic_interface_id, **_params):
+        return self.get(self.fic_interface_path % fic_interface_id,
+                        params=_params)
+
+    @APIParamsCall
     def list_static_routes(self, **_params):
         return self.list('static_routes',
                          self.static_routes_path, **_params)
@@ -664,6 +690,14 @@ class Client(ClientBase):
     @APIParamsCall
     def show_vpn_service(self, vpn_service_id, **_params):
         return self.get(self.vpn_service_path % vpn_service_id, params=_params)
+
+    @APIParamsCall
+    def list_fic_services(self, **_params):
+        return self.list('fic_services', self.fic_services_path, **_params)
+
+    @APIParamsCall
+    def show_fic_service(self, fic_service_id, **_params):
+        return self.get(self.fic_service_path % fic_service_id, params=_params)
 
     @APIParamsCall
     def list_public_ip_pools(self, **_params):
