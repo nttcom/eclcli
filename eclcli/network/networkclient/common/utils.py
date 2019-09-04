@@ -116,10 +116,10 @@ def safe_encode_dict(data):
     def _encode_item(item):
         k, v = item
         if isinstance(v, list):
-            return (k, safe_encode_list(v))
+            return k, safe_encode_list(v)
         elif isinstance(v, dict):
-            return (k, safe_encode_dict(v))
-        return (k, _safe_encode_without_obj(v))
+            return k, safe_encode_dict(v)
+        return k, _safe_encode_without_obj(v)
 
     return dict(list(map(_encode_item, data.items())))
 
@@ -362,6 +362,7 @@ class LoadBalancerInterface(ESIAPIDictWrapper):
 class LoadBalancerSyslogServer(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(LoadBalancerSyslogServer, self).__init__(apiresource)
+
 
 class CommonFunctionPool(ESIAPIDictWrapper):
     def __init__(self, apiresource):

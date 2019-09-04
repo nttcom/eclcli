@@ -1,9 +1,10 @@
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
-
-from eclcli.common import command
+from eclcli.common import command, utils
 from eclcli.bare import bare_utils
-from eclcli.common import utils
 
 
 class ShowUEFI(command.ShowOne):
@@ -20,7 +21,6 @@ class ShowUEFI(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
         search_opts = {}
         self.log.debug('search options: %s', search_opts)
@@ -34,17 +34,18 @@ class ShowUEFI(command.ShowOne):
             'Status',
         )
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         data = bare_client.uefis.get(server_obj.id)
 
-        return columns,utils.get_item_properties(
-                data,
-                columns,
-                mixed_case_fields=[],
-                formatters={
-                    'Setting': bare_utils._format_dicts_list_generic
-                }
-                )
+        return columns, utils.get_item_properties(
+            data,
+            columns,
+            mixed_case_fields=[],
+            formatters={
+                'Setting': bare_utils._format_dicts_list_generic
+            }
+        )
+
 
 class UpdateUEFI(command.ShowOne):
     """Update UEFI settings for a server"""
@@ -59,18 +60,18 @@ class UpdateUEFI(command.ShowOne):
         parser.add_argument(
             "--settings",
             metavar="<settings>",
-            help="Dict object of settings to update. eg. {\"hoge\": {\"value\": \"Disabled\"}, \"fuga\": {\"value\": \"Enabled\"}}",
+            help="Dict object of settings to update. eg. {\"hoge\": "
+                 "{\"value\": \"Disabled\"}, \"fuga\": {\"value\": \"Enabled\"}}",
         )
         return parser
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
 
-        body = {"uefi": {"setting" :{}}}
+        body = {"uefi": {"setting": {}}}
         if parsed_args.settings:
             body['uefi']['settings'] = json.loads(parsed_args.settings)
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
-        bare_client.uefis.update(server_obj.id,body)
-        return {},{}
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        bare_client.uefis.update(server_obj.id, body)
+        return {}, {}

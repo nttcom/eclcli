@@ -29,14 +29,14 @@ import logging
 import time
 
 try:
-    import simplejson as json
-except ImportError:
     import json
+except ImportError:
+    import simplejson as json
 
 import requests
 
-from storageclient.common.apiclient import exceptions
-from storageclient.common import importutils
+from . import exceptions
+from .. import importutils
 
 
 _logger = logging.getLogger(__name__)

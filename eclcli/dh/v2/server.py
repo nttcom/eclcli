@@ -1,12 +1,4 @@
-import copy
-
-#import six
-
-
-from eclcli.common import command
-from eclcli.common import utils
-#from ..dhclient import exceptions
-#from ..dhclient import utils
+from eclcli.common import command, utils
 
 
 class ListServer(command.Lister):
@@ -61,46 +53,48 @@ class ListServer(command.Lister):
         dh_client = self.app.client_manager.dh
 
         search_opts = {
-            "changes-since":parsed_args.changes_since,
-            "marker":parsed_args.marker,
-            "limit":parsed_args.limit,
-            "name":parsed_args.name,
-            "image":parsed_args.image,
-            "flavor":parsed_args.flavor,
-            "status":parsed_args.status
+            "changes-since": parsed_args.changes_since,
+            "marker": parsed_args.marker,
+            "limit": parsed_args.limit,
+            "name": parsed_args.name,
+            "image": parsed_args.image,
+            "flavor": parsed_args.flavor,
+            "status": parsed_args.status
         }
         self.log.debug('search options: %s', search_opts)
 
         if parsed_args.detail:
             columns = ['ID',
-                'Name',
-                'Status',
-                'Description',
-                'Hypervisor Type',
-                'imageRef',
-                'Baremetal Server'
-                ]
-                
+                       'Name',
+                       'Status',
+                       'Description',
+                       'Hypervisor Type',
+                       'imageRef',
+                       'Baremetal Server'
+                       ]
+
             column_headers = columns
 
         else:
             columns = ['ID',
-                'Name',
-                'Links']
-            column_headers = columns   
+                       'Name',
+                       'Links']
+            column_headers = columns
 
         mixed_case_fields = ['imageRef']
-            
-        data = dh_client.servers.list(search_opts=search_opts,detailed=parsed_args.detail)
+
+        data = dh_client.servers.list(search_opts=search_opts,
+                                      detailed=parsed_args.detail)
 
         return (column_headers,
                 (utils.get_item_properties(
-                    s, columns, 
-                    mixed_case_fields=mixed_case_fields 
+                    s, columns,
+                    mixed_case_fields=mixed_case_fields
                 ) for s in data))
 
+
 class ShowServer(command.ShowOne):
- 
+
     def get_parser(self, prog_name):
         parser = super(ShowServer, self).get_parser(prog_name)
 
@@ -111,11 +105,11 @@ class ShowServer(command.ShowOne):
         )
 
         return parser
- 
+
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
-        self.log.debug('server-id: %s',parsed_args.server_id)
+        self.log.debug('server-id: %s', parsed_args.server_id)
 
         rows = ['ID',
                 'Name',
@@ -125,7 +119,6 @@ class ShowServer(command.ShowOne):
                 'imageRef',
                 'Baremetal Server'
                 ]
-        
 
         row_headers = rows
 
@@ -134,11 +127,12 @@ class ShowServer(command.ShowOne):
         data = dh_client.servers.get(server_id=parsed_args.server_id)
 
         return (row_headers, (utils.get_item_properties(
-                data, rows, mixed_case_fields=mixed_case_fields 
-            )))
+            data, rows, mixed_case_fields=mixed_case_fields
+        )))
+
 
 class CreateServer(command.ShowOne):
- 
+
     def get_parser(self, prog_name):
         parser = super(CreateServer, self).get_parser(prog_name)
 
@@ -148,7 +142,6 @@ class CreateServer(command.ShowOne):
             metavar='<name>'
         )
 
-
         parser.add_argument(
             "--description",
             help="Server description",
@@ -157,7 +150,9 @@ class CreateServer(command.ShowOne):
 
         parser.add_argument(
             "networks",
-            help="Comma separated list of upto 2 Logical Network ID(s) which belong to different plane(Data/Storage), eg UUID1,UUID2",
+            help="Comma separated list of upto 2 Logical Network ID(s) "
+                 "which belong to different plane(Data/Storage), "
+                 "eg UUID1,UUID2",
             metavar='<networks>'
         )
 
@@ -166,7 +161,6 @@ class CreateServer(command.ShowOne):
             help="Password for the administrator",
             metavar='<adminPass>'
         )
-
 
         parser.add_argument(
             "imageRef",
@@ -180,29 +174,30 @@ class CreateServer(command.ShowOne):
             metavar='<flavorRef>'
         )
 
-
         parser.add_argument(
             "--availability_zone",
-            help="The availability zone name in which to launch the server. If omit this parameter, target availability zone is random",
+            help="The availability zone name in which to launch the server. "
+                 "If omit this parameter, target availability zone is random",
             metavar='<availability-zone>'
         )
 
         parser.add_argument(
             "--metadata",
-            help="Metadata key and value pairs. The maximum size of the metadata key and value is 255 bytes each",
+            help="Metadata key and value pairs. The maximum size of "
+                 "the metadata key and value is 255 bytes each",
             metavar='<metadata>'
         )
 
         return parser
- 
+
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
-        nics=[]
+        nics = []
         net_list = parsed_args.networks.split(",")
         for net in net_list:
-            nics.append({"uuid":net})
-            nics.append({"uuid":net})
+            nics.append({"uuid": net})
+            nics.append({"uuid": net})
 
         rows = [
             'ID',
@@ -213,17 +208,24 @@ class CreateServer(command.ShowOne):
 
         mixed_case_fields = ['adminPass']
 
-        data = dh_client.servers.create(name=parsed_args.name, networks=nics, image_id=parsed_args.imageRef, flavor_id=parsed_args.flavorRef,
-               admin_pass=parsed_args.adminPass, metadata=parsed_args.metadata, availability_zone=parsed_args.availability_zone, description=parsed_args.description)
+        data = dh_client.servers.create(
+            name=parsed_args.name,
+            networks=nics,
+            image_id=parsed_args.imageRef,
+            flavor_id=parsed_args.flavorRef,
+            admin_pass=parsed_args.adminPass, metadata=parsed_args.metadata,
+            availability_zone=parsed_args.availability_zone,
+            description=parsed_args.description
+        )
 
         return (row_headers,
                 utils.get_item_properties(
                     data, rows, mixed_case_fields=mixed_case_fields
-                    ))
+                ))
 
 
 class DeleteServer(command.Command):
- 
+
     def get_parser(self, prog_name):
         parser = super(DeleteServer, self).get_parser(prog_name)
 
@@ -235,13 +237,11 @@ class DeleteServer(command.Command):
         )
 
         return parser
- 
-    def take_action(self, parsed_args):
 
+    def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
-        self.log.debug('server-ids: %s',parsed_args.server_ids)
-        
+        self.log.debug('server-ids: %s', parsed_args.server_ids)
+
         for server_id in parsed_args.server_ids:
             dh_client.servers.delete(server_id)
-

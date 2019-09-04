@@ -3,7 +3,8 @@ six>=1.9.0 # MIT
 
 Babel!=2.3.0,!=2.3.1,!=2.3.2,!=2.3.3,!=2.4.0,>=1.3 # BSD
 cliff!=1.16.0,!=1.17.0,>=1.15.0 # Apache-2.0
-eclsdk>=0.0.12 # Apache-2.0
+eclsdk>=0.0.16 # Apache-2.0
+future>=0.17.1 # MIT
 keystoneauth1<=3.4.0,>=2.1.0 # Apache-2.0
 openstacksdk<=0.13.0 # Apache-2.0
 os-client-config>=1.13.1 # Apache-2.0
@@ -17,3 +18,7 @@ python-cinderclient>=1.3.1 # Apache-2.0
 requests>=2.20.0 # Apache-2.0
 stevedore>=1.5.0 # Apache-2.0
 json-merge-patch>=0.2
+
+# Restrict "cmd2" version until the following problem of "cliff" is resolved.
+# https://bugs.launchpad.net/python-cliff/+bug/1810213
+cmd2>0.8.3,<0.9.0 # MIT

@@ -38,7 +38,7 @@ class AvailabilityZoneManager(base.ManagerWithFind):
     resource_class = AvailabilityZone
     return_parameter_name = "availabilityZoneInfo"
 
-    #Setting to false due to API bug currently av_zone/detail is not working
+    # Setting to false due to API bug currently av_zone/detail is not working
     def list(self, detailed=False):
         """
         Get a list of all availability zones.
@@ -47,7 +47,7 @@ class AvailabilityZoneManager(base.ManagerWithFind):
         """
         if detailed is True:
             return self._list("/os-availability-zone/detail",
-                              'choices')  #choices instead of return_parameter_name due to API bug
+                              'choices')  # choices instead of return_parameter_name due to API bug
         else:
             return self._list("/os-availability-zone",
                               self.return_parameter_name)

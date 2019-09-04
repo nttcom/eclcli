@@ -19,8 +19,8 @@ import logging
 import pkg_resources
 import six
 
-from icgwclient import exceptions
-from icgwclient import utils
+from . import exceptions
+from . import utils
 
 
 logger = logging.getLogger(__name__)

@@ -2,7 +2,12 @@ import logging
 from xml.etree import ElementTree as etree
 from xml.parsers import expat
 
-from oslo_serialization import jsonutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+from builtins import int
 import six
 
 from . import constants
@@ -10,9 +15,6 @@ from . import exceptions as exception
 from ..i18n import _
 
 LOG = logging.getLogger(__name__)
-
-if six.PY3:
-    long = int
 
 
 class ActionDispatcher(object):
@@ -107,7 +109,7 @@ class XMLDictSerializer(DictSerializer):
         self._add_xmlns(node, used_prefixes, has_atom)
         return etree.tostring(node, encoding='UTF-8')
 
-    #NOTE (ameade): the has_atom should be removed after all of the
+    # NOTE (ameade): the has_atom should be removed after all of the
     # XML serializers and view builders have been updated to the current
     # spec that required all responses include the xmlns:atom, the has_atom
     # flag is to prevent current tests from breaking
@@ -127,7 +129,7 @@ class XMLDictSerializer(DictSerializer):
         result = etree.SubElement(parent, nodename)
         if ":" in nodename:
             used_prefixes.append(nodename.split(":", 1)[0])
-        #TODO(bcwaldon): accomplish this without a type-check
+        # TODO(bcwaldon): accomplish this without a type-check
         if isinstance(data, list):
             if not data:
                 result.set(
@@ -143,7 +145,7 @@ class XMLDictSerializer(DictSerializer):
             for item in data:
                 self._to_xml_node(result, metadata, singular, item,
                                   used_prefixes)
-        #TODO(bcwaldon): accomplish this without a type-check
+        # TODO(bcwaldon): accomplish this without a type-check
         elif isinstance(data, dict):
             if not data:
                 result.set(
@@ -168,10 +170,6 @@ class XMLDictSerializer(DictSerializer):
                 result.set(
                     constants.TYPE_ATTR,
                     constants.TYPE_INT)
-            elif isinstance(data, long):
-                result.set(
-                    constants.TYPE_ATTR,
-                    constants.TYPE_LONG)
             elif isinstance(data, float):
                 result.set(
                     constants.TYPE_ATTR,
@@ -294,22 +292,20 @@ class XMLDeserializer(TextDeserializer):
         attrNil = node.get(str(etree.QName(constants.XSI_NAMESPACE, "nil")))
         attrType = node.get(str(etree.QName(
             self.metadata.get('xmlns'), "type")))
-        if (attrNil and attrNil.lower() == 'true'):
+        if attrNil and attrNil.lower() == 'true':
             return None
         elif not len(node) and not node.text:
-            if (attrType and attrType == constants.TYPE_DICT):
+            if attrType and attrType == constants.TYPE_DICT:
                 return {}
-            elif (attrType and attrType == constants.TYPE_LIST):
+            elif attrType and attrType == constants.TYPE_LIST:
                 return []
             else:
                 return ''
-        elif (len(node) == 0 and node.text):
+        elif len(node) == 0 and node.text:
             converters = {constants.TYPE_BOOL:
                           lambda x: x.lower() == 'true',
                           constants.TYPE_INT:
                           lambda x: int(x),
-                          constants.TYPE_LONG:
-                          lambda x: long(x),
                           constants.TYPE_FLOAT:
                           lambda x: float(x)}
             if attrType and attrType in converters:

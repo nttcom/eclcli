@@ -30,9 +30,10 @@ class ListPort(command.Lister):
             'Hardware ID',
         )
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         data = bare_client.ports.list(server_obj.id)
-        return (columns, (utils.get_item_properties(s,columns) for s in data))
+        return columns, (utils.get_item_properties(s, columns) for s in data)
+
 
 class ShowPort(command.ShowOne):
     """Show nic physical port's detail for a server"""
@@ -55,8 +56,8 @@ class ShowPort(command.ShowOne):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
 
-        server_obj = utils.find_resource(bare_client.servers,parsed_args.server)
-        data = bare_client.ports.get(server_obj.id,parsed_args.port)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        data = bare_client.ports.get(server_obj.id, parsed_args.port)
         columns = (
             'ID',
             'Mac Addr',
@@ -70,6 +71,6 @@ class ShowPort(command.ShowOne):
                         columns,
                         mixed_case_fields=[],
                         formatters={
-                            'Attached Ports':bare_utils._format_dicts_list_generic
+                            'Attached Ports': bare_utils._format_dicts_list_generic
                         }
                         ))

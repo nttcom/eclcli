@@ -56,8 +56,10 @@ class ListFirewallPlan(command.Lister):
         # if parsed_args.version:
         #     search_opts.update({"version": parsed_args.version})
 
-        data = [to_obj.FirewallPlan(fwplan)
-            for fwplan in network_client.list_firewall_plans(**search_opts).get('firewall_plans')]
+        data = [
+            to_obj.FirewallPlan(fwplan) for fwplan
+            in network_client.list_firewall_plans(**search_opts).get('firewall_plans')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(

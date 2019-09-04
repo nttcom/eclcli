@@ -14,7 +14,7 @@
 #    under the License.
 
 from .. import base
-import options
+from . import options
 
 
 class Resource(base.Resource):

@@ -163,10 +163,9 @@ class ShowGwInterface(command.ShowOne):
         gw_interface_id = parsed_args.gw_interface_id
 
         dic = network_client.show_gw_interface(gw_interface_id).get('gw_interface')
-        columns = dic #utils.get_columns(dic)
+        columns = dic  # utils.get_columns(dic)
         obj = to_obj.GwInterface(dic)
-        data = utils.get_item_properties(
-            obj, columns,)
+        data = utils.get_item_properties(obj, columns,)
         return columns, data
 
 
@@ -267,8 +266,8 @@ class CreateGwInterface(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.GwInterface(dic)
         data = utils.get_item_properties(
-            obj, columns,)
-        return (columns, data)
+            obj, columns, )
+        return columns, data
 
 
 class SetGwInterface(command.ShowOne):
@@ -303,7 +302,7 @@ class SetGwInterface(command.ShowOne):
         columns = utils.get_columns(dic)
         obj = to_obj.GwInterface(dic)
         data = utils.get_item_properties(
-            obj, columns,)
+            obj, columns, )
         return columns, data
 
 

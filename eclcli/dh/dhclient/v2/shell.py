@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import logging
 
-from .. import exceptions
 from ..i18n import _
 from ..common import cliutils
 from .. import utils
@@ -23,8 +22,7 @@ def do_server_list(cs, args):
     help="UUID for Inter Connect Gateway Service")
 def do_server_show(cs, args):
     """Show User Detail for Inter Connect Gateway Service."""
-    servers = []
-    servers.append(cs.servers.get(args.id))
+    servers = [cs.servers.get(args.id)]
     columns = ["name", "description"]
     utils.print_list(servers, columns)
 
@@ -66,8 +64,8 @@ def do_server_create(cs, args):
     servers = []
     kwargs = {}
     keys = ["name", "networks", "imageRef",
-                "flavorRef", "adminPass", "metadata",
-                "availability_zone", "description"]
+            "flavorRef", "adminPass", "metadata",
+            "availability_zone", "description"]
     for k in keys:
         if hasattr(args, k):
             kwargs[k] = getattr(args, k, "")
@@ -84,7 +82,8 @@ def do_server_create(cs, args):
     help="User Name for Inter Connect Gateway Service")
 def do_server_delete(cs, args):
     """Delete User(s) from Inter Connect Gateway Service."""
-    utils.do_action_on_many(cs.servers.delete,
+    utils.do_action_on_many(
+        cs.servers.delete,
         args.id,
         _("Request to delete server %s has been accepted."),
         _("Unable to delete the specified server(s)."))
@@ -101,10 +100,9 @@ def do_usage_list(cs, args):
     metavar='<uuid>',
     help="UUID for Usage")
 def do_history_get(cs, args):
-    histories = []
-    histories.append(cs.usages.get_histories(args.id))
+    histories = [cs.usages.get_histories(args.id)]
     columns = ["tenant_id", "histories"]
-    utils.print_list(usages, columns)
+    utils.print_list(histories, columns)
 
 
 def do_license_list(cs, args):
@@ -149,6 +147,6 @@ def do_license_create(cs, args):
     help="License ID")
 def do_license_delete(cs, args):
     utils.do_action_on_many(cs.licenses.delete,
-        args.id,
-        _("Request to delete license %s has been accepted."),
-        _("Unable to delete the specified license(s)."))
+                            args.id,
+                            _("Request to delete license %s has been accepted."),
+                            _("Unable to delete the specified license(s)."))

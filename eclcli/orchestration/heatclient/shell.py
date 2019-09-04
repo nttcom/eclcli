@@ -25,11 +25,11 @@ from oslo_utils import importutils
 import six
 import six.moves.urllib.parse as urlparse
 
-from keystoneclient.auth.identity import v2 as v2_auth
-from keystoneclient.auth.identity import v3 as v3_auth
+from keystoneauth1 import session as kssession
+from keystoneauth1.identity import v2 as v2_auth
+from keystoneauth1.identity import v3 as v3_auth
 from keystoneclient import discover
 from keystoneclient import exceptions as ks_exc
-from keystoneclient import session as kssession
 
 from eclcli.orchestration import heatclient
 
@@ -430,7 +430,7 @@ class HeatShell(object):
                         'auth_url instead.')
                 raise exc.CommandError(msg)
 
-        return (v2_auth_url, v3_auth_url)
+        return v2_auth_url, v3_auth_url
 
     def _get_keystone_session(self, **kwargs):
         # first create a Keystone session
@@ -656,7 +656,7 @@ class HeatShell(object):
             trace_id = osprofiler_profiler.get().get_base_id()
             print(_("Trace ID: %s") % trace_id)
             print(_("To display trace use next command:\n"
-                  "osprofiler trace show --html %s ") % trace_id)
+                    "osprofiler trace show --html %s ") % trace_id)
 
     def do_bash_completion(self, args):
         """Prints all of the commands and options to stdout.
@@ -710,6 +710,7 @@ def main(args=None):
         else:
             print(encodeutils.safe_encode(six.text_type(e)), file=sys.stderr)
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

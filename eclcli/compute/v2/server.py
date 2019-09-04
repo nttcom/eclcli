@@ -22,18 +22,10 @@ import os
 import six
 import sys
 
-from eclcli.common import command
+from novaclient.v2 import servers
+from novaclient.v2.servers import ServerManager
 
-try:
-    from novaclient.v2 import servers
-    from novaclient.v2.servers import ServerManager
-except ImportError:
-    from novaclient.v1_1 import servers
-    from novaclient.v1_1.servers import ServerManager
-
-from eclcli.common import exceptions
-from eclcli.common import parseractions
-from eclcli.common import utils
+from eclcli.common import command, exceptions, parseractions, utils
 from eclcli.i18n import _  # noqa
 from eclcli.identity import common as identity_common
 
@@ -120,36 +112,36 @@ def _format_servers_list_power_state(state):
 
 
 def _get_ip_address(addresses, address_type, ip_address_family):
-        # Old style addresses
-        if address_type in addresses:
-            for addy in addresses[address_type]:
+    # Old style addresses
+    if address_type in addresses:
+        for addy in addresses[address_type]:
+            if int(addy['version']) in ip_address_family:
+                return addy['addr']
+
+    # New style addresses
+    new_address_type = address_type
+    if address_type == 'public':
+        new_address_type = 'floating'
+    if address_type == 'private':
+        new_address_type = 'fixed'
+    for network in addresses:
+        for addy in addresses[network]:
+            # Case where it is list of strings
+            if isinstance(addy, six.string_types):
+                if new_address_type == 'fixed':
+                    return addresses[network][0]
+                else:
+                    return addresses[network][-1]
+            # Case where it is a dict
+            if 'OS-EXT-IPS:type' not in addy:
+                continue
+            if addy['OS-EXT-IPS:type'] == new_address_type:
                 if int(addy['version']) in ip_address_family:
                     return addy['addr']
-
-        # New style addresses
-        new_address_type = address_type
-        if address_type == 'public':
-            new_address_type = 'floating'
-        if address_type == 'private':
-            new_address_type = 'fixed'
-        for network in addresses:
-            for addy in addresses[network]:
-                # Case where it is list of strings
-                if isinstance(addy, six.string_types):
-                    if new_address_type == 'fixed':
-                        return addresses[network][0]
-                    else:
-                        return addresses[network][-1]
-                # Case where it is a dict
-                if 'OS-EXT-IPS:type' not in addy:
-                    continue
-                if addy['OS-EXT-IPS:type'] == new_address_type:
-                    if int(addy['version']) in ip_address_family:
-                        return addy['addr']
-        raise exceptions.CommandError(
-            "ERROR: No %s IP version %s address found" %
-            (address_type, ip_address_family)
-        )
+    raise exceptions.CommandError(
+        "ERROR: No %s IP version %s address found" %
+        (address_type, ip_address_family)
+    )
 
 
 def _prep_server_detail(compute_client, server):
@@ -1448,7 +1440,7 @@ class ShowServer(command.ShowOne):
             (resp, data) = server.diagnostics()
             if not resp.status_code == 200:
                 sys.stderr.write(_("Error retrieving diagnostics data"))
-                return ({}, {})
+                return {}, {}
         else:
             data = _prep_server_detail(compute_client, server)
 

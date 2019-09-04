@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from eclcli.common import command
-from eclcli.common import exceptions
 from eclcli.common import utils
-from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 
@@ -15,7 +13,7 @@ class ListChannel(command.Lister):
             metavar="<boolean>",
             type=utils.parse_bool,
             choices=[True, False],
-            help=("The flag of whether getting contracts(true or false(default)).")
+            help="The flag of whether getting contracts(true or false(default))."
         )
         return parser
 
@@ -39,9 +37,11 @@ class ListChannel(command.Lister):
             'Contracts',
         )
 
-        get_contracts = str(parsed_args.get_contracts).lower() # TODO ちゃんと書く
-        data = [objectify(user)
-            for user in sss_client.list_channels(get_contracts).get('channels')]
+        get_contracts = str(parsed_args.get_contracts).lower()  # TODO ちゃんと書く
+        data = [
+            objectify(user)
+            for user in sss_client.list_channels(get_contracts).get('channels')
+        ]
 
         return (column_headers,
                 (utils.get_item_properties(

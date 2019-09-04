@@ -13,9 +13,9 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from icgwclient import base
-from icgwclient.openstack.common.apiclient import base as common_base
-from icgwclient import utils
+from . import base
+from .common.apiclient import base as common_base
+from . import utils
 
 
 class Extension(common_base.HookableMixin):

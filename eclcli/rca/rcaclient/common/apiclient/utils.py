@@ -11,12 +11,16 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from oslo.utils import encodeutils
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import six
 
-from icgwclient.openstack.common._i18n import _
-from icgwclient.openstack.common.apiclient import exceptions
-from icgwclient.openstack.common import uuidutils
+from .._i18n import _
+from . import exceptions
+from .. import uuidutils
 
 
 def find_resource(manager, name_or_id, **find_args):

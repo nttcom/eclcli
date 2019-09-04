@@ -2,8 +2,11 @@ import argparse
 import logging
 import os
 
-from oslo_utils import encodeutils
-from oslo_utils import importutils
+try:
+    from oslo_utils import encodeutils, importutils
+except ImportError:
+    from oslo.utils import encodeutils, importutils
+
 import six
 
 from . import exceptions
@@ -131,10 +134,10 @@ def safe_encode_dict(data):
     def _encode_item(item):
         k, v = item
         if isinstance(v, list):
-            return (k, safe_encode_list(v))
+            return k, safe_encode_list(v)
         elif isinstance(v, dict):
-            return (k, safe_encode_dict(v))
-        return (k, _safe_encode_without_obj(v))
+            return k, safe_encode_dict(v)
+        return k, _safe_encode_without_obj(v)
 
     return dict(list(map(_encode_item, data.items())))
 
@@ -163,7 +166,8 @@ def objectify(dictionary):
 
 def get_request_body(parsed_args, required=(), optional=()):
     body = {req: getattr(parsed_args, req, "") for req in required}
-    body.update({opt:getattr(parsed_args, opt) for opt in optional
-                if hasattr(parsed_args, opt) and getattr(parsed_args, opt, None)
-    })
+    body.update({opt: getattr(parsed_args, opt) for opt in optional
+                 if hasattr(parsed_args, opt)
+                 and getattr(parsed_args, opt, None)
+                 })
     return body

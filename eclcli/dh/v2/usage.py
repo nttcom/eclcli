@@ -1,15 +1,11 @@
-import copy
-import six
-
 from eclcli.common import command
 from eclcli.common import utils
- 
- 
+
+
 class ListUsage(command.Lister):
- 
+
     def get_parser(self, prog_name):
         parser = super(ListUsage, self).get_parser(prog_name)
-
 
         parser.add_argument(
             "--From",
@@ -30,34 +26,34 @@ class ListUsage(command.Lister):
         )
 
         return parser
- 
+
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
         search_opts = {
-            "from":parsed_args.From,
-            "to":parsed_args.to,
-            "license_type":parsed_args.license_type,
+            "from": parsed_args.From,
+            "to": parsed_args.to,
+            "license_type": parsed_args.license_type,
         }
 
-        self.log.debug('search options: %s',search_opts)
+        self.log.debug('search options: %s', search_opts)
 
         columns = [
             'ID', 'Type', 'Value', 'Unit', 'Name', 'Has License Key', 'Resource ID'
         ]
 
         column_headers = columns
-        
- 
+
         data = dh_client.usages.list(search_opts=search_opts)
- 
+
         return (column_headers,
                 (utils.get_item_properties(
                     s, columns
                 ) for s in data))
 
+
 class ShowUsageHistory(command.ShowOne):
- 
+
     def get_parser(self, prog_name):
         parser = super(ShowUsageHistory, self).get_parser(prog_name)
 
@@ -80,16 +76,16 @@ class ShowUsageHistory(command.ShowOne):
         )
 
         return parser
- 
+
     def take_action(self, parsed_args):
         dh_client = self.app.client_manager.dh
 
         search_opts = {
-            "from":parsed_args.From,
-            "to":parsed_args.to
+            "from": parsed_args.From,
+            "to": parsed_args.to
         }
 
-        self.log.debug('search options: %s',search_opts)
+        self.log.debug('search options: %s', search_opts)
 
         rows = [
             'Tenant ID',
@@ -101,8 +97,8 @@ class ShowUsageHistory(command.ShowOne):
 
         row_headers = rows
 
-        data = dh_client.usages.get_histories(search_opts=search_opts,usage=parsed_args.usage)
+        data = dh_client.usages.get_histories(search_opts=search_opts, usage=parsed_args.usage)
 
         return (row_headers, (utils.get_item_properties(
-                data, rows
-        	)))
+            data, rows
+        )))

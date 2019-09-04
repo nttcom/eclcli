@@ -3,6 +3,7 @@ from .. import SERVICE_TYPE
 from . import users
 from . import versions
 
+
 class Client(object):
     def __init__(self, username=None, api_key=None, project_id=None,
                  auth_url=None, insecure=False, timeout=None,

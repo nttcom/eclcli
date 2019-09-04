@@ -15,8 +15,8 @@
 
 import netaddr
 
-from eccclient.common import exceptions
-from eccclient.i18n import _
+from . import exceptions
+from ..i18n import _
 
 
 def validate_int_range(parsed_args, attr_name, min_value=None, max_value=None):

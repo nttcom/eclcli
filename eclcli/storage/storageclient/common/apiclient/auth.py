@@ -24,7 +24,7 @@ import os
 import six
 from stevedore import extension
 
-from storageclient.common.apiclient import exceptions
+from . import exceptions
 
 _discovered_plugins = {}
 
@@ -164,7 +164,7 @@ class BaseAuthPlugin(object):
         :param opt_name: name of the option, e.g., "username"
         :param args: parsed arguments
         """
-        return (opt_name, getattr(args, "os_%s" % opt_name, None))
+        return opt_name, getattr(args, "os_%s" % opt_name, None)
 
     def parse_opts(self, args):
         """Parse the actual auth-system options if any.

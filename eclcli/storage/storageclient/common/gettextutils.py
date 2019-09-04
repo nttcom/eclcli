@@ -37,6 +37,7 @@ _AVAILABLE_LANGUAGES = {}
 USE_LAZY = False
 DOMAIN = 'storageclient'
 
+
 class TranslatorFactory(object):
     """Create translator functions
     """

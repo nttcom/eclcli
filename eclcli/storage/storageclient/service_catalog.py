@@ -1,4 +1,4 @@
-import storageclient.exceptions
+from . import exceptions
 
 
 class ServiceCatalog(object):
@@ -24,7 +24,7 @@ class ServiceCatalog(object):
                 if not filter_value or endpoint[attr] == filter_value:
                     matching_endpoints.append(endpoint)
             if not matching_endpoints:
-                raise storageclient.exceptions.EndpointNotFound()
+                raise exceptions.EndpointNotFound()
 
         # We don't always get a service catalog back ...
         if 'serviceCatalog' not in self.catalog['access']:
@@ -59,12 +59,12 @@ class ServiceCatalog(object):
                     matching_endpoints.append(endpoint)
 
         if not matching_endpoints:
-            raise storageclient.exceptions.EndpointNotFound()
+            raise exceptions.EndpointNotFound()
         elif len(matching_endpoints) > 1:
             try:
                 eplist = [ep[attr] for ep in matching_endpoints]
             except KeyError:
                 eplist = matching_endpoints
-            raise storageclient.exceptions.AmbiguousEndpoints(endpoints=eplist)
+            raise exceptions.AmbiguousEndpoints(endpoints=eplist)
         else:
             return matching_endpoints[0][endpoint_type]

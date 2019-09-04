@@ -1,5 +1,11 @@
-#Functions used to do the format work
-import json
+# Functions used to do the format work
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+import six
+
 
 def _format_zone_state(state):
     if isinstance(state, dict) and "available" in state:
@@ -7,8 +13,9 @@ def _format_zone_state(state):
     else:
         return state
 
-def _format_subdict(dict_x, list_it = True):
-    if dict_x == None:
+
+def _format_subdict(dict_x, list_it=True):
+    if dict_x is None:
         return None
 
     if len(dict_x) == 0:
@@ -56,8 +63,8 @@ def _format_subdict(dict_x, list_it = True):
     return out
 
 
-def _format_sublist(list_x, list_it = True):
-    if list_x == None:
+def _format_sublist(list_x, list_it=True):
+    if list_x is None:
         return None
 
     if len(list_x) == 0:
@@ -106,6 +113,7 @@ def _format_sublist(list_x, list_it = True):
 
     return out
 
+
 def _format_show_dictionary(dict_x):
     """
     Return a formatted string instead output a dictionary directly
@@ -129,11 +137,13 @@ def _format_show_dictionary(dict_x):
                 pairs += _format_subdict(dict_x[_keyName], False) + '\n'
         return pairs[:-1]
 
-    except:
+    except Exception:
         return dict_x
+
 
 def _format_dicts_list_generic(input_list):
     return json.dumps(input_list, indent=4, sort_keys=True)
+
 
 def _format_show_dicts_list(list_x):
     """
@@ -144,7 +154,7 @@ def _format_show_dicts_list(list_x):
     :return: formatted string
     """
     try:
-        if list_x == None:
+        if list_x is None:
             return None
 
         if type(list_x) == dict:
@@ -158,7 +168,7 @@ def _format_show_dicts_list(list_x):
 
             if len(list_x) == 1:
                 if type(list_x[0]) == dict:
-                    out +=  _format_show_dictionary(list_x[0])
+                    out += _format_show_dictionary(list_x[0])
                 if type(list_x[0]) == list:
                     out += _format_show_dicts_list[list_x[0]]
                 if type(list_x[0]) != dict and type(list_x[0]) != list:
@@ -173,7 +183,7 @@ def _format_show_dicts_list(list_x):
 
                 if type(elem) == dict:
                     temp = ""
-                    if inline == False:
+                    if inline is False:
                         temp += '\n'
                     temp += _format_subdict(elem)
                     temp += " \n"
@@ -181,7 +191,7 @@ def _format_show_dicts_list(list_x):
 
                 if type(elem) == list:
                     temp = ""
-                    if inline == False:
+                    if inline is False:
                         temp += '\n'
                     temp += _format_sublist(elem)
                     temp += " \n"
@@ -194,7 +204,7 @@ def _format_show_dicts_list(list_x):
 
             return out
 
-    except:
+    except Exception:
         return list_x
 
 
@@ -210,8 +220,9 @@ def _format_links(link_x):
             pairs += _dict['rel'] + '-> ' + _dict['href'] + '\n'
         return pairs[:-1]
 
-    except:
+    except Exception:
         return link_x
+
 
 def _format_imageORflavor(image_link):
     """
@@ -227,8 +238,9 @@ def _format_imageORflavor(image_link):
 
         return pairs
 
-    except:
+    except Exception:
         return image_link
+
 
 def _dictionary2string(dict_x):
     """
@@ -243,6 +255,7 @@ def _dictionary2string(dict_x):
         pairs += str(_keyName) + ": " \
                    + str(dict_x[_keyName]) + ', '
     return pairs
+
 
 def _format_raid_arrays(raid_arrays):
     """
@@ -280,9 +293,9 @@ def _format_raid_arrays(raid_arrays):
             _keysNames = raid_arrays.keys()
             for _keyName in _keysNames:
                 if type(raid_arrays[_keyName]) == list:
-                    #print type(raid_arrays[_keyName][0])
+                    # print type(raid_arrays[_keyName][0])
                     if type(raid_arrays[_keyName][0]) == str or type(
-                            raid_arrays[_keyName][0]) == unicode:
+                            raid_arrays[_keyName][0]) == six.text_type:
                         tempStr = "["
                         for elem in raid_arrays[_keyName]:
                             tempStr += str(elem) + ', '
@@ -304,8 +317,9 @@ def _format_raid_arrays(raid_arrays):
         else:
             return raid_arrays
 
-    except:
+    except Exception:
         return raid_arrays
+
 
 def _format_nic_physical_ports(ports):
     """
@@ -328,8 +342,9 @@ def _format_nic_physical_ports(ports):
                 out += "attached_ports"
         return out
 
-    except:
+    except Exception:
         return ports
+
 
 def _tidy_data_info(info):
     try:
@@ -339,5 +354,5 @@ def _tidy_data_info(info):
                 info[_key] = _format_show_dictionary(info[_key])
         return info
 
-    except:
+    except Exception:
         return info

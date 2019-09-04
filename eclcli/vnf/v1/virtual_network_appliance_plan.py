@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import json
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
 import copy
-import six
-from eclcli.common import command
-from eclcli.common import utils
-from eclcli.i18n import _  # noqa
+from eclcli.common import command, utils
 
 
 class ListVirtualNetworkAppliancePlan(command.Lister):
@@ -69,4 +70,4 @@ class ShowVirtualNetworkAppliancePlan(command.ShowOne):
         licenses_json = json.dumps(licenses, indent=2)
         setattr(data, 'licenses', licenses_json)
 
-        return (row_headers, (utils.get_item_properties(data, rows)))
+        return row_headers, (utils.get_item_properties(data, rows))

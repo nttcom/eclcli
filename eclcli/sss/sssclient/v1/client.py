@@ -14,8 +14,6 @@ from ..common import serializer
 from ..common import utils
 from ..i18n import _
 
-from datetime import datetime
-
 _logger = logging.getLogger(__name__)
 
 
@@ -57,24 +55,25 @@ def exception_handler_v10(status_code, error_content):
                     status_code=status_code, message=error_message)
         else:
             raise exceptions.SSSClientException(status_code=status_code,
-                                                    message=error_dict)
+                                                message=error_dict)
     else:
         message = None
         if isinstance(error_content, dict):
             message = error_content.get('message')
         if message:
             raise exceptions.SSSClientException(status_code=status_code,
-                                                    message=message)
+                                                message=message)
 
     # If we end up here the exception was not a neutron error
     msg = "%s-%s" % (status_code, error_content)
     raise exceptions.SSSClientException(status_code=status_code,
-                                            message=msg)
+                                        message=msg)
 
 
 class APIParamsCall(object):
     """A Decorator to add support for format and tenant overriding and filters.
     """
+
     def __init__(self, function):
         self.function = function
 
@@ -86,6 +85,7 @@ class APIParamsCall(object):
             ret = self.function(instance, *args, **kwargs)
             instance.format = _format
             return ret
+
         return with_params
 
 
@@ -240,7 +240,7 @@ class ClientBase(object):
         Defaults to the currently set format.
         """
         _format = _format or self.format
-        return "application/%s" % (_format)
+        return "application/%s" % _format
 
     def retry_request(self, method, action, body=None,
                       headers=None, params=None):
@@ -321,9 +321,9 @@ class Client(ClientBase):
     #
     # Users
     #
-    user_singular_path = "/users/%s" # {user_id} for Show, Update and Delete
-    user_list_path     = "/users"    # for List
-    user_create_path   = "/users"    # for Create
+    user_singular_path = "/users/%s"  # {user_id} for Show, Update and Delete
+    user_list_path = "/users"  # for List
+    user_create_path = "/users"  # for Create
 
     @APIParamsCall
     def list_users(self, **_params):
@@ -333,17 +333,17 @@ class Client(ClientBase):
     @APIParamsCall
     def show_user(self, user_id, **_params):
         """Fetche information of a certain user_id in SSS."""
-        return self.get(self.user_singular_path % (user_id), params=_params)
+        return self.get(self.user_singular_path % user_id, params=_params)
 
-    #@APIParamsCall
-    #def update_user(self, body=None, user_id="", *args, **_params):
-    #    """Update information of a certain user_id in SSS."""
-    #    return self.put(self.user_singular_path % (user_id), body=body)
+    # @APIParamsCall
+    # def update_user(self, body=None, user_id="", *args, **_params):
+    #     """Update information of a certain user_id in SSS."""
+    #     return self.put(self.user_singular_path % (user_id), body=body)
 
     @APIParamsCall
     def delete_user(self, user_id, **_params):
         """Deletes a certain user in SSS."""
-        return self.delete(self.user_singular_path % (user_id), params=_params)
+        return self.delete(self.user_singular_path % user_id, params=_params)
 
     @APIParamsCall
     def create_user(self, body=None, *args, **_params):
@@ -353,9 +353,9 @@ class Client(ClientBase):
     #
     # Tenants
     #
-    tenant_singular_path = "/tenants/%s" # {user_id} for Show, Update and Delete
-    tenant_list_path     = "/tenants"    # for List
-    tenant_create_path   = "/tenants"    # for Create
+    tenant_singular_path = "/tenants/%s"  # {user_id} for Show, Update and Delete
+    tenant_list_path = "/tenants"  # for List
+    tenant_create_path = "/tenants"  # for Create
 
     @APIParamsCall
     def list_tenants(self, **_params):
@@ -365,12 +365,12 @@ class Client(ClientBase):
     @APIParamsCall
     def show_tenant(self, tenant_id, **_params):
         """Fetche information of a certain tenant_id in SSS."""
-        return self.get(self.tenant_singular_path % (tenant_id), params=_params)
+        return self.get(self.tenant_singular_path % tenant_id, params=_params)
 
     @APIParamsCall
     def delete_tenant(self, tenant_id, **_params):
         """Deletes a certain tenant in SSS."""
-        return self.delete(self.tenant_singular_path % (tenant_id), params=_params)
+        return self.delete(self.tenant_singular_path % tenant_id, params=_params)
 
     @APIParamsCall
     def create_tenant(self, body=None, *args, **_params):
@@ -380,8 +380,8 @@ class Client(ClientBase):
     #
     # Roles
     #
-    role_create_path   = "/roles"                     # for Create
-    role_delete_path   = "/roles/tenants/%s/users/%s" # {tenant_id}, {user_id} for Delete
+    role_create_path = "/roles"  # for Create
+    role_delete_path = "/roles/tenants/%s/users/%s"  # {tenant_id}, {user_id} for Delete
 
     @APIParamsCall
     def delete_role(self, tenant_id, user_id, **params):
@@ -396,46 +396,46 @@ class Client(ClientBase):
     #
     # API Keypair
     #
-    api_keypair_path   = "/keys/%s" # {user_id} for Update
+    api_keypair_path = "/keys/%s"  # {user_id} for Update
 
     @APIParamsCall
     def set_api_keypair(self, user_id, *args, **_params):
         """Sets a certain API keypair in SSS."""
-        return self.put(self.api_keypair_path % (user_id))
+        return self.put(self.api_keypair_path % user_id)
 
     #
     # Channel
     #
-    channel_path   = "/channels?get_contracts=%s" # {user_id} for Update
+    channel_path = "/channels?get_contracts=%s"  # {user_id} for Update
 
     @APIParamsCall
     def list_channels(self, get_contracts, *args, **_params):
         """List channels in SSS."""
-        return self.get(self.channel_path % (get_contracts))
+        return self.get(self.channel_path % get_contracts)
 
     #
     # Contract
     #
-    contract_show_path   = "/contracts/%s"            # {contract_id} for Show, Delete
-    contract_list_path   = "/contracts?channel_id=%s" # {channel_id}  for List
-    contract_create_path = "/contracts"               # for Create
-    billing_show_path    = "/contracts/%s/billing/%s" # for Show
-    with_target_contract = "%s/target_contract/%s"      # for Show billing of each contract
+    contract_show_path = "/contracts/%s"  # {contract_id} for Show, Delete
+    contract_list_path = "/contracts?channel_id=%s"  # {channel_id}  for List
+    contract_create_path = "/contracts"  # for Create
+    billing_show_path = "/contracts/%s/billing/%s"  # for Show
+    with_target_contract = "%s/target_contract/%s"  # for Show billing of each contract
 
     @APIParamsCall
     def list_contracts(self, channel_id, **_params):
         """Fetches a list of all contracts of a certain channel_id in SSS."""
-        return self.get(self.contract_list_path %(channel_id), params=_params)
+        return self.get(self.contract_list_path % channel_id, params=_params)
 
     @APIParamsCall
     def show_contract(self, contract_id, **_params):
         """Fetches information of a certain contract_id in SSS."""
-        return self.get(self.contract_show_path % (contract_id), params=_params)
+        return self.get(self.contract_show_path % contract_id, params=_params)
 
     @APIParamsCall
     def delete_contract(self, contract_id, **params):
         """Deletes a certain contract in SSS."""
-        return self.delete(self.contract_show_path % (contract_id))
+        return self.delete(self.contract_show_path % contract_id)
 
     @APIParamsCall
     def create_contract(self, body=None, *args, **_params):
@@ -451,18 +451,18 @@ class Client(ClientBase):
     #
     # IAM Endpoints
     #
-    iam_group_list_path          = "/iam/groups"            
-    iam_group_create_path        = "/iam/groups"
-    iam_group_delete_path        = "/iam/groups/%s"
-    iam_group_attach_role_path   = "/iam/groups/%s/roles/%s"
-    iam_group_attach_user_path   = "/iam/groups/%s/users/%s"
-    iam_group_detach_role_path   = "/iam/groups/%s/roles/%s"
-    iam_group_detach_user_path   = "/iam/groups/%s/users/%s"
-    iam_role_list_path           = "/iam/roles"
-    iam_role_create_path         = "/iam/roles"
-    iam_role_show_path           = "/iam/roles/%s"
-    iam_role_delete_path         = "/iam/roles/%s" 
-    iam_user_list_path           = "/iam/groups/%s/users"
+    iam_group_list_path = "/iam/groups"
+    iam_group_create_path = "/iam/groups"
+    iam_group_delete_path = "/iam/groups/%s"
+    iam_group_attach_role_path = "/iam/groups/%s/roles/%s"
+    iam_group_attach_user_path = "/iam/groups/%s/users/%s"
+    iam_group_detach_role_path = "/iam/groups/%s/roles/%s"
+    iam_group_detach_user_path = "/iam/groups/%s/users/%s"
+    iam_role_list_path = "/iam/roles"
+    iam_role_create_path = "/iam/roles"
+    iam_role_show_path = "/iam/roles/%s"
+    iam_role_delete_path = "/iam/roles/%s"
+    iam_user_list_path = "/iam/groups/%s/users"
 
     @APIParamsCall
     def iam_group_list(self, contract_id=None):
@@ -473,31 +473,30 @@ class Client(ClientBase):
 
     @APIParamsCall
     def iam_group_create(self, iam_group_name=None, contract_id=None, description=None):
-        body = {"iam_group_name":iam_group_name,
-                "contract_id":contract_id,
-                "description":description}
+        body = {"iam_group_name": iam_group_name,
+                "contract_id": contract_id,
+                "description": description}
         return self.post(self.iam_group_create_path, body=body)
 
     @APIParamsCall
     def iam_group_delete(self, iam_group_id=None):
-        return self.delete(self.iam_group_delete_path % (iam_group_id))
-
+        return self.delete(self.iam_group_delete_path % iam_group_id)
 
     @APIParamsCall
     def iam_group_attach_user(self, iam_group_id=None, iam_user_id=None):
-        return self.put(self.iam_group_attach_user_path % (iam_group_id,iam_user_id))
+        return self.put(self.iam_group_attach_user_path % (iam_group_id, iam_user_id))
 
     @APIParamsCall
     def iam_group_detach_user(self, iam_group_id=None, iam_user_id=None):
-        return self.delete(self.iam_group_detach_user_path % (iam_group_id,iam_user_id))
+        return self.delete(self.iam_group_detach_user_path % (iam_group_id, iam_user_id))
 
     @APIParamsCall
     def iam_group_attach_role(self, iam_group_id=None, iam_role_id=None):
-        return self.put(self.iam_group_attach_role_path % (iam_group_id,iam_role_id))
+        return self.put(self.iam_group_attach_role_path % (iam_group_id, iam_role_id))
 
     @APIParamsCall
     def iam_group_detach_role(self, iam_group_id=None, iam_role_id=None):
-        return self.delete(self.iam_group_attach_role_path % (iam_group_id,iam_role_id))
+        return self.delete(self.iam_group_attach_role_path % (iam_group_id, iam_role_id))
 
     @APIParamsCall
     def iam_role_list(self, contract_id=None):
@@ -507,21 +506,21 @@ class Client(ClientBase):
         return self.get(url)
 
     def iam_role_show(self, iam_role_id=None):
-        return self.get(self.iam_role_show_path % (iam_role_id))
+        return self.get(self.iam_role_show_path % iam_role_id)
 
     @APIParamsCall
-    def iam_role_create(self, iam_role_name=None, contract_id=None, 
+    def iam_role_create(self, iam_role_name=None, contract_id=None,
                         description=None, resources=None):
-        body = {"iam_role_name":iam_role_name,
-                "contract_id":contract_id,
-                "description":description,
-                "resources":resources}
+        body = {"iam_role_name": iam_role_name,
+                "contract_id": contract_id,
+                "description": description,
+                "resources": resources}
         return self.post(self.iam_role_create_path, body=body)
 
     @APIParamsCall
     def iam_role_delete(self, iam_role_id=None):
-        return self.delete(self.iam_role_delete_path % (iam_role_id))
-    
+        return self.delete(self.iam_role_delete_path % iam_role_id)
+
     @APIParamsCall
     def iam_user_list(self, iam_group_id=None):
-        return self.get(self.iam_user_list_path % (iam_group_id))
+        return self.get(self.iam_user_list_path % iam_group_id)

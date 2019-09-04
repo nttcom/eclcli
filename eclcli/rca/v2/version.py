@@ -3,10 +3,7 @@
 import six
 
 from eclcli.common import command
-
-from eclcli.common import exceptions
 from eclcli.common import utils
-from ..rcaclient.common.utils import objectify
 
 
 class ListVersion(command.Lister):

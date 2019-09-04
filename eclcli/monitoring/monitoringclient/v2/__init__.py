@@ -13,4 +13,4 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
-from client import Client    # noqa
+from .client import Client    # noqa

@@ -16,15 +16,23 @@ import re
 import textwrap
 import uuid
 
-from oslo.serialization import jsonutils
-from oslo.utils import encodeutils
+try:
+    from oslo_serialization import jsonutils
+except ImportError:
+    from oslo.serialization import jsonutils
+
+try:
+    from oslo_utils import encodeutils
+except ImportError:
+    from oslo.utils import encodeutils
+
 import pkg_resources
 import prettytable
 import six
 
-from icgwclient import exceptions
-from icgwclient.i18n import _
-from icgwclient.openstack.common import cliutils
+from . import exceptions
+from .i18n import _
+from .common import cliutils
 
 
 VALID_KEY_REGEX = re.compile(r"[\w\.\- :]+$", re.UNICODE)

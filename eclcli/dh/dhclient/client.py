@@ -10,9 +10,13 @@ import re
 import socket
 import time
 
-from keystoneclient import adapter
-from oslo_utils import importutils
-from oslo_utils import netutils
+from keystoneauth1 import adapter
+
+try:
+    from oslo_utils import importutils, netutils
+except ImportError:
+    from oslo.utils import importutils, netutils
+
 import requests
 from requests import adapters
 
@@ -23,11 +27,11 @@ except ImportError:
 
 from six.moves.urllib import parse
 
-# from cloudn_client.utils import set_headers_param
 from . import exceptions
 from .i18n import _
 from . import service_catalog
 from . import SERVICE_TYPE
+
 
 class TCPKeepAliveAdapter(adapters.HTTPAdapter):
     """The custom adapter used to set TCP Keep-Alive on all connections."""
@@ -246,7 +250,7 @@ class HTTPClient(object):
             try:
                 target = target[p]
             # except KeyError:
-            except Exception, e:
+            except Exception:
                 return
 
         if key in target:
@@ -727,4 +731,3 @@ def get_client_class(version):
 def Client(version, *args, **kwargs):
     client_class = get_client_class(version)
     return client_class(*args, **kwargs)
-

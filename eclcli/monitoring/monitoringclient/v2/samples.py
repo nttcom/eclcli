@@ -12,7 +12,7 @@
 #    under the License.
 
 from .. import base
-import options
+from . import options
 
 CREATION_ATTRIBUTES = ('source',
                        'counter_name',
@@ -103,7 +103,6 @@ class SampleManager(base.Manager):
             params.append('per_page=%s' % per_page)
         path = options.build_url(path, q, params)
         return self._list(path)
-
 
     def get(self, sample_id):
         path = "/v2/samples/" + sample_id

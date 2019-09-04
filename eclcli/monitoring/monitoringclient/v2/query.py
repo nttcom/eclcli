@@ -13,8 +13,8 @@
 #    under the License.
 
 from .. import base
-import alarms
-import samples
+from . import alarms
+from . import samples
 
 
 class QueryManager(base.Manager):

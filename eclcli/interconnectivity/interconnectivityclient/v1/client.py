@@ -21,6 +21,7 @@ import logging
 import time
 
 import requests
+import six
 import six.moves.urllib.parse as urlparse
 
 from .. import ECC_VERSION
@@ -68,7 +69,7 @@ def exception_handler_v10(status_code, error_content):
             elif error_content.get('errors'):
                 error_body = error_content['error']
 
-        if isinstance(error_body, unicode) or isinstance(error_body, str):
+        if isinstance(error_body, six.text_type) or isinstance(error_body, str):
             error_message = error_body
         elif isinstance(error_body, dict):
             error_message = error_body.get['errorCode'] + ' ' + \
@@ -210,9 +211,9 @@ class ClientBase(object):
         self.retries = kwargs.pop('retries', 0)
         self.raise_errors = kwargs.pop('raise_errors', True)
         self.httpclient = client.construct_http_client(**kwargs)
-        self.version = ECC_VERSION # '2.0'
+        self.version = ECC_VERSION  # '2.0'
         self.format = 'json'
-        self.action_prefix = ACTION_PREFIX # "/v%s" % (self.version)
+        self.action_prefix = ACTION_PREFIX  # "/v%s" % (self.version)
         self.retry_interval = 1
 
     def _handle_fault_response(self, status_code, response_body):
@@ -303,7 +304,7 @@ class ClientBase(object):
         Defaults to the currently set format.
         """
         _format = _format or self.format
-        return "application/%s" % (_format)
+        return "application/%s" % _format
 
     def retry_request(self, method, action, body=None,
                       headers=None, params=None, no_body=False):
@@ -394,33 +395,31 @@ class Client(ClientBase):
 
     # Operations
     # order_status_path = "/operations/%s" # {operation_id} for Show
-    operations_path = "/operations" # for List
+    operations_path = "/operations"  # for List
     operation_singular_path = "/operations/%s"
 
     # NGC_Datacenters(to get dc tag, name pair)
-    ngc_datacenters_private_path = "/private/ngc_datacenters" # for List
+    ngc_datacenters_private_path = "/private/ngc_datacenters"  # for List
 
     # NGC_Datacenters(to get MCLAG Info)
-    datacenters_path = "/datacenters" #{cic_domain_id} for List
-
+    datacenters_path = "/datacenters"  # {cic_domain_id} for List
 
     # EC_Services
-    ec_services_path = "/ec_services/%s" # {service_id} for Show
-    ec_service_path = "/ec_services/%s/server_segments" # {service_id} for List
+    ec_services_path = "/ec_services/%s"  # {service_id} for Show
+    ec_service_path = "/ec_services/%s/server_segments"  # {service_id} for List
 
     # ESI_Networks
-    esi_networks_path = "/esi_networks?tenant_id=%s" # {tenant_id} for List
+    esi_networks_path = "/esi_networks?tenant_id=%s"  # {tenant_id} for List
 
     # mCIC
-    mcic_list_path = "/mCICs?tenant_id=%s" # {tenant_id}  for List
-    mcic_create_path = "/mCICs" # for Create
-    mcic_singular_path = "/mCICs/%s" # {mcic_id} for Show, Update and Delete
+    mcic_list_path = "/mCICs?tenant_id=%s"  # {tenant_id}  for List
+    mcic_create_path = "/mCICs"  # for Create
+    mcic_singular_path = "/mCICs/%s"  # {mcic_id} for Show, Update and Delete
 
     # CIC
-    cic_plural_path = "/mCICs/%s/CICs" # {mcic_id} for List and Create
-    cic_singular_path = "/mCICs/%s/CICs/%s" # {mcic_id} {cic_id} for Show,Update and Delete
+    cic_plural_path = "/mCICs/%s/CICs"  # {mcic_id} for List and Create
+    cic_singular_path = "/mCICs/%s/CICs/%s"  # {mcic_id} {cic_id} for Show,Update and Delete
 
-    operations_path = "/operations"
     mcic_operation_path = "/operations?mcic_id=%s"
     cic_operation_path = "/operations?cic_id=%s"
 
@@ -449,7 +448,6 @@ class Client(ClientBase):
     @APIParamsCall
     def show_operation(self, operation_id, **_params):
         return self.get(self.operation_singular_path % operation_id, params=_params)
-
 
     @APIParamsCall
     def show_latest_task(self, **_params):
@@ -499,9 +497,8 @@ class Client(ClientBase):
         except Exception:
             # オペレーションが存在しない場合
             d = {id_type: _params[id_type],
-                 'operation_status': u'success',}
+                 'operation_status': u'success', }
             return d
-
 
     #
     # NGC Datacenters
@@ -512,7 +509,6 @@ class Client(ClientBase):
     def list_ngc_datacenters_private_info(self, **_params):
         """Fetches all NGC Data-Centers."""
         return self.get(self.ngc_datacenters_private_path, params=_params)
-
 
     @APIParamsCall
     def list_datacenters(self, **_params):
@@ -525,16 +521,16 @@ class Client(ClientBase):
     # EC Service
     #
     @APIParamsCall
+    # Original name is show_ec_datacenter
     # def show_ec_datacenter(self, service_id, **_params):
-    ### Original name is show_ec_datacenter
     def show_ec_service(self, service_id, **_params):
         """Fetche information of a certain service_id in EC Data-Services."""
-        return self.get(self.ec_services_path % (service_id), params=_params)
+        return self.get(self.ec_services_path % service_id, params=_params)
 
     @APIParamsCall
     def list_server_segments(self, service_id, **_params):
         """Fetches a list of all server segments by service_id in EC Data-Services."""
-        return self.get(self.ec_service_path % (service_id), params=_params)
+        return self.get(self.ec_service_path % service_id, params=_params)
 
     #
     # ESI networks
@@ -542,7 +538,7 @@ class Client(ClientBase):
     @APIParamsCall
     def list_esi_networks(self, tenant_id, **_params):
         """Fetches a list of all esi networks in ESI Controller."""
-        return self.get(self.esi_networks_path % (tenant_id), params=_params)
+        return self.get(self.esi_networks_path % tenant_id, params=_params)
 
     #
     # mCIC
@@ -550,7 +546,7 @@ class Client(ClientBase):
     @APIParamsCall
     def list_mcics(self, tenant_id, **_params):
         """Fetches a list of all MCICs in a certen tenant."""
-        return self.get(self.mcic_list_path % (tenant_id), params=_params)
+        return self.get(self.mcic_list_path % tenant_id, params=_params)
 
     @APIParamsCall
     def create_mcic(self, body=None, *args, **_params):
@@ -560,18 +556,17 @@ class Client(ClientBase):
     @APIParamsCall
     def show_mcic(self, mcic_id, **_params):
         """Fetche information of a certain mcic_id in MCIC."""
-        return self.get(self.mcic_singular_path % (mcic_id), params=_params)
+        return self.get(self.mcic_singular_path % mcic_id, params=_params)
 
     @APIParamsCall
     def update_mcic(self, body=None, mcic_id="", *args, **_params):
         """Updates a mcic."""
-        return self.put(self.mcic_singular_path % (mcic_id), body=body)
+        return self.put(self.mcic_singular_path % mcic_id, body=body)
 
     @APIParamsCall
     def delete_mcic(self, mcic_id, **params):
         """Deletes a mcic."""
-        return self.delete(self.mcic_singular_path % (mcic_id))
-
+        return self.delete(self.mcic_singular_path % mcic_id)
 
     #
     # CIC
@@ -579,12 +574,12 @@ class Client(ClientBase):
     @APIParamsCall
     def list_cics(self, mcic_id, **_params):
         """Fetches a list of all CICs in a certen MCIC."""
-        return self.get(self.cic_plural_path % (mcic_id), params=_params)
+        return self.get(self.cic_plural_path % mcic_id, params=_params)
 
     @APIParamsCall
     def create_cic(self, body=None, mcic_id="", *args, **_params):
         """Creates a new CIC in a certain MCIC."""
-        return self.post(self.cic_plural_path % (mcic_id), body=convert_value_to_integer(body))
+        return self.post(self.cic_plural_path % mcic_id, body=convert_value_to_integer(body))
 
     @APIParamsCall
     def show_cic(self, mcic_id, cic_id, **_params):
@@ -608,11 +603,11 @@ class Client(ClientBase):
 
     @APIParamsCall
     def show_mcic_operation(self, mcic_id="", **_params):
-        return self.get(self.mcic_operation_path % (mcic_id), params=_params)
+        return self.get(self.mcic_operation_path % mcic_id, params=_params)
 
     @APIParamsCall
     def show_cic_operation(self, cic_id="", **_params):
-        return self.get(self.cic_operation_path % (cic_id), params=_params)
+        return self.get(self.cic_operation_path % cic_id, params=_params)
 
     @APIParamsCall
     def list_extensions(self, **_params):

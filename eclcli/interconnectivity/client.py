@@ -1,7 +1,5 @@
 import logging
 
-from eclcli.common import utils
-
 
 LOG = logging.getLogger(__name__)
 
@@ -15,7 +13,7 @@ API_VERSIONS = {
 
 def make_client(instance):
     """Returns a network proxy"""
-    from interconnectivityclient.v1 import client as interconnectivity_client
+    from .interconnectivityclient.v1 import client as interconnectivity_client
     c = interconnectivity_client.Client(session=instance.session)
     return c
 

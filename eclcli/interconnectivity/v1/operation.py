@@ -1,4 +1,3 @@
-
 import six
 
 from eclcli.common import command
@@ -41,7 +40,7 @@ class ListOperation(command.Lister):
         body = get_request_body(parsed_args, required, optional)
 
         data = [objectify(mcic)
-            for mcic in connectivity_client.list_operations(**body)]
+                for mcic in connectivity_client.list_operations(**body)]
 
         return (column_headers,
                 (utils.get_item_properties(
