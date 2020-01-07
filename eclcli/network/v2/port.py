@@ -134,7 +134,7 @@ class CreatePort(command.ShowOne):
         if not (parsed_args.admin_state_up is None):
             body['port'].update({'admin_state_up': parsed_args.admin_state_up})
         if parsed_args.fixed_ips:
-            result = filter(lambda fixed_ip: fixed_ip != {}, parsed_args.fixed_ips)
+            result = [fixed_ip for fixed_ip in parsed_args.fixed_ips if fixed_ip != {}]
             body['port'].update({'fixed_ips': result})
         if parsed_args.allowed_address_pairs:
             body['port'].update({'allowed_address_pairs': parsed_args.allowed_address_pairs})
@@ -240,7 +240,8 @@ class SetPort(command.ShowOne):
         if parsed_args.fixed_ips:
             body['port'].update({'fixed_ips': parsed_args.fixed_ips})
         if parsed_args.allowed_address_pairs:
-            result = filter(lambda allowed_address_pair: allowed_address_pair != {}, parsed_args.allowed_address_pairs)
+            result = [allowed_address_pair for allowed_address_pair in parsed_args.allowed_address_pairs
+                      if allowed_address_pair != {}]
             body['port'].update({'allowed_address_pairs': result})
         if parsed_args.segmentation_id:
             body['port'].update({'segmentation_id': parsed_args.segmentation_id})
