@@ -70,7 +70,7 @@ class UpdateUEFI(command.ShowOne):
 
         body = {"uefi": {"setting": {}}}
         if parsed_args.settings:
-            body['uefi']['settings'] = json.loads(parsed_args.settings)
+            body['uefi']['setting'] = json.loads(parsed_args.settings)
 
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         bare_client.uefis.update(server_obj.id, body)
