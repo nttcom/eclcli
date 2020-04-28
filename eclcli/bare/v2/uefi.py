@@ -58,7 +58,8 @@ class UpdateUEFI(command.ShowOne):
             help="Name or ID of server",
         )
         parser.add_argument(
-            "--settings",
+            "--settings", '--setting',
+            dest='setting',
             metavar="<settings>",
             help="Dict object of settings to update. eg. {\"hoge\": "
                  "{\"value\": \"Disabled\"}, \"fuga\": {\"value\": \"Enabled\"}}",
@@ -69,8 +70,8 @@ class UpdateUEFI(command.ShowOne):
         bare_client = self.app.client_manager.bare
 
         body = {"uefi": {"setting": {}}}
-        if parsed_args.settings:
-            body['uefi']['setting'] = json.loads(parsed_args.settings)
+        if parsed_args.setting:
+            body['uefi']['setting'] = json.loads(parsed_args.setting)
 
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         bare_client.uefis.update(server_obj.id, body)
