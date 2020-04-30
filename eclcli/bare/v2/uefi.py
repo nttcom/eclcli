@@ -48,7 +48,7 @@ class ShowUEFI(command.ShowOne):
 
 
 class UpdateUEFI(command.ShowOne):
-    """Update UEFI settings for a server"""
+    """Update UEFI setting for a server"""
 
     def get_parser(self, prog_name):
         parser = super(UpdateUEFI, self).get_parser(prog_name)
@@ -58,10 +58,9 @@ class UpdateUEFI(command.ShowOne):
             help="Name or ID of server",
         )
         parser.add_argument(
-            "--settings", '--setting',
-            dest='setting',
-            metavar="<settings>",
-            help="Dict object of settings to update. eg. {\"hoge\": "
+            "--setting", "--settings",
+            metavar="<setting>",
+            help="Dict object of setting to update. eg. {\"hoge\": "
                  "{\"value\": \"Disabled\"}, \"fuga\": {\"value\": \"Enabled\"}}",
         )
         return parser
