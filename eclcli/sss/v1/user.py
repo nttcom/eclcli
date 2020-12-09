@@ -78,13 +78,15 @@ class CreateUser(command.ShowOne):
             metavar='<boolean>',
             type=utils.parse_bool,
             choices=[True, False],
-            help='If this flag is set true, notification eamil will be sent to new users email.'
+            help='If this flag is set true, notification email will be sent to new users email.'
         )
         parser.add_argument(
             '--password',
             metavar='<password>',
             help='Initial password of new user. If this parameter is not designated, '
-                 'random initial password is generated and applied to new user.'
+                 'random initial password is generated and applied to new user. '
+                 'Specify a minimum of 8 characters and include at least one each of ' 
+                 'uppercase and lowercase letters and numbers.'
         )
         return parser
 
@@ -115,7 +117,7 @@ class DeleteUser(command.Command):
             'user_id',
             metavar="<uuid>",
             nargs="+",
-            help="Delete target users user id."
+            help="Delete target users user id. (ecidXXXXXXXXX)"
         )
         return parser
 
