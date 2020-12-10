@@ -122,8 +122,7 @@ class CreateRole(command.ShowOne):
         if parsed_args.resources == "":
             resources_list = []
         else:
-            resources_list = [json.loads(i)
-                              for i in parsed_args.resources.split(",")]
+            resources_list = json.loads("[" + parsed_args.resources + "]")
         data = iam_client.iam_role_create(contract_id=parsed_args.contract_id,
                                           iam_role_name=parsed_args.name,
                                           description=parsed_args.description,
