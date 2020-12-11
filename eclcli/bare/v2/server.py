@@ -519,21 +519,13 @@ class StartServer(command.ShowOne):
             metavar="<server>",
             help="Name or ID or server",
         )
-        parser.add_argument(
-            "--boot-mode",
-            metavar="<boot-mode>",
-            help="Baremetal Server boot mode. A valid value is DISK, PXE or ISO",
-        )
         return parser
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
 
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
-        if parsed_args.boot_mode:
-            data = bare_client.servers.start_with_mode(server_obj.id, {"boot_mode": parsed_args.boot_mode})
-        else:
-            data = bare_client.servers.start(server_obj.id)
+        bare_client.servers.start(server_obj.id)
         return {}, {}
 
 
@@ -577,23 +569,49 @@ class RebootServer(command.ShowOne):
             "--type",
             metavar="<type>",
             default="SOFT",
+            choices=["HARD", "SOFT"],
             help="Server shutdown mode. A valid value is HARD (IPMI) or SOFT (ACPI)",
-        )
-        parser.add_argument(
-            "--boot-mode",
-            metavar="<boot-mode>",
-            help="baremetal server boot mode. A valid value is DISK, PXE or ISO.",
         )
         return parser
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
 
-        body = {'type': parsed_args.type}
-        if parsed_args.boot_mode:
-            body['boot_mode'] = parsed_args.boot_mode
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
-        bare_client.servers.reboot_with_mode(server_obj.id, body)
+        bare_client.servers.reboot(server_obj.id, parsed_args.type)
+        return {}, {}
+
+
+class UpdateBootmode(command.ShowOne):
+    """Change baremetal server bootmode"""
+
+    def get_parser(self, prog_name):
+        parser = super(UpdateBootmode, self).get_parser(prog_name)
+        parser.add_argument(
+            "boot_mode",
+            metavar="<boot-mode>",
+            choices=["DISK", "PXE", "ISO", "LEGACY"],
+            help="Baremetal Server boot mode. A valid value is LEGACY, DISK, PXE or ISO",
+        )
+        parser.add_argument(
+            "--type",
+            metavar="<type>",
+            default="SOFT",
+            choices=["HARD", "SOFT"],
+            help="Server shutdown mode. A valid value is HARD (IPMI) or SOFT (ACPI)",
+        )
+        parser.add_argument(
+            "server",
+            metavar="<server>",
+            help="Name or ID of server",
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        bare_client = self.app.client_manager.bare
+
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        bare_client.servers.update_boot_mode(server_obj.id, parsed_args.type, parsed_args.boot_mode)
         return {}, {}
 
 

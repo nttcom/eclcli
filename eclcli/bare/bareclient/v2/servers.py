@@ -775,12 +775,6 @@ class ServerManager(base.BootingManagerWithFind):
         """
         self._action('os-start', server, None)
 
-    def start_with_mode(self, server, body):
-        """
-        Start the server with mode.
-        """
-        self._action('os-start', server, body)
-
     def pause(self, server):
         """
         Pause the server.
@@ -984,8 +978,16 @@ class ServerManager(base.BootingManagerWithFind):
         """
         self._action('reboot', server, {'type': reboot_type})
 
-    def reboot_with_mode(self, server, body):
-        self._action('reboot', server, body)
+    def update_boot_mode(self, server, reboot_type, boot_mode):
+        """
+        Update baremetal server bootmode.
+
+        :param server: The :class:`Server` (or its ID) to share onto.
+        :param reboot_type: either :data:`REBOOT_SOFT` for a software-level
+                reboot, or `REBOOT_HARD` for a virtual power cycle hard reboot.
+        :param boot_mode: Server boot mode(LEGACY, DISK, PXE or ISO).
+        """
+        self._action('boot_mode', server, {'type': reboot_type, 'boot_mode': boot_mode})
 
     def rebuild(self, server, image, password=None, disk_config=None,
                 preserve_ephemeral=False, name=None, meta=None, files=None,
