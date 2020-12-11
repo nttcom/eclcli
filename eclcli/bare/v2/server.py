@@ -590,8 +590,8 @@ class UpdateBootmode(command.ShowOne):
         parser.add_argument(
             "boot_mode",
             metavar="<boot-mode>",
-            choices=["DISK", "PXE", "ISO"],
-            help="Baremetal Server boot mode. A valid value is DISK, PXE or ISO",
+            choices=["DISK", "PXE", "ISO", "LEGACY"],
+            help="Baremetal Server boot mode. A valid value is LEGACY, DISK, PXE or ISO",
         )
         parser.add_argument(
             "--type",
