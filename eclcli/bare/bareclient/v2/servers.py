@@ -754,8 +754,7 @@ class ServerManager(base.BootingManagerWithFind):
         :param type: Server shutdown mode(HARD or SOFT).
                      Default value is SOFT.
         """
-        info = None if type is None else {"type": type}
-        return self._action("os-stop", server, info)
+        self._action('os-stop', server, {'type': type})
 
     def force_delete(self, server):
         """
