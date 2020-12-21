@@ -542,6 +542,7 @@ class StopServer(command.ShowOne):
         parser.add_argument(
             "--type",
             metavar="<type>",
+            default="SOFT",
             choices=["HARD", "SOFT"],
             help="Server shutdown mode. A valid value is HARD or SOFT.",
         )
