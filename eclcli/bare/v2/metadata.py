@@ -1,6 +1,6 @@
 import six
 
-from eclcli.common import command
+from eclcli.common import command, utils
 
 
 class ListMetadata(command.ShowOne):
@@ -19,8 +19,8 @@ class ListMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
-        data = bare_client.metadata.list(parsed_args.server)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        data = bare_client.metadata.list(server_obj.id)
         if len(data._info) == 0:
             return {}, {}
         else:
@@ -47,8 +47,8 @@ class ShowMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
-        data = bare_client.metadata.get(parsed_args.server, parsed_args.key)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        data = bare_client.metadata.get(server_obj.id, parsed_args.key)
         return zip(*sorted(six.iteritems(data._info)))
 
 
@@ -77,10 +77,10 @@ class UpdateMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         body = {'metadata': {}}
         body['metadata'][parsed_args.key] = parsed_args.value
-        data = bare_client.metadata.update(parsed_args.server, parsed_args.key, body)
+        data = bare_client.metadata.update(server_obj.id, parsed_args.key, body)
         return zip(*sorted(six.iteritems(data._info)))
 
 
@@ -104,10 +104,10 @@ class MergeMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         body = {'metadata': {}}
         body['metadata'] = dict((s.split('=')) for s in parsed_args.metadata.split(","))
-        data = bare_client.metadata.merge(parsed_args.server, body)
+        data = bare_client.metadata.merge(server_obj.id, body)
         return zip(*sorted(six.iteritems(data._info)))
 
 
@@ -131,10 +131,10 @@ class ReplaceMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         body = {'metadata': {}}
         body['metadata'] = dict((s.split('=')) for s in parsed_args.metadata.split(","))
-        data = bare_client.metadata.replace(parsed_args.server, body)
+        data = bare_client.metadata.replace(server_obj.id, body)
         return zip(*sorted(six.iteritems(data._info)))
 
 
@@ -158,6 +158,6 @@ class DeleteMetadata(command.ShowOne):
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
         identity_client = self.app.client_manager.identity
-
-        data = bare_client.metadata.delete(parsed_args.server, parsed_args.key)
+        server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
+        data = bare_client.metadata.delete(server_obj.id, parsed_args.key)
         return {}, {}
