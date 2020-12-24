@@ -14,8 +14,6 @@ class ShowLimit(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         data = bare_client.limits.get()
         _info = bare_utils._tidy_data_info(data._info)
 

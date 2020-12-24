@@ -21,8 +21,6 @@ class CreateKeypair(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         if parsed_args.public_key:
             columns = (
                 'Name',
@@ -60,8 +58,6 @@ class DeleteKeypair(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         bare_client.keypairs.delete(parsed_args.keypair)
         return {}, {}
 
@@ -80,8 +76,6 @@ class ShowKeypair(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         columns = (
             'Name',
             'Fingerprint',
@@ -101,8 +95,6 @@ class ListKeypair(command.Lister):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         columns = (
             'Name',
             'Fingerprint',
