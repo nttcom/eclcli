@@ -17,8 +17,6 @@ class ListPort(command.Lister):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         search_opts = {}
         self.log.debug('search options: %s', search_opts)
 
@@ -54,8 +52,6 @@ class ShowPort(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         server_obj = utils.find_resource(bare_client.servers, parsed_args.server)
         data = bare_client.ports.get(server_obj.id, parsed_args.port)
         columns = (

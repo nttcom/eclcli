@@ -12,8 +12,6 @@ class ListVersion(command.Lister):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         search_opts = {}
         self.log.debug('search options: %s', search_opts)
 
@@ -42,8 +40,6 @@ class ShowVersion(command.ShowOne):
 
     def take_action(self, parsed_args):
         bare_client = self.app.client_manager.bare
-        identity_client = self.app.client_manager.identity
-
         columns = (
             'ID',
             'Status',
