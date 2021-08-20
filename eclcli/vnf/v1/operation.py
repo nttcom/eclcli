@@ -84,7 +84,7 @@ class ShowOperation(command.ShowOne):
         data = client.get_operation(parsed_args.operation_id)
 
         if data.request_body:
-            req_body_dict = data.request_body if type(data.request_body) is dict else json.loads(data.request_body)
+            req_body_dict = json.loads(data.request_body) if type(data.request_body) is str else data.request_body
             setattr(data, 'request_body', json.dumps(req_body_dict, indent=2))
 
         return row_headers, (utils.get_item_properties(data, rows))
