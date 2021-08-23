@@ -85,7 +85,7 @@ class ShowOperation(command.ShowOne):
 
         if data.request_body:
             req_body = data.request_body
-            req_body_dict = json.loads(req_body)
+            req_body_dict = json.loads(req_body) if type(req_body) is str else req_body
             setattr(data, 'request_body', json.dumps(req_body_dict, indent=2))
 
         return row_headers, (utils.get_item_properties(data, rows))
