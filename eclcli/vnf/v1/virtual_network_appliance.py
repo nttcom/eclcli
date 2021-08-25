@@ -111,7 +111,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             '--interface',
-            metavar="<net-id=net-uuid,ip-address=ip-addr,name=interface-name,"
+            metavar="<net-id=net-uuid,ip-address=ip-addr1:ip-addr2...,"
+                    "name=interface-name,"
                     "description=interface-description,tags=interface-tags>",
             action='append',
             default=[],
@@ -199,11 +200,10 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             if_info = {}
             if_info.update(utils.parse_vna_interface(if_str, valid_keys))
             try:
-                if not bool(if_info["net-id"]) or \
-                        not bool(if_info["ip-address"]):
+                if not bool(if_info["net-id"]):
                     raise
             except Exception:
-                msg = _("You must specify network uuid and ip address both")
+                msg = _("You must specify network uuid")
                 raise exceptions.CommandError(msg)
 
             interfaces.append(if_info)
@@ -211,16 +211,26 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         interface_object = {}
         if_num = 1
         for interface in interfaces:
-
             if_key = 'interface_' + str(if_num)
-            tmp = {
-                if_key: {
-                    'network_id': interface['net-id'],
-                    'fixed_ips': [
-                        {'ip_address': interface['ip-address']}
-                    ]
+            if 'ip-address' in interface:
+                fixed_ips_tmp = interface.get('ip-address')
+                fixed_ips = []
+                fixed_ips = [{'ip_address': ip}
+                                for ip in fixed_ips_tmp.split(':')]
+                tmp = {
+                    if_key: {
+                        'network_id': interface['net-id'],
+                        'fixed_ips': fixed_ips
+                    }
                 }
-            }
+            else:
+                tmp = {
+                    if_key: {
+                        'network_id': interface['net-id'],
+                        'fixed_ips': []
+                    }
+                }
+
             if 'name' in interface:
                 name = interface.get('name', '')
                 tmp[if_key].update({'name': name})
