@@ -122,7 +122,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                    "virtual network appliance. "
                    "net-id: attach interface to network with this UUID, "
                    "ip-address: IPv4 fixed address for interface. "
-                   "You can specif multiple ip address by using ':' "
+                   "You can specify multiple ip address by using ':' "
                    "(e.g: 1.1.1.1:2.2.2.2:...), "
                    "name: Name of Interface (optional)."
                    "description: Description of the interface,"
