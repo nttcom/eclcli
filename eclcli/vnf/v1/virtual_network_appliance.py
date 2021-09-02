@@ -412,7 +412,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                    "      (e.g. '{\"tag1\": 1,\"tag2\": \"a\"...}' )"
                    "net-id: attach interface to network with this UUID, "
                    "fixed-ips: IPv4 fixed address for NIC. "
-                   "You can specif multiple ip address by using ':' "
+                   "You can specify multiple ip address by using ':' "
                    "(e.g: 1.1.1.1:2.2.2.2:...)")
         )
         parser.add_argument(
