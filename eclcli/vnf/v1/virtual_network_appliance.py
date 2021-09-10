@@ -219,6 +219,14 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             interface_object = {}
             for interface in interfaces:
                 slot_no = interface.get('slot-no')
+                if not slot_no:
+                    msg = _("slot-no is none")
+                    raise exceptions.CommandError(msg)
+
+                if len(slot_no) != 1 or not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+                    msg = _("slot-no is invalid")
+                    raise exceptions.CommandError(msg)
+
                 if_key = 'interface_' + str(slot_no)
                 if 'ip-address' in interface:
                     fixed_ips_tmp = interface.get('ip-address')
