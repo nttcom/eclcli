@@ -189,7 +189,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         if not parsed_args.interface or len(parsed_args.interface) == 0:
             interface_object = {}
         elif len(parsed_args.interface) > 8:
-            msg = _("You can specify 1 to 8 interface in virtual network "
+            msg = _("You can specify 0 to 8 interface in virtual network "
                     "appliance creation.")
             raise exceptions.CommandError(msg)
         else:
@@ -223,11 +223,11 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                     msg = _("slot-no is not specified")
                     raise exceptions.CommandError(msg)
 
-                if len(slot_no) != 1 or not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+                if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
                     msg = _("slot-no is invalid")
                     raise exceptions.CommandError(msg)
 
-                if_key = 'interface_' + str(slot_no)
+                if_key = 'interface_' + str(int(slot_no))
                 if 'ip-address' in interface:
                     fixed_ips_tmp = interface.get('ip-address')
                     fixed_ips = []
@@ -475,11 +475,11 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
                 msg = _("slot-no is not specified")
                 raise exceptions.CommandError(msg)
 
-            if len(slot_no) != 1 or not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+            if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
                 msg = _("slot-no is invalid")
                 raise exceptions.CommandError(msg)
 
-            if_key = 'interface_' + str(slot_no)
+            if_key = 'interface_' + str(int(slot_no))
 
             network_id = interface.get('net-id')
             fixed_ips_tmp = interface.get('fixed-ips')
