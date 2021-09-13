@@ -470,6 +470,15 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         tag_flag = False
         for interface in interfaces:
             slot_no = interface.get('slot-no')
+
+            if not slot_no:
+                msg = _("slot-no is not specified")
+                raise exceptions.CommandError(msg)
+
+            if len(slot_no) != 1 or not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+                msg = _("slot-no is invalid")
+                raise exceptions.CommandError(msg)
+
             if_key = 'interface_' + str(slot_no)
 
             network_id = interface.get('net-id')
