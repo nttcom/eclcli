@@ -220,7 +220,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             for interface in interfaces:
                 slot_no = interface.get('slot-no')
                 if not slot_no:
-                    msg = _("slot-no is none")
+                    msg = _("slot-no is not specified")
                     raise exceptions.CommandError(msg)
 
                 if len(slot_no) != 1 or not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
