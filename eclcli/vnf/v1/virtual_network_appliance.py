@@ -210,14 +210,6 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             # conflict interfaces
             tmp_interfaces = []
             for interface in interfaces:
-                tmp_interfaces.append(interface.get('slot-no'))
-
-            if len(tmp_interfaces) != len(set(tmp_interfaces)):
-                msg = _("Interfaces are duplicates")
-                raise exceptions.CommandError(msg)
-
-            interface_object = {}
-            for interface in interfaces:
                 slot_no = interface.get('slot-no')
                 if not slot_no:
                     msg = _("slot-no is not specified")
@@ -226,6 +218,16 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                 if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
                     msg = _("slot-no is invalid")
                     raise exceptions.CommandError(msg)
+                tmp_interfaces.append(int(slot_no))
+
+            if len(tmp_interfaces) != len(set(tmp_interfaces)):
+                msg = _("Interfaces are duplicates")
+                raise exceptions.CommandError(msg)
+
+            interface_object = {}
+
+            for interface in interfaces:
+                slot_no = interface.get('slot-no')
 
                 if_key = 'interface_' + str(int(slot_no))
                 if 'ip-address' in interface:
@@ -460,17 +462,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
         # conflict interfaces
         tmp_interfaces = []
         for interface in interfaces:
-            tmp_interfaces.append(interface.get('slot-no'))
-
-        if len(tmp_interfaces) != len(set(tmp_interfaces)):
-            msg = _("Interfaces are duplicates")
-            raise exceptions.CommandError(msg)
-
-        requested_interface_object = {}
-        tag_flag = False
-        for interface in interfaces:
             slot_no = interface.get('slot-no')
-
             if not slot_no:
                 msg = _("slot-no is not specified")
                 raise exceptions.CommandError(msg)
@@ -478,7 +470,17 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
             if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
                 msg = _("slot-no is invalid")
                 raise exceptions.CommandError(msg)
+            tmp_interfaces.append(int(slot_no))
 
+        if len(tmp_interfaces) != len(set(tmp_interfaces)):
+            msg = _("Interfaces are duplicates")
+            raise exceptions.CommandError(msg)
+
+        requested_interface_object = {}
+        tag_flag = False
+
+        for interface in interfaces:
+            slot_no = interface.get('slot-no')
             if_key = 'interface_' + str(int(slot_no))
 
             network_id = interface.get('net-id')
