@@ -207,7 +207,6 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
                     raise exceptions.CommandError(msg)
                 interfaces.append(if_info)
 
-            # conflict interfaces
             tmp_interfaces = []
             for interface in interfaces:
                 slot_no = interface.get('slot-no')
@@ -459,7 +458,6 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
             interfaces.append(if_info)
 
-        # conflict interfaces
         tmp_interfaces = []
         for interface in interfaces:
             slot_no = interface.get('slot-no')
