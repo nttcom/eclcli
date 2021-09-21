@@ -111,15 +111,15 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
         parser.add_argument(
             '--interface',
-            metavar="<net-id=net-uuid,ip-address=ip-addr1:ip-addr2...,"
-                    "name=interface-name,description=interface-description,"
+            metavar="<slot-no=number,net-id=net-uuid,"
+                    "ip-address=ip-addr1:ip-addr2...,name=interface-name,"
+                    "description=interface-description,"
                     "tags=interface-tags>",
-            action='append',
-            default=[],
+            action='store',
+            nargs='+',
             help=_("Specify interface parameter for "
                    "virtual network appliance. "
-                   "You can specify only one interface in creation of "
-                   "virtual network appliance. "
+                   "slot-no: sequential number of interface,"
                    "net-id: attach interface to network with this UUID, "
                    "ip-address: IPv4 fixed address for interface. "
                    "You can specify multiple ip address by using ':' "
@@ -186,72 +186,87 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         ]
         row_headers = rows
 
-        if len(parsed_args.interface) == 0:
-            msg = _("You must specify at least one interface.")
-            raise exceptions.CommandError(msg)
-
-        if len(parsed_args.interface) > 1:
-            msg = _("You can specify only one interface in virtual network "
+        if not parsed_args.interface or len(parsed_args.interface) == 0:
+            interface_object = {}
+        elif len(parsed_args.interface) > 8:
+            msg = _("You can specify 0 to 8 interface in virtual network "
                     "appliance creation.")
             raise exceptions.CommandError(msg)
-
-        interfaces = []
-        valid_keys = ['net-id', 'ip-address', 'name', 'description', 'tags']
-        for if_str in parsed_args.interface:
-            if_info = {}
-            if_info.update(utils.parse_vna_interface(if_str, valid_keys))
-            try:
-                if not bool(if_info["net-id"]):
-                    raise
-            except Exception:
-                msg = _("You must specify network uuid")
-                raise exceptions.CommandError(msg)
-
-            interfaces.append(if_info)
-
-        interface_object = {}
-        if_num = 1
-        for interface in interfaces:
-            if_key = 'interface_' + str(if_num)
-            if 'ip-address' in interface:
-                fixed_ips_tmp = interface.get('ip-address')
-                fixed_ips = []
-                if fixed_ips_tmp:
-                    fixed_ips = [{'ip_address': ip}
-                                    for ip in fixed_ips_tmp.split(':')]
-                tmp = {
-                    if_key: {
-                        'network_id': interface['net-id'],
-                        'fixed_ips': fixed_ips
-                    }
-                }
-            else:
-                tmp = {
-                    if_key: {
-                        'network_id': interface['net-id']
-                    }
-                }
-
-            if 'name' in interface:
-                name = interface.get('name', '')
-                tmp[if_key].update({'name': name})
-
-            if 'description' in interface:
-                description = interface.get('description', '')
-                tmp[if_key].update({'description': description})
-
-            if 'tags' in interface:
-                interface_tags = interface.get('tags') or '{}'
+        else:
+            interfaces = []
+            valid_keys = ['slot-no', 'net-id', 'ip-address', 'name',
+                        'description', 'tags']
+            for if_str in parsed_args.interface:
+                if_info = {}
+                if_info.update(utils.parse_vna_interface(if_str, valid_keys))
                 try:
-                    obj = json.loads(interface_tags)
+                    if not bool(if_info["net-id"]):
+                        raise
                 except Exception:
-                    msg = _("You must specify JSON object format")
+                    msg = _("You must specify network uuid")
+                    raise exceptions.CommandError(msg)
+                interfaces.append(if_info)
+
+            tmp_interfaces = []
+            for interface in interfaces:
+                slot_no = interface.get('slot-no')
+                if not slot_no:
+                    msg = _("slot-no is not specified")
                     raise exceptions.CommandError(msg)
 
-                tmp[if_key].update({'tags': obj})
+                if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+                    msg = _("slot-no is invalid")
+                    raise exceptions.CommandError(msg)
+                tmp_interfaces.append(int(slot_no))
 
-            interface_object.update(tmp)
-            if_num += 1
+            if len(tmp_interfaces) != len(set(tmp_interfaces)):
+                msg = _("Interfaces are duplicates")
+                raise exceptions.CommandError(msg)
+
+            interface_object = {}
+
+            for interface in interfaces:
+                slot_no = interface.get('slot-no')
+
+                if_key = 'interface_' + str(int(slot_no))
+                if 'ip-address' in interface:
+                    fixed_ips_tmp = interface.get('ip-address')
+                    fixed_ips = []
+                    if fixed_ips_tmp:
+                        fixed_ips = [{'ip_address': ip}
+                                        for ip in fixed_ips_tmp.split(':')]
+                    tmp = {
+                        if_key: {
+                            'network_id': interface['net-id'],
+                            'fixed_ips': fixed_ips
+                        }
+                    }
+                else:
+                    tmp = {
+                        if_key: {
+                            'network_id': interface['net-id']
+                        }
+                    }
+
+                if 'name' in interface:
+                    name = interface.get('name', '')
+                    tmp[if_key].update({'name': name})
+
+                if 'description' in interface:
+                    description = interface.get('description', '')
+                    tmp[if_key].update({'description': description})
+
+                if 'tags' in interface:
+                    interface_tags = interface.get('tags') or '{}'
+                    try:
+                        obj = json.loads(interface_tags)
+                    except Exception:
+                        msg = _("You must specify JSON object format")
+                        raise exceptions.CommandError(msg)
+
+                    tmp[if_key].update({'tags': obj})
+
+                interface_object.update(tmp)
 
         plan_id = \
             parsed_args.virtual_network_appliance_plan_id
@@ -443,10 +458,17 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
             interfaces.append(if_info)
 
-        # conflict interfaces
         tmp_interfaces = []
         for interface in interfaces:
-            tmp_interfaces.append(interface.get('slot-no'))
+            slot_no = interface.get('slot-no')
+            if not slot_no:
+                msg = _("slot-no is not specified")
+                raise exceptions.CommandError(msg)
+
+            if not slot_no.isdigit() or int(slot_no) > 8 or int(slot_no) < 1:
+                msg = _("slot-no is invalid")
+                raise exceptions.CommandError(msg)
+            tmp_interfaces.append(int(slot_no))
 
         if len(tmp_interfaces) != len(set(tmp_interfaces)):
             msg = _("Interfaces are duplicates")
@@ -454,9 +476,10 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
         requested_interface_object = {}
         tag_flag = False
+
         for interface in interfaces:
             slot_no = interface.get('slot-no')
-            if_key = 'interface_' + str(slot_no)
+            if_key = 'interface_' + str(int(slot_no))
 
             network_id = interface.get('net-id')
             fixed_ips_tmp = interface.get('fixed-ips')
