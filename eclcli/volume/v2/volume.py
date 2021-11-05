@@ -57,16 +57,6 @@ class CreateVolume(command.ShowOne):
             help="Use <volume-type> as the new volume type",
         )
         parser.add_argument(
-            '--user',
-            metavar='<user>',
-            help='Specify an alternate user (name or ID)',
-        )
-        parser.add_argument(
-            '--project',
-            metavar='<project>',
-            help='Specify an alternate project (name or ID)',
-        )
-        parser.add_argument(
             "--availability-zone",
             metavar="<availability-zone>",
             help="Create new volume in <availability_zone>"
@@ -75,11 +65,6 @@ class CreateVolume(command.ShowOne):
             "--image",
             metavar="<image>",
             help="Use <image> as source of new volume (name or ID)"
-        )
-        parser.add_argument(
-            "--source",
-            metavar="<volume>",
-            help="Volume to clone (name or ID)"
         )
         parser.add_argument(
             "--property",
@@ -95,12 +80,6 @@ class CreateVolume(command.ShowOne):
         volume_client = self.app.client_manager.volume
         image_client = self.app.client_manager.image
 
-        source_volume = None
-        if parsed_args.source:
-            source_volume = utils.find_resource(
-                volume_client.volumes,
-                parsed_args.source).id
-
         image = None
         if parsed_args.image:
             image = utils.find_resource(
@@ -113,30 +92,15 @@ class CreateVolume(command.ShowOne):
                 volume_client.snapshots,
                 parsed_args.snapshot).id
 
-        project = None
-        if parsed_args.project:
-            project = utils.find_resource(
-                identity_client.projects,
-                parsed_args.project).id
-
-        user = None
-        if parsed_args.user:
-            user = utils.find_resource(
-                identity_client.users,
-                parsed_args.user).id
-
         volume = volume_client.volumes.create(
             size=parsed_args.size,
             snapshot_id=snapshot,
             name=parsed_args.name,
             description=parsed_args.description,
             volume_type=parsed_args.type,
-            user_id=user,
-            project_id=project,
             availability_zone=parsed_args.availability_zone,
             metadata=parsed_args.property,
-            imageRef=image,
-            source_volid=source_volume
+            imageRef=image
         )
         # Remove key links from being displayed
         volume._info.update(
