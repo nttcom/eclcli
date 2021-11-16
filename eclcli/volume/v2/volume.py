@@ -76,7 +76,6 @@ class CreateVolume(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        identity_client = self.app.client_manager.identity
         volume_client = self.app.client_manager.volume
         image_client = self.app.client_manager.image
 
