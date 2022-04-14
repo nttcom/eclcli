@@ -17,8 +17,8 @@ from ..i18n import _
 _logger = logging.getLogger(__name__)
 
 
-def exception_handler_v10(status_code, error_content):
-    """Exception handler for API v1.0 client.
+def exception_handler_v2(status_code, error_content):
+    """Exception handler for API v2 client.
 
     This routine generates the appropriate SSS exception according to
     the contents of the response body.
@@ -90,7 +90,7 @@ class APIParamsCall(object):
 
 
 class ClientBase(object):
-    """Client for the OpenStack SSS v1.0 API.
+    """Client for the OpenStack SSS v2 API.
 
     :param string username: Username for authentication. (optional)
     :param string user_id: User ID for authentication. (optional)
@@ -129,7 +129,7 @@ class ClientBase(object):
 
     Example::
 
-        from sssclient.v1_0 import client
+        from sssclient.v2 import client
         sss = client.Client(username=USER,
                                 password=PASS,
                                 tenant_name=TENANT_NAME,
@@ -145,7 +145,7 @@ class ClientBase(object):
     EXTED_PLURALS = {}
 
     def __init__(self, **kwargs):
-        """Initialize a new client for the SSS v1.0 API."""
+        """Initialize a new client for the SSS v2 API."""
         super(ClientBase, self).__init__()
         self.retries = kwargs.pop('retries', 0)
         self.raise_errors = kwargs.pop('raise_errors', True)
@@ -166,7 +166,7 @@ class ClientBase(object):
             # SSS error
             des_error_body = {'message': response_body}
         # Raise the appropriate exception
-        exception_handler_v10(status_code, des_error_body)
+        exception_handler_v2(status_code, des_error_body)
 
     def do_request(self, method, action, body=None, headers=None, params=None):
         # Add format and tenant_id
