@@ -403,7 +403,6 @@ class Client(ClientBase):
     contract_show_path = "/contracts/%s"  # {contract_id} for Show, Delete
     contract_list_path = "/contracts?channel_id=%s"  # {channel_id}  for List
     contract_create_path = "/contracts"  # for Create
-    billing_show_path = "/contracts/%s/billing/%s"  # for Show
     with_target_contract = "%s/target_contract/%s"  # for Show billing of each contract
 
     @APIParamsCall
@@ -423,14 +422,8 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_contract(self, body=None, *args, **_params):
-        """Creates a certain contract in SSS.."""
+        """Creates a certain contract in SSS."""
         return self.post(self.contract_create_path, body=body)
-
-    @APIParamsCall
-    def show_billing(self, contract_id, target_month, **_params):
-        """Fetches information of a certain contract_id in SSS."""
-        billing_action = self.billing_show_path % (contract_id, target_month)
-        return self.get(billing_action, params=_params)
 
     #
     # IAM Endpoints

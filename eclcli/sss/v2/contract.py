@@ -160,37 +160,3 @@ class DeleteContract(command.Command):
 
         for contract_id in parsed_args.contract_id:
             sss_client.delete_contract(contract_id)
-
-
-class ShowBilling(command.ShowOne):
-    _description = _("Show billing")
-    def get_parser(self, prog_name):
-        parser = super(ShowBilling, self).get_parser(prog_name)
-        parser.add_argument(
-            'contract_id',
-            metavar="<uuid>",
-            help="The contract ID getting more information"
-        )
-        parser.add_argument(
-            'target_month',
-            metavar="<target_month>",
-            help="target billing month with YYYY-MM format"
-        )
-        return parser
-
-    def take_action(self, parsed_args):
-        sss_client = self.app.client_manager.sss
-        contract_id = parsed_args.contract_id
-        target_month = parsed_args.target_month
-        billing = sss_client.show_billing(contract_id, target_month)
-        columns = utils.get_columns(billing)
-        obj = objectify(billing)
-
-        try:
-            obj.charge_data = json.dumps(obj.charge_data, indent=2)
-        except Exception:
-            # Ignore prettify if exception raised
-            pass
-
-        data = utils.get_item_properties(obj, columns)
-        return columns, data
