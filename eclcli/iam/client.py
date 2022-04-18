@@ -5,18 +5,18 @@ from eclcli.common import utils
 LOG = logging.getLogger(__name__)
 
 
-DEFAULT_API_VERSION = '1'
+DEFAULT_API_VERSION = '2'
 API_VERSION_OPTION = 'os_iam_api_version'
 API_NAME = "iam"
 API_VERSIONS = {
-    "1": "iamclient.v1.client.Client",
+    "2": "iamclient.v2.client.Client",
 }
 
 _iam_api_version = None
 
 
 def make_client(instance):
-    from eclcli.sss.sssclient.v1 import client as iam_client
+    from eclcli.sss.sssclient.v2 import client as iam_client
 
     if _iam_api_version is not None:
         version = _iam_api_version
