@@ -378,22 +378,6 @@ class Client(ClientBase):
         return self.post(self.tenant_create_path, body=body)
 
     #
-    # Roles
-    #
-    role_create_path = "/roles"  # for Create
-    role_delete_path = "/roles/tenants/%s/users/%s"  # {tenant_id}, {user_id} for Delete
-
-    @APIParamsCall
-    def delete_role(self, tenant_id, user_id, **params):
-        """Deletes a certain role in SSS."""
-        return self.delete(self.role_delete_path % (tenant_id, user_id))
-
-    @APIParamsCall
-    def create_role(self, body=None, *args, **_params):
-        """Creates a certain role in SSS.."""
-        return self.post(self.role_create_path, body=body)
-
-    #
     # API Keypair
     #
     api_keypair_path = "/keys/%s"  # {user_id} for Update
