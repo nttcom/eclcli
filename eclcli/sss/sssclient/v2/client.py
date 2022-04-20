@@ -347,7 +347,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_user(self, body=None, *args, **_params):
-        """Creates a certain user in SSS.."""
+        """Creates a certain user in SSS."""
         return self.post(self.user_create_path, body=body)
 
     #
@@ -374,7 +374,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_tenant(self, body=None, *args, **_params):
-        """Creates a certain tenant in SSS.."""
+        """Creates a certain tenant in SSS."""
         return self.post(self.tenant_create_path, body=body)
 
     #
@@ -424,6 +424,51 @@ class Client(ClientBase):
     def create_contract(self, body=None, *args, **_params):
         """Creates a certain contract in SSS."""
         return self.post(self.contract_create_path, body=body)
+
+    #
+    # Workspace Endpoints
+    #
+    workspace_singular_path = "/workspaces/%s"  # {workspace_id} for Show, Update and Delete
+    workspace_list_path = "/workspaces"  # for List
+    workspace_create_path = "/workspaces"  # for Create
+    workspace_role_create_path = "/workspace-roles"  # for Create
+    workspace_role_delete_path = "/workspace-roles/workspaces/%s/users/%s"  # for Delete
+
+    @APIParamsCall
+    def list_workspaces(self, **_params):
+        """Fetches a list of all workspace in SSS."""
+        return self.get(self.workspace_list_path, params=_params)
+
+    @APIParamsCall
+    def show_workspace(self, workspace_id, **_params):
+        """Fetche information of a certain workspace_id in SSS."""
+        return self.get(self.workspace_singular_path % workspace_id, params=_params)
+
+    @APIParamsCall
+    def delete_workspace(self, workspace_id, **_params):
+        """Deletes a certain workspace in SSS."""
+        return self.delete(self.workspace_singular_path % workspace_id, params=_params)
+
+    @APIParamsCall
+    def create_workspace(self, body=None, *args, **_params):
+        """Creates a certain workspace in SSS."""
+        return self.post(self.workspace_create_path, body=body)
+
+    @APIParamsCall
+    def set_workspace(self, workspace_id, *args, **_params):
+        """Sets a certain workspace in SSS."""
+        return self.put(self.workspace_singular_path % workspace_id)
+
+    @APIParamsCall
+    def delete_workspace_role(self, workspace_id, user_id, **_params):
+        """Deletes a certain workspace-role in SSS."""
+        return self.delete(self.workspace_role_delete_path % (workspace_id, user_id), params=_params)
+
+    @APIParamsCall
+    def create_workspace_role(self, body=None, *args, **_params):
+        """Creates a certain workspace-role in SSS."""
+        return self.post(self.workspace_role_create_path, body=body)
+
 
     #
     # IAM Endpoints
