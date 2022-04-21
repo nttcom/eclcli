@@ -431,8 +431,8 @@ class Client(ClientBase):
     workspace_singular_path = "/workspaces/%s"  # {workspace_id} for Show, Update and Delete
     workspace_list_path = "/workspaces"  # for List
     workspace_create_path = "/workspaces"  # for Create
-    workspace_role_create_path = "/workspace-roles"  # for Create
-    workspace_role_delete_path = "/workspace-roles/workspaces/%s/users/%s"  # for Delete
+    workspace_role_assignment_add_path = "/workspace-roles"  # for Create
+    workspace_role_assignment_delete_path = "/workspace-roles/workspaces/%s/users/%s"  # for Delete
 
     @APIParamsCall
     def list_workspaces(self, **_params):
@@ -460,14 +460,14 @@ class Client(ClientBase):
         return self.put(self.workspace_singular_path % workspace_id)
 
     @APIParamsCall
-    def delete_workspace_role(self, workspace_id, user_id, **_params):
+    def delete_workspace_role_assignment(self, workspace_id, user_id, **_params):
         """Deletes a certain workspace-role in SSS."""
-        return self.delete(self.workspace_role_delete_path % (workspace_id, user_id), params=_params)
+        return self.delete(self.workspace_role_assignment_delete_path % (workspace_id, user_id), params=_params)
 
     @APIParamsCall
-    def create_workspace_role(self, body=None, *args, **_params):
-        """Creates a certain workspace-role in SSS."""
-        return self.post(self.workspace_role_create_path, body=body)
+    def add_workspace_role_assignment(self, body=None, *args, **_params):
+        """Adds a certain workspace-role in SSS."""
+        return self.post(self.workspace_role_assignment_add_path, body=body)
 
 
     #
