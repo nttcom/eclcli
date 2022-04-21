@@ -138,9 +138,9 @@ class DeleteWorkspace(command.Command):
         sss_client.delete_workspace(parsed_args.user_id)
 
 
-class CreateWorkspaceRole(command.ShowOne):
+class AddWorkspaceRoleAssignment(command.ShowOne):
     def get_parser(self, prog_name):
-        parser = super(CreateWorkspaceRole, self).get_parser(prog_name)
+        parser = super(AddWorkspaceRoleAssignment, self).get_parser(prog_name)
         parser.add_argument(
             'user_id',
             metavar='<user_id>',
@@ -162,16 +162,16 @@ class CreateWorkspaceRole(command.ShowOne):
         if parsed_args.workspace_id is not None:
             body['workspace_id'] = str(parsed_args.workspace_id)
 
-        workspace_role = sss_client.create_workspace_role(body)
+        workspace_role = sss_client.add_workspace_role_assignment(body)
         columns = utils.get_columns(workspace_role)
         obj = objectify(workspace_role)
         data = utils.get_item_properties(obj, columns)
         return columns, data
 
 
-class DeleteWorkspaceRole(command.Command):
+class DeleteWorkspaceRoleAssignment(command.Command):
     def get_parser(self, prog_name):
-        parser = super(DeleteWorkspaceRole, self).get_parser(prog_name)
+        parser = super(DeleteWorkspaceRoleAssignment, self).get_parser(prog_name)
         parser.add_argument(
             'workspace_id',
             metavar="<workspace_id>",
@@ -187,4 +187,4 @@ class DeleteWorkspaceRole(command.Command):
     def take_action(self, parsed_args):
         sss_client = self.app.client_manager.sss
 
-        sss_client.delete_workspace_role(parsed_args.workspace_id, parsed_args.user_id)
+        sss_client.delete_workspace_role_assignment(parsed_args.workspace_id, parsed_args.user_id)
