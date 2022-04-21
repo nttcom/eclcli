@@ -69,16 +69,6 @@ class CreateTenant(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(CreateTenant, self).get_parser(prog_name)
         parser.add_argument(
-            'tenant_name',
-            metavar='<tenant_name>',
-            help="New tenant\'s tenant name. This name need to be unique globally."
-        )
-        parser.add_argument(
-            'description',
-            metavar='<description>',
-            help='Description for this tenant.'
-        )
-        parser.add_argument(
             'workspace_id',
             metavar='<workspace_id>',
             help='The workspace ID where the tenant will be created.'
@@ -94,10 +84,6 @@ class CreateTenant(command.ShowOne):
         sss_client = self.app.client_manager.sss
 
         body = {}
-        if parsed_args.tenant_name is not None:
-            body['tenant_name'] = str(parsed_args.tenant_name)
-        if parsed_args.description is not None:
-            body['description'] = str(parsed_args.description)
         if parsed_args.region is not None:
             body['workspace_id'] = str(parsed_args.workspace_id)
         if parsed_args.region is not None:
