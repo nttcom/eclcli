@@ -146,15 +146,16 @@ class AddWorkspaceRoleAssignment(command.ShowOne):
     def get_parser(self, prog_name):
         parser = super(AddWorkspaceRoleAssignment, self).get_parser(prog_name)
         parser.add_argument(
-            'user_id',
-            metavar='<user_id>',
-            help='User ID for workspace role'
-        )
-        parser.add_argument(
             'workspace_id',
             metavar="<workspace_id>",
             help="Workspace ID for workspace role"
         )
+        parser.add_argument(
+            'user_id',
+            metavar='<user_id>',
+            help='User ID for workspace role'
+        )
+
         return parser
 
     def take_action(self, parsed_args):
