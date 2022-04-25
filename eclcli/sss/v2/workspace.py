@@ -139,7 +139,7 @@ class DeleteWorkspace(command.Command):
     def take_action(self, parsed_args):
         sss_client = self.app.client_manager.sss
 
-        sss_client.delete_workspace(parsed_args.user_id)
+        sss_client.delete_workspace(parsed_args.workspace_id)
 
 
 class AddWorkspaceRoleAssignment(command.ShowOne):
