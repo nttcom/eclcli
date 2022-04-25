@@ -435,9 +435,12 @@ class Client(ClientBase):
     workspace_role_assignment_delete_path = "/workspace-roles/workspaces/%s/users/%s"  # for Delete
 
     @APIParamsCall
-    def list_workspaces(self, **_params):
+    def list_workspaces(self, contract_id, **_params):
         """Fetches a list of all workspace in SSS."""
-        return self.get(self.workspace_list_path, params=_params)
+        url = self.workspace_list_path
+        if contract_id:
+            url += "?contract_id=" + contract_id
+        return self.get(url, params=_params)
 
     @APIParamsCall
     def show_workspace(self, workspace_id, **_params):
