@@ -7,6 +7,11 @@ from ..sssclient.common.utils import objectify
 class ListWorkspace(command.Lister):
     def get_parser(self, prog_name):
         parser = super(ListWorkspace, self).get_parser(prog_name)
+        parser.add_argument(
+            '--contract_id',
+            metavar='<contract_id>',
+            help='Contract ID of Workspace information to be acquired'
+        )
         return parser
 
     def take_action(self, parsed_args):
@@ -26,7 +31,7 @@ class ListWorkspace(command.Lister):
         )
 
         data = [objectify(workspace)
-                for workspace in sss_client.list_workspaces().get('workspaces')]
+                for workspace in sss_client.list_workspaces(parsed_args.contract_id).get('workspaces')]
 
         return (column_headers,
                 (utils.get_item_properties(
