@@ -115,12 +115,11 @@ class SetWorkspace(command.ShowOne):
         sss_client = self.app.client_manager.sss
 
         body = {}
-        if parsed_args.workspace_id is not None:
-            body['workspace_id'] = str(parsed_args.workspace_id)
-        if parsed_args.workspace_id is not None:
+        if parsed_args.description is not None:
             body['description'] = str(parsed_args.description)
 
-        workspace = sss_client.set_workspace(body)
+        sss_client.set_workspace(parsed_args.workspace_id, body)
+        workspace = sss_client.show_workspace(parsed_args.workspace_id)
         columns = utils.get_columns(workspace)
         obj = objectify(workspace)
         data = utils.get_item_properties(obj, columns)

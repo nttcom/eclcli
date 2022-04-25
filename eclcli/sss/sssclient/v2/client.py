@@ -458,9 +458,9 @@ class Client(ClientBase):
         return self.post(self.workspace_create_path, body=body)
 
     @APIParamsCall
-    def set_workspace(self, workspace_id, *args, **_params):
+    def set_workspace(self, workspace_id, body=None, *args, **_params):
         """Sets a certain workspace in SSS."""
-        return self.put(self.workspace_singular_path % workspace_id)
+        return self.put(self.workspace_singular_path % workspace_id, body=body)
 
     @APIParamsCall
     def delete_workspace_role_assignment(self, workspace_id, user_id, **_params):
