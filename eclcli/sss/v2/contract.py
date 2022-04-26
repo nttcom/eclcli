@@ -97,7 +97,7 @@ class CreateContract(command.ShowOne):
             metavar='<boolean>',
             type=utils.parse_bool,
             choices=[True, False],
-            help='If this flag is set \'true\', notification eamil will be '
+            help='If this flag is set \'true\', notification email will be '
                  'sent to new user\'s email.'
         )
         parser.add_argument(

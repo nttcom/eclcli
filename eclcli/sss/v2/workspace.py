@@ -24,8 +24,8 @@ class ListWorkspace(command.Lister):
             'start_time',
         )
         column_headers = (
-            'Workspace ID',
-            'Workspace Name',
+            'ID',
+            'Name',
             'Description',
             'Start Time',
         )
@@ -87,7 +87,7 @@ class CreateWorkspace(command.ShowOne):
         if parsed_args.description is not None:
             body['description'] = str(parsed_args.description)
         if parsed_args.contract_id is not None:
-            body['contract_id'] = parsed_args.contract_id
+            body['contract_id'] = str(parsed_args.contract_id)
 
         workspace = sss_client.create_workspace(body)
         columns = utils.get_columns(workspace)
