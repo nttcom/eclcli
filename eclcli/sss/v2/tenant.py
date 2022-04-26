@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from eclcli.common import command
-from eclcli.common import exceptions
 from eclcli.common import utils
-from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 

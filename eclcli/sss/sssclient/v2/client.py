@@ -472,7 +472,6 @@ class Client(ClientBase):
         """Adds a certain workspace-role in SSS."""
         return self.post(self.workspace_role_assignment_add_path, body=body)
 
-
     #
     # IAM Endpoints
     #
