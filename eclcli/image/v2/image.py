@@ -432,7 +432,9 @@ class CreateImage(command.ShowOne):
 
         # open the file first to ensure any failures are handled before the
         # image is created
-        fp = gc_utils.get_data_file(parsed_args)
+        fp = None
+        if parsed_args.file:
+            fp = open(parsed_args.file, 'rb')
         info = {}
         if fp is not None and parsed_args.volume:
             raise exceptions.CommandError("Uploading data and using container "
