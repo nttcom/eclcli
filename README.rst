@@ -86,10 +86,6 @@ Support
 -----------
 ECL2.0 users can raise requests via NTT Communications' ticket portal.
 
-Contact
------------
-* ecl-cli-sdk@ntt.com
-
 Contributing
 -------------
 
