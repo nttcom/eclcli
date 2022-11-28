@@ -227,7 +227,7 @@ class CreateLoadBalancer(command.ShowOne):
 
         data = client.create_load_balancer(
             plan_id=parsed_args.plan_id,
-            interfaces=parsed_args.interfaces,
+            interfaces=interfaces,
             name=parsed_args.name,
             description=parsed_args.description,
             tags=tags,
