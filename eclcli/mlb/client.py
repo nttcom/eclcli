@@ -1,7 +1,5 @@
 import logging
 
-from eclcli.common import utils
-
 LOG = logging.getLogger(__name__)
 
 DEFAULT_API_VERSION = '1'
