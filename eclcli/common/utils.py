@@ -463,3 +463,29 @@ def parse_vna_interface(text, valid_keys):
               " or, interface-slot-no=number,ip-address=ip-addr, " \
               "mac-address=mac-addr,type=type,vrid=vrid>"
         raise exceptions.CommandError(msg % text)
+
+
+def parse_mlb_params(text, valid_keys, key_map):
+    """parse mlb params text
+
+    :param text: not in one of the following format
+    :param valid_keys: keys of the params
+    :param key_map: keys of the request body
+    :return:
+    """
+    try:
+        params = {}
+        pattern_valid_keys = r'(%s)' % '|'.join(map(lambda x: x + '=', valid_keys))
+        match_keys = re.findall(pattern_valid_keys, text)
+        tmp_text = re.sub(r'\\t', '', text)
+        match_values = re.sub(pattern_valid_keys, '\t', tmp_text).split('\t')
+        for index, key in enumerate(match_keys):
+            params[key_map[key.strip('=')]] = match_values[index + 1].rstrip(',')
+
+        if len(params) == 0:
+            raise ValueError
+
+        return params
+    except ValueError:
+        msg = "%r is not in the format"
+        raise exceptions.CommandError(msg % text)
