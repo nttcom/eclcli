@@ -131,9 +131,10 @@ class CreateTenantConnection(command.ShowOne):
         parser.add_argument(
             '--fixed-ip',
             action='append',
-            type=utils.parse_tags,
-            metavar='<IP Address>',
+            type=utils.parse_fixed_ips,
+            metavar='<subnet_id,ipv4>|<ipv4>',
             help="Fixed ip address of tenant connection to create. "
+                 "subnet_id,ipv4 or ipv4 format. "
                  "You can repeat this option."
         )
 
@@ -167,7 +168,7 @@ class CreateTenantConnection(command.ShowOne):
         if parsed_args.segmentation_id:
             attachment_opts['segmentation_id'] = parsed_args.segmentation_id
         if parsed_args.fixed_ip:
-            attachment_opts['fixed_ip'] = parsed_args.fixed_ip
+            attachment_opts['fixed_ips'] = parsed_args.fixed_ip
 
         if len(attachment_opts.keys()) > 0:
             body['attachment_opts'] = attachment_opts
