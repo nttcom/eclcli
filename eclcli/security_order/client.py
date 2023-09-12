@@ -17,11 +17,11 @@
 
 from eclcli.api import eclsdk
 
-DEFAULT_API_VERSION = '2'
+DEFAULT_API_VERSION = '3'
 API_VERSION_OPTION = ''
 API_NAME = 'security_order'
 API_VERSIONS = {
-    '2': 'eclcli.security_order.v2',
+    '3': 'eclcli.security_order.v3',
 }
 
 
