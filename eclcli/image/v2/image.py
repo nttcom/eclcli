@@ -324,12 +324,17 @@ class CreateImage(command.ShowOne):
         public_group.add_argument(
             "--public",
             action="store_true",
-            help="Image is accessible to the public",
+            help="Public to all users",
         )
         public_group.add_argument(
             "--private",
             action="store_true",
-            help="Image is inaccessible to the public (default)",
+            help="Private to other users",
+        )
+        public_group.add_argument(
+            "--shared",
+            action="store_true",
+            help="Shareable with other users (Shared members are not set by default)",
         )
         parser.add_argument(
             "--property",
@@ -414,6 +419,8 @@ class CreateImage(command.ShowOne):
             kwargs['visibility'] = 'public'
         if parsed_args.private:
             kwargs['visibility'] = 'private'
+        if parsed_args.shared:
+            kwargs['visibility'] = 'shared'
 
         # Handle deprecated --owner option
         project_arg = parsed_args.project
