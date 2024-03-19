@@ -420,7 +420,7 @@ class CreateServer(command.ShowOne):
             volume = utils.find_resource(
                 volume_client.volumes,
                 parsed_args.volume,
-            ).id
+            )
 
         # Lookup parsed_args.flavor
         flavor = utils.find_resource(compute_client.flavors,
@@ -458,7 +458,11 @@ class CreateServer(command.ShowOne):
         if volume:
             # When booting from volume, for now assume no other mappings
             # This device value is likely KVM-specific
-            block_device_mapping = {'vda': volume}
+            if hasattr(volume, 'volume_image_metadata') and \
+                    volume.volume_image_metadata.get('root_device_name') == 'sda':
+                block_device_mapping = {'sda': volume.id}
+            else:
+                block_device_mapping = {'vda': volume.id}
         else:
             for dev_map in parsed_args.block_device_mapping:
                 dev_key, dev_vol = dev_map.split('=', 1)
