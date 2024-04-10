@@ -169,6 +169,7 @@ class CreatePolicy(command.ShowOne):
         parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
+            type=int,
             help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
         )
 
@@ -393,6 +394,7 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
         parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
+            type=int,
             help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
         )
 
@@ -540,6 +542,7 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
         parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
+            type=int,
             help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
         )
 
