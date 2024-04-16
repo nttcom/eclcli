@@ -21,6 +21,7 @@ ROWS_FOR_SHOW = [
     'Tenant ID',
     'Algorithm',
     'Persistence',
+    'Idle timeout',
     'Sorry page url',
     'Source NAT',
     'Certificate ID',
@@ -38,6 +39,7 @@ ROWS_FOR_CHANGES = [
 ROWS_FOR_SHOW_STAGED = [
     'Algorithm',
     'Persistence',
+    'Idle timeout',
     'Sorry page url',
     'Source NAT',
     'Certificate ID',
@@ -67,6 +69,7 @@ class ListPolicy(command.Lister):
             'Load Balancer ID',
             'Algorithm',
             'Persistence',
+            'Idle timeout',
             'Sorry page url',
             'Source NAT',
             'Certificate ID',
@@ -164,6 +167,13 @@ class CreatePolicy(command.ShowOne):
         )
 
         parser.add_argument(
+            '--idle-timeout',
+            metavar='<idle-timeout>',
+            type=int,
+            help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
+        )
+
+        parser.add_argument(
             '--sorry-page-url',
             metavar='<sorry-page-url>',
             help=_('URL of the sorry page to which accesses are redirected '
@@ -239,6 +249,7 @@ class CreatePolicy(command.ShowOne):
             tags=tags,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
@@ -381,6 +392,13 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--idle-timeout',
+            metavar='<idle-timeout>',
+            type=int,
+            help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
+        )
+
+        parser.add_argument(
             '--sorry-page-url',
             metavar='<sorry-page-url>',
             help=_('URL of the sorry page to which accesses are redirected '
@@ -437,6 +455,7 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
@@ -521,6 +540,13 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--idle-timeout',
+            metavar='<idle-timeout>',
+            type=int,
+            help=_('The duration (in seconds) during which a session is allowed to remain inactive'),
+        )
+
+        parser.add_argument(
             '--sorry-page-url',
             metavar='<sorry-page-url>',
             help=_('URL of the sorry page to which accesses are redirected '
@@ -577,6 +603,7 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
