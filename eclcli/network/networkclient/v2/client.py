@@ -263,9 +263,6 @@ class Client(ClientBase):
     internet_gateways_path = '/internet_gateways'
     internet_gateway_path = '/internet_gateways/%s'
 
-    vpn_gateways_path = '/vpn_gateways'
-    vpn_gateway_path = '/vpn_gateways/%s'
-
     fic_gateways_path = '/fic_gateways'
     fic_gateway_path = '/fic_gateways/%s'
 
@@ -502,26 +499,6 @@ class Client(ClientBase):
     @APIParamsCall
     def delete_internet_gateway(self, internet_gateway_id):
         return self.delete(self.internet_gateway_path % internet_gateway_id)
-
-    @APIParamsCall
-    def list_vpn_gateways(self, **_params):
-        return self.list('vpn_gateways', self.vpn_gateways_path, **_params)
-
-    @APIParamsCall
-    def show_vpn_gateway(self, vpn_gateway_id, **_params):
-        return self.get(self.vpn_gateway_path % vpn_gateway_id, params=_params)
-
-    @APIParamsCall
-    def create_vpn_gateway(self, body=None):
-        return self.post(self.vpn_gateways_path, body=body)
-
-    @APIParamsCall
-    def update_vpn_gateway(self, vpn_gateway_id, body=None):
-        return self.put(self.vpn_gateway_path % vpn_gateway_id, body=body)
-
-    @APIParamsCall
-    def delete_vpn_gateway(self, vpn_gateway_id):
-        return self.delete(self.vpn_gateway_path % vpn_gateway_id)
 
     @APIParamsCall
     def list_fic_gateways(self, **_params):
