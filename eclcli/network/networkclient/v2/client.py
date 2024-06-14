@@ -242,9 +242,6 @@ class Client(ClientBase):
     gw_interfaces_path = '/gw_interfaces'
     gw_interface_path = '/gw_interfaces/%s'
 
-    vpn_interfaces_path = '/vpn_interfaces'
-    vpn_interface_path = '/vpn_interfaces/%s'
-
     fic_interfaces_path = '/fic_interfaces'
     fic_interface_path = '/fic_interfaces/%s'
 
@@ -253,9 +250,6 @@ class Client(ClientBase):
 
     internet_services_path = '/internet_services'
     internet_service_path = '/internet_services/%s'
-
-    vpn_services_path = '/vpn_services'
-    vpn_service_path = '/vpn_services/%s'
 
     fic_services_path = '/fic_services'
     fic_service_path = '/fic_services/%s'
@@ -356,7 +350,6 @@ class Client(ClientBase):
                      'ipsecpolicies': 'ipsecpolicy',
                      'ikepolicies': 'ikepolicy',
                      'ipsec_site_connections': 'ipsec_site_connection',
-                     'vpnservices': 'vpnservice',
                      'vips': 'vip',
                      'pools': 'pool',
                      'members': 'member',
@@ -582,26 +575,6 @@ class Client(ClientBase):
         return self.delete(self.gw_interface_path % gw_interface_id)
 
     @APIParamsCall
-    def list_vpn_interfaces(self, **_params):
-        return self.list('vpn_interfaces', self.vpn_interfaces_path, **_params)
-
-    @APIParamsCall
-    def show_vpn_interface(self, vpn_interface_id, **_params):
-        return self.get(self.vpn_interface_path % vpn_interface_id, params=_params)
-
-    @APIParamsCall
-    def create_vpn_interface(self, body=None):
-        return self.post(self.vpn_interfaces_path, body=body)
-
-    @APIParamsCall
-    def update_vpn_interface(self, vpn_interface_id, body=None):
-        return self.put(self.vpn_interface_path % vpn_interface_id, body=body)
-
-    @APIParamsCall
-    def delete_vpn_interface(self, vpn_interface_id):
-        return self.delete(self.vpn_interface_path % vpn_interface_id)
-
-    @APIParamsCall
     def list_fic_interfaces(self, **_params):
         return self.list('fic_interfaces', self.fic_interfaces_path, **_params)
 
@@ -659,14 +632,6 @@ class Client(ClientBase):
     @APIParamsCall
     def show_internet_service(self, internet_service_id, **_params):
         return self.get(self.internet_service_path % internet_service_id, params=_params)
-
-    @APIParamsCall
-    def list_vpn_services(self, **_params):
-        return self.list('vpn_services', self.vpn_services_path, **_params)
-
-    @APIParamsCall
-    def show_vpn_service(self, vpn_service_id, **_params):
-        return self.get(self.vpn_service_path % vpn_service_id, params=_params)
 
     @APIParamsCall
     def list_fic_services(self, **_params):

@@ -255,11 +255,6 @@ class InternetService(ESIAPIDictWrapper):
         super(InternetService, self).__init__(apiresource)
 
 
-class VPNGateway(ESIAPIDictWrapper):
-    def __init__(self, apiresource):
-        super(VPNGateway, self).__init__(apiresource)
-
-
 class FICGateway(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(FICGateway, self).__init__(apiresource)
@@ -278,11 +273,6 @@ class InterDCService(ESIAPIDictWrapper):
 class InterDCInterface(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         super(InterDCInterface, self).__init__(apiresource)
-
-
-class VPNService(ESIAPIDictWrapper):
-    def __init__(self, apiresource):
-        super(VPNService, self).__init__(apiresource)
 
 
 class FICService(ESIAPIDictWrapper):
@@ -309,11 +299,6 @@ class GwInterface(ESIAPIDictWrapper):
     def __init__(self, apiresource):
         apiresource.setdefault('network_name', '')
         super(GwInterface, self).__init__(apiresource)
-
-
-class VPNInterface(ESIAPIDictWrapper):
-    def __init__(self, apiresource):
-        super(VPNInterface, self).__init__(apiresource)
 
 
 class FICInterface(ESIAPIDictWrapper):
