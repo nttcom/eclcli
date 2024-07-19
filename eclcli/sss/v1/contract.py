@@ -5,6 +5,7 @@ try:
 except ImportError:
     import simplejson as json
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 from ..sssclient.common.utils import objectify
 
 
@@ -47,6 +48,7 @@ class ListContract(command.Lister):
 
 
 class ShowContract(command.ShowOne):
+    _description = _("Show contract")
     def get_parser(self, prog_name):
         parser = super(ShowContract, self).get_parser(prog_name)
         parser.add_argument(
@@ -161,6 +163,7 @@ class DeleteContract(command.Command):
 
 
 class ShowBilling(command.ShowOne):
+    _description = _("Show billing")
     def get_parser(self, prog_name):
         parser = super(ShowBilling, self).get_parser(prog_name)
         parser.add_argument(

@@ -6,9 +6,11 @@ import copy
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListAvailabilityZone(command.Lister):
+    _description = _("List availability-zones of storage")
 
     def get_parser(self, prog_name):
         parser = super(ListAvailabilityZone, self).get_parser(prog_name)

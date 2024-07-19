@@ -7,9 +7,11 @@ except ImportError:
 
 import copy
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 
 
 class ListTlsPolicy(command.Lister):
+    _description = _("List tls-policys of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListTlsPolicy, self).get_parser(prog_name)
@@ -35,6 +37,7 @@ class ListTlsPolicy(command.Lister):
 
 
 class ShowTlsPolicy(command.ShowOne):
+    _description = _("Show tls-policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowTlsPolicy, self).\

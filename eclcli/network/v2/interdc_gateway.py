@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListInterDCGateway(command.Lister):
+    _description = _("List interdc-gws")
     def get_parser(self, prog_name):
         parser = super(ListInterDCGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -66,6 +68,7 @@ class ListInterDCGateway(command.Lister):
 
 
 class ShowInterDCGateway(command.ShowOne):
+    _description = _("Show interdc-gw")
     def get_parser(self, prog_name):
         parser = super(ShowInterDCGateway, self).get_parser(prog_name)
         parser.add_argument(

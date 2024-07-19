@@ -51,6 +51,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListPolicy(command.Lister):
+    _description = _("List policys of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListPolicy, self).get_parser(prog_name)
@@ -90,6 +91,7 @@ class ListPolicy(command.Lister):
 
 
 class ShowPolicy(command.ShowOne):
+    _description = _("Show policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowPolicy, self).\
@@ -123,6 +125,7 @@ class ShowPolicy(command.ShowOne):
 
 
 class CreatePolicy(command.ShowOne):
+    _description = _("Create new policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreatePolicy, self). \
@@ -264,6 +267,7 @@ class CreatePolicy(command.ShowOne):
 
 
 class DeletePolicy(command.Command):
+    _description = _("Delete policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeletePolicy, self). \
@@ -283,6 +287,7 @@ class DeletePolicy(command.Command):
 
 
 class UpdatePolicy(command.ShowOne):
+    _description = _("Update policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdatePolicy, self). \
@@ -361,6 +366,7 @@ class UpdatePolicy(command.ShowOne):
 
 
 class CreateStagedPolicyConfiguration(command.ShowOne):
+    _description = _("Create new staged policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedPolicyConfiguration, self). \
@@ -469,6 +475,7 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
 
 
 class CancelStagedPolicyConfiguration(command.Command):
+    _description = _("Cancel staged policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedPolicyConfiguration, self). \
@@ -487,6 +494,7 @@ class CancelStagedPolicyConfiguration(command.Command):
 
 
 class ShowStagedPolicyConfiguration(command.ShowOne):
+    _description = _("Show staged policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedPolicyConfiguration, self).\
@@ -509,6 +517,7 @@ class ShowStagedPolicyConfiguration(command.ShowOne):
 
 
 class UpdateStagedPolicyConfiguration(command.ShowOne):
+    _description = _("Update staged policy of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedPolicyConfiguration, self). \

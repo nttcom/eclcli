@@ -16,11 +16,13 @@
 from eclcli.common import command
 from eclcli.common import utils
 from eclcli.common import exceptions
+from eclcli.i18n import _  # noqa
 from .. import monitoring_utils
 import six
 
 
 class CreateAlarm(command.ShowOne):
+    _description = _("Create new alarm of monitoring")
     def get_parser(self, prog_name):
         """create an alarm"""
 
@@ -185,6 +187,7 @@ class CreateAlarm(command.ShowOne):
 
 
 class UpdateAlarm(command.ShowOne):
+    _description = _("Update alarm of monitoring")
     def get_parser(self, prog_name):
         parser = super(UpdateAlarm, self).get_parser(prog_name)
         parser.add_argument(

@@ -7,9 +7,11 @@ except ImportError:
 
 import copy
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 
 
 class ListVirtualNetworkAppliancePlan(command.Lister):
+    _description = _("List plans of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ListVirtualNetworkAppliancePlan, self).get_parser(prog_name)
@@ -37,6 +39,7 @@ class ListVirtualNetworkAppliancePlan(command.Lister):
 
 
 class ShowVirtualNetworkAppliancePlan(command.ShowOne):
+    _description = _("Show plan of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ShowVirtualNetworkAppliancePlan, self).\

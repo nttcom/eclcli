@@ -18,9 +18,11 @@
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ShowNameServer(command.Lister):
+    _description = _("Show nameserver of DNS")
 
     def get_parser(self, prog_name):
         parser = super(ShowNameServer, self).get_parser(prog_name)

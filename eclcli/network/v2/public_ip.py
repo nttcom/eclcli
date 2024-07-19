@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListPubicIP(command.Lister):
+    _description = _("List public-ips")
     def get_parser(self, prog_name):
         parser = super(ListPubicIP, self).get_parser(prog_name)
 
@@ -76,6 +78,7 @@ class ListPubicIP(command.Lister):
 
 
 class ShowPubicIP(command.ShowOne):
+    _description = _("Show public-ip")
     def get_parser(self, prog_name):
         parser = super(ShowPubicIP, self).get_parser(prog_name)
         parser.add_argument(
@@ -99,6 +102,7 @@ class ShowPubicIP(command.ShowOne):
 
 
 class CreatePubicIP(command.ShowOne):
+    _description = _("Create new public-ip")
     def get_parser(self, prog_name):
         parser = super(CreatePubicIP, self).get_parser(prog_name)
         parser.add_argument(
@@ -141,6 +145,7 @@ class CreatePubicIP(command.ShowOne):
 
 
 class SetPubicIP(command.ShowOne):
+    _description = _("Update public-ip")
     def get_parser(self, prog_name):
         parser = super(SetPubicIP, self).get_parser(prog_name)
         parser.add_argument(
@@ -173,6 +178,7 @@ class SetPubicIP(command.ShowOne):
 
 
 class DeletePubicIP(command.Command):
+    _description = _("Delete public-ip")
     def get_parser(self, prog_name):
         parser = super(DeletePubicIP, self).get_parser(prog_name)
         parser.add_argument(

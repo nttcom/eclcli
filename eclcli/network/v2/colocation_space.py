@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListColoSpace(command.Lister):
+    _description = _("List colocation-spaces")
     def get_parser(self, prog_name):
         parser = super(ListColoSpace, self).get_parser(prog_name)
         parser.add_argument(
@@ -58,6 +60,7 @@ class ListColoSpace(command.Lister):
 
 
 class ShowColoSpace(command.ShowOne):
+    _description = _("Show colocation-space")
     def get_parser(self, prog_name):
         parser = super(ShowColoSpace, self).get_parser(prog_name)
         parser.add_argument(

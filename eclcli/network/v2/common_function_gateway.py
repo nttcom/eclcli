@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListCommonFunctionGateway(command.Lister):
+    _description = _("List common-function-gws")
     def get_parser(self, prog_name):
         parser = super(ListCommonFunctionGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -81,6 +83,7 @@ class ListCommonFunctionGateway(command.Lister):
 
 
 class ShowCommonFunctionGateway(command.ShowOne):
+    _description = _("Show common-function-gw")
     def get_parser(self, prog_name):
         parser = super(ShowCommonFunctionGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -104,6 +107,7 @@ class ShowCommonFunctionGateway(command.ShowOne):
 
 
 class CreateCommonFunctionGateway(command.ShowOne):
+    _description = _("Create new common-function-gw")
     def get_parser(self, prog_name):
         parser = super(CreateCommonFunctionGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -139,6 +143,7 @@ class CreateCommonFunctionGateway(command.ShowOne):
 
 
 class SetCommonFunctionGateway(command.ShowOne):
+    _description = _("Update common-function-gw")
     def get_parser(self, prog_name):
         parser = super(SetCommonFunctionGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -176,6 +181,7 @@ class SetCommonFunctionGateway(command.ShowOne):
 
 
 class DeleteCommonFunctionGateway(command.Command):
+    _description = _("Delete common-function-gw")
     def get_parser(self, prog_name):
         parser = super(DeleteCommonFunctionGateway, self).get_parser(prog_name)
         parser.add_argument(

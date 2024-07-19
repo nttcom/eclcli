@@ -11,6 +11,7 @@ from eclcli.i18n import _  # noqa
 
 
 class ListOperation(command.Lister):
+    _description = _("List operations of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ListOperation, self).get_parser(prog_name)
@@ -52,6 +53,7 @@ class ListOperation(command.Lister):
 
 
 class ShowOperation(command.ShowOne):
+    _description = _("Show operation of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ShowOperation, self).\

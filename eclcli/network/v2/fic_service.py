@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListFICService(command.Lister):
+    _description = _("List fic-services")
     def get_parser(self, prog_name):
         parser = super(ListFICService, self).get_parser(prog_name)
         return parser
@@ -32,6 +34,7 @@ class ListFICService(command.Lister):
 
 
 class ShowFICService(command.ShowOne):
+    _description = _("Show fic-service")
     def get_parser(self, prog_name):
         parser = super(ShowFICService, self).get_parser(prog_name)
         parser.add_argument(

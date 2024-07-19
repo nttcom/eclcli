@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListColoLogicalLink(command.Lister):
+    _description = _("List colocation-logical-links")
     def get_parser(self, prog_name):
         parser = super(ListColoLogicalLink, self).get_parser(prog_name)
 
@@ -89,6 +91,7 @@ class ListColoLogicalLink(command.Lister):
 
 
 class ShowColoLogicalLink(command.ShowOne):
+    _description = _("Show colocation-logical-link")
     def get_parser(self, prog_name):
         parser = super(ShowColoLogicalLink, self).get_parser(prog_name)
         parser.add_argument(
@@ -112,6 +115,7 @@ class ShowColoLogicalLink(command.ShowOne):
 
 
 class CreateColoLogicalLink(command.ShowOne):
+    _description = _("Create new colocation-logical-link")
     def get_parser(self, prog_name):
         parser = super(CreateColoLogicalLink, self).get_parser(prog_name)
         parser.add_argument(
@@ -167,6 +171,7 @@ class CreateColoLogicalLink(command.ShowOne):
 
 
 class SetColoLogicalLink(command.ShowOne):
+    _description = _("Update colocation-logical-link")
     def get_parser(self, prog_name):
         parser = super(SetColoLogicalLink, self).get_parser(prog_name)
         parser.add_argument(
@@ -211,6 +216,7 @@ class SetColoLogicalLink(command.ShowOne):
 
 
 class DeleteColoLogicalLink(command.Command):
+    _description = _("Delete colocation-logical-link")
     def get_parser(self, prog_name):
         parser = super(DeleteColoLogicalLink, self).get_parser(prog_name)
         parser.add_argument(

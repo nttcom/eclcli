@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 from ..sssclient.common.utils import objectify
 
 
 class ListUser(command.Lister):
+    _description = _("List users")
     def get_parser(self, prog_name):
         parser = super(ListUser, self).get_parser(prog_name)
         return parser
@@ -41,6 +43,7 @@ class ListUser(command.Lister):
 
 
 class ShowUser(command.ShowOne):
+    _description = _("Show user")
     def get_parser(self, prog_name):
         parser = super(ShowUser, self).get_parser(prog_name)
         parser.add_argument(
@@ -61,6 +64,7 @@ class ShowUser(command.ShowOne):
 
 
 class CreateUser(command.ShowOne):
+    _description = _("Create new user")
     def get_parser(self, prog_name):
         parser = super(CreateUser, self).get_parser(prog_name)
         parser.add_argument(
@@ -111,6 +115,7 @@ class CreateUser(command.ShowOne):
 
 
 class DeleteUser(command.Command):
+    _description = _("Delete user")
     def get_parser(self, prog_name):
         parser = super(DeleteUser, self).get_parser(prog_name)
         parser.add_argument(

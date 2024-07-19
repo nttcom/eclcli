@@ -41,6 +41,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListLoadBalancer(command.Lister):
+    _description = _("List load-balancers")
 
     def get_parser(self, prog_name):
         parser = super(ListLoadBalancer, self).get_parser(prog_name)
@@ -76,6 +77,7 @@ class ListLoadBalancer(command.Lister):
 
 
 class ShowLoadBalancer(command.ShowOne):
+    _description = _("Show load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowLoadBalancer, self).\
@@ -111,6 +113,7 @@ class ShowLoadBalancer(command.ShowOne):
 
 
 class CreateLoadBalancer(command.ShowOne):
+    _description = _("Create new load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateLoadBalancer, self). \
@@ -240,6 +243,7 @@ class CreateLoadBalancer(command.ShowOne):
 
 
 class DeleteLoadBalancer(command.Command):
+    _description = _("Delete load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteLoadBalancer, self). \
@@ -259,6 +263,7 @@ class DeleteLoadBalancer(command.Command):
 
 
 class UpdateLoadBalancer(command.ShowOne):
+    _description = _("Update load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateLoadBalancer, self). \
@@ -340,6 +345,7 @@ class UpdateLoadBalancer(command.ShowOne):
 
 
 class CreateStagedLoadBalancerConfiguration(command.ShowOne):
+    _description = _("Create new staged load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedLoadBalancerConfiguration, self). \
@@ -439,6 +445,7 @@ class CreateStagedLoadBalancerConfiguration(command.ShowOne):
 
 
 class CancelStagedLoadBalancerConfiguration(command.Command):
+    _description = _("Cancel staged load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedLoadBalancerConfiguration, self). \
@@ -457,6 +464,7 @@ class CancelStagedLoadBalancerConfiguration(command.Command):
 
 
 class ShowStagedLoadBalancerConfiguration(command.ShowOne):
+    _description = _("Show staged load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedLoadBalancerConfiguration, self).\
@@ -481,6 +489,7 @@ class ShowStagedLoadBalancerConfiguration(command.ShowOne):
 
 
 class UpdateStagedLoadBalancerConfiguration(command.ShowOne):
+    _description = _("Update staged load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedLoadBalancerConfiguration, self). \
@@ -580,6 +589,7 @@ class UpdateStagedLoadBalancerConfiguration(command.ShowOne):
 
 
 class ActionLoadBalancer(command.Command):
+    _description = _("Action for load-balancer")
 
     def get_parser(self, prog_name):
         parser = super(ActionLoadBalancer, self). \

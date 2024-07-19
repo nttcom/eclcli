@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListFirewallInterface(command.Lister):
+    _description = _("List firewall-interfaces")
     def get_parser(self, prog_name):
         parser = super(ListFirewallInterface, self).get_parser(prog_name)
 
@@ -89,6 +91,7 @@ class ListFirewallInterface(command.Lister):
 
 
 class ShowFirewallInterface(command.ShowOne):
+    _description = _("Show firewall-interface")
     def get_parser(self, prog_name):
         parser = super(ShowFirewallInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -112,6 +115,7 @@ class ShowFirewallInterface(command.ShowOne):
 
 
 class SetFirewallInterface(command.ShowOne):
+    _description = _("Update firewall-interface")
     def get_parser(self, prog_name):
         parser = super(SetFirewallInterface, self).get_parser(prog_name)
         parser.add_argument(

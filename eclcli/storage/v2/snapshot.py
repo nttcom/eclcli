@@ -4,9 +4,11 @@ import copy
 import six
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListSnapshot(command.Lister):
+    _description = _("List snapshots of storage")
 
     def get_parser(self, prog_name):
         parser = super(ListSnapshot, self).get_parser(prog_name)
@@ -35,6 +37,7 @@ class ListSnapshot(command.Lister):
 
 
 class ShowSnapshot(command.ShowOne):
+    _description = _("Show snapshot of storage")
 
     def get_parser(self, prog_name):
         parser = super(ShowSnapshot, self).get_parser(prog_name)
@@ -69,6 +72,7 @@ class ShowSnapshot(command.ShowOne):
 
 
 class CreateSnapshot(command.ShowOne):
+    _description = _("Create new snapshot of storage")
 
     def get_parser(self, prog_name):
         parser = super(CreateSnapshot, self).get_parser(prog_name)
@@ -112,6 +116,7 @@ class CreateSnapshot(command.ShowOne):
 
 
 class UpdateSnapshot(command.ShowOne):
+    _description = _("Update snapshot of storage")
 
     def get_parser(self, prog_name):
         parser = super(UpdateSnapshot, self).get_parser(prog_name)
@@ -161,6 +166,7 @@ class UpdateSnapshot(command.ShowOne):
 
 
 class DeleteSnapshot(command.Command):
+    _description = _("Delete snapshot of storage")
 
     def get_parser(self, prog_name):
         parser = super(DeleteSnapshot, self).get_parser(prog_name)
@@ -179,6 +185,7 @@ class DeleteSnapshot(command.Command):
 
 
 class RestoreSnapshot(command.Command):
+    _description = _("Restore snapshot of storage")
 
     def get_parser(self, prog_name):
         parser = super(RestoreSnapshot, self).get_parser(prog_name)

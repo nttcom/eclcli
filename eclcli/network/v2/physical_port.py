@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListPhysicalPort(command.Lister):
+    _description = _("List physical-ports")
     def get_parser(self, prog_name):
         parser = super(ListPhysicalPort, self).get_parser(prog_name)
         return parser
@@ -32,6 +34,7 @@ class ListPhysicalPort(command.Lister):
 
 
 class ShowPhysicalPort(command.ShowOne):
+    _description = _("Show physical-port")
     def get_parser(self, prog_name):
         parser = super(ShowPhysicalPort, self).get_parser(prog_name)
         parser.add_argument(

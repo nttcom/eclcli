@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListLoadBalancer(command.Lister):
+    _description = _("List load-balancers")
     def get_parser(self, prog_name):
         parser = super(ListLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -89,6 +91,7 @@ class ListLoadBalancer(command.Lister):
 
 
 class ShowLoadBalancer(command.ShowOne):
+    _description = _("Show load-balancer")
     def get_parser(self, prog_name):
         parser = super(ShowLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -112,6 +115,7 @@ class ShowLoadBalancer(command.ShowOne):
 
 
 class CreateLoadBalancer(command.ShowOne):
+    _description = _("Create new load-balancer")
     def get_parser(self, prog_name):
         parser = super(CreateLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -151,6 +155,7 @@ class CreateLoadBalancer(command.ShowOne):
 
 
 class SetLoadBalancer(command.ShowOne):
+    _description = _("Update load-balancer")
     def get_parser(self, prog_name):
         parser = super(SetLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -196,6 +201,7 @@ class SetLoadBalancer(command.ShowOne):
 
 
 class DeleteLoadBalancer(command.Command):
+    _description = _("Delete load-balancer")
     def get_parser(self, prog_name):
         parser = super(DeleteLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -214,6 +220,7 @@ class DeleteLoadBalancer(command.Command):
 
 
 class RebootLoadBalancer(command.ShowOne):
+    _description = _("Reboot load-balancer")
     def get_parser(self, prog_name):
         parser = super(RebootLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(
@@ -247,6 +254,7 @@ class RebootLoadBalancer(command.ShowOne):
 
 
 class ResetPasswordLoadBalancer(command.ShowOne):
+    _description = _("Reset password load-balancer")
     def get_parser(self, prog_name):
         parser = super(ResetPasswordLoadBalancer, self).get_parser(prog_name)
         parser.add_argument(

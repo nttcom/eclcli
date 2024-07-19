@@ -18,6 +18,7 @@
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class CreateZone(command.ShowOne):
@@ -97,6 +98,7 @@ class CreateZone(command.ShowOne):
 
 
 class DeleteZone(command.Command):
+    _description = _("Delete zone of DNS")
 
     def get_parser(self, prog_name):
         parser = super(DeleteZone, self).get_parser(prog_name)
@@ -113,6 +115,7 @@ class DeleteZone(command.Command):
 
 
 class ShowZone(command.ShowOne):
+    _description = _("Show zone of DNS")
 
     def get_parser(self, prog_name):
         parser = super(ShowZone, self).get_parser(prog_name)
@@ -151,6 +154,7 @@ class ShowZone(command.ShowOne):
 
 
 class ListZone(command.Lister):
+    _description = _("List zones of DNS")
 
     def get_parser(self, prog_name):
         parser = super(ListZone, self).get_parser(prog_name)
@@ -188,6 +192,7 @@ class ListZone(command.Lister):
 
 
 class UpdateZone(command.ShowOne):
+    _description = _("Update zone of DNS")
 
     def get_parser(self, prog_name):
         parser = super(UpdateZone, self).get_parser(prog_name)

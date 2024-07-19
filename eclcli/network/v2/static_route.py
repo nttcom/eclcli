@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListStaticRoute(command.Lister):
+    _description = _("List static-routes")
     def get_parser(self, prog_name):
         parser = super(ListStaticRoute, self).get_parser(prog_name)
 
@@ -109,6 +111,7 @@ class ListStaticRoute(command.Lister):
 
 
 class ShowStaticRoute(command.ShowOne):
+    _description = _("Show static-route")
     def get_parser(self, prog_name):
         parser = super(ShowStaticRoute, self).get_parser(prog_name)
         parser.add_argument(
@@ -132,6 +135,7 @@ class ShowStaticRoute(command.ShowOne):
 
 
 class CreateStaticRoute(command.ShowOne):
+    _description = _("Create new static-route")
     def get_parser(self, prog_name):
         parser = super(CreateStaticRoute, self).get_parser(prog_name)
         parser.add_argument(
@@ -197,6 +201,7 @@ class CreateStaticRoute(command.ShowOne):
 
 
 class SetStaticRoute(command.ShowOne):
+    _description = _("Update static-route")
     def get_parser(self, prog_name):
         parser = super(SetStaticRoute, self).get_parser(prog_name)
         parser.add_argument(
@@ -233,6 +238,7 @@ class SetStaticRoute(command.ShowOne):
 
 
 class DeleteStaticRoute(command.Command):
+    _description = _("Delete static-route")
     def get_parser(self, prog_name):
         parser = super(DeleteStaticRoute, self).get_parser(prog_name)
         parser.add_argument(

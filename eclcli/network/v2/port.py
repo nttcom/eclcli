@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListPort(command.Lister):
+    _description = _("List ports")
     def get_parser(self, prog_name):
         parser = super(ListPort, self).get_parser(prog_name)
         return parser
@@ -32,6 +34,7 @@ class ListPort(command.Lister):
 
 
 class ShowPort(command.ShowOne):
+    _description = _("Show port")
     def get_parser(self, prog_name):
         parser = super(ShowPort, self).get_parser(prog_name)
         parser.add_argument(
@@ -55,6 +58,7 @@ class ShowPort(command.ShowOne):
 
 
 class CreatePort(command.ShowOne):
+    _description = _("Create new port")
     def get_parser(self, prog_name):
         parser = super(CreatePort, self).get_parser(prog_name)
         parser.add_argument(
@@ -163,6 +167,7 @@ class CreatePort(command.ShowOne):
 
 
 class SetPort(command.ShowOne):
+    _description = _("Update port")
     def get_parser(self, prog_name):
         parser = super(SetPort, self).get_parser(prog_name)
         parser.add_argument(
@@ -267,6 +272,7 @@ class SetPort(command.ShowOne):
 
 
 class DeletePort(command.Command):
+    _description = _("Delete port")
     def get_parser(self, prog_name):
         parser = super(DeletePort, self).get_parser(prog_name)
         parser.add_argument(

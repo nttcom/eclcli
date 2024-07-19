@@ -64,6 +64,7 @@ def _format_image(image):
 
 
 class CopyImage(command.ShowOne):
+    _description = _("Copy of image")
     def get_parser(self, prog_name):
         parser = super(CopyImage, self).get_parser(prog_name)
         parser.add_argument(
@@ -96,6 +97,7 @@ class CopyImage(command.ShowOne):
 
 
 class CancelCopyImage(command.ShowOne):
+    _description = _("Cancel copy of image")
     def get_parser(self, prog_name):
         parser = super(CancelCopyImage, self).get_parser(prog_name)
         parser.add_argument(
@@ -116,6 +118,7 @@ class CancelCopyImage(command.ShowOne):
 
 
 class ListCopyImage(command.Lister):
+    _description = _("List copy-jobs of image")
     def get_parser(self, prog_name):
         parser = super(ListCopyImage, self).get_parser(prog_name)
         return parser
@@ -140,6 +143,7 @@ class ListCopyImage(command.Lister):
 
 
 class ShowCopyImage(command.ShowOne):
+    _description = _("Show copy-job of image")
     def get_parser(self, prog_name):
         parser = super(ShowCopyImage, self).get_parser(prog_name)
         parser.add_argument(
@@ -160,6 +164,7 @@ class ShowCopyImage(command.ShowOne):
 
 
 class UpdateImageMember(command.ShowOne):
+    _description = _("Update member of image")
     def get_parser(self, prog_name):
         parser = super(UpdateImageMember, self).get_parser(prog_name)
         parser.add_argument(

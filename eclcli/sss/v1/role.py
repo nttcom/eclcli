@@ -3,11 +3,13 @@
 from eclcli.common import command
 from eclcli.common import exceptions
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 
 class CreateRole(command.ShowOne):
+    _description = _("Create new role")
     def get_parser(self, prog_name):
         parser = super(CreateRole, self).get_parser(prog_name)
         parser.add_argument(
@@ -38,6 +40,7 @@ class CreateRole(command.ShowOne):
 
 
 class DeleteRole(command.Command):
+    _description = _("Delete role")
     def get_parser(self, prog_name):
         parser = super(DeleteRole, self).get_parser(prog_name)
         parser.add_argument(

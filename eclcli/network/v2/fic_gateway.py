@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListFICGateway(command.Lister):
+    _description = _("List fic-gws")
     def get_parser(self, prog_name):
         parser = super(ListFICGateway, self).get_parser(prog_name)
         return parser
@@ -32,6 +34,7 @@ class ListFICGateway(command.Lister):
 
 
 class ShowFICGateway(command.ShowOne):
+    _description = _("Show fic-gw")
     def get_parser(self, prog_name):
         parser = super(ShowFICGateway, self).get_parser(prog_name)
         parser.add_argument(

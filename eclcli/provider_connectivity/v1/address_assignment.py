@@ -4,9 +4,11 @@ import copy
 import six
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListAddressAssignment(command.Lister):
+    _description = _("List address-assignments of between tenants connect")
     def get_parser(self, prog_name):
         parser = super(ListAddressAssignment,
                        self).get_parser(prog_name)
@@ -64,6 +66,7 @@ class ShowICCNetwork(command.ShowOne):
 
 
 class ListICCSubnet(command.Lister):
+    _description = _("List subnets of between tenants connect")
     def get_parser(self, prog_name):
         parser = super(ListICCSubnet,
                        self).get_parser(prog_name)

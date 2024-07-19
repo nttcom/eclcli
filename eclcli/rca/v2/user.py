@@ -5,10 +5,12 @@ from eclcli.common import command
 
 from eclcli.common import exceptions
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..rcaclient.common.utils import objectify
 
 
 class ListUser(command.Lister):
+    _description = _("List users of remote console access")
     def get_parser(self, prog_name):
         parser = super(ListUser, self).get_parser(prog_name)
         return parser
@@ -33,6 +35,7 @@ class ListUser(command.Lister):
 
 
 class ShowUser(command.ShowOne):
+    _description = _("Show user of remote console access")
     def get_parser(self, prog_name):
         parser = super(ShowUser, self).get_parser(prog_name)
         parser.add_argument(
@@ -60,6 +63,7 @@ class ShowUser(command.ShowOne):
 
 
 class CreateUser(command.ShowOne):
+    _description = _("Create new user of remote console access")
     def get_parser(self, prog_name):
         parser = super(CreateUser, self).get_parser(prog_name)
         parser.add_argument(
@@ -92,6 +96,7 @@ class CreateUser(command.ShowOne):
 
   
 class SetUser(command.ShowOne):
+    _description = _("Update user of remote console access")
     def get_parser(self, prog_name):
         parser = super(SetUser, self).get_parser(prog_name)
         parser.add_argument(
@@ -124,6 +129,7 @@ class SetUser(command.ShowOne):
 
 
 class DeleteUser(command.Command):
+    _description = _("Delete user of remote console access")
     def get_parser(self, prog_name):
         parser = super(DeleteUser, self).get_parser(prog_name)
         parser.add_argument(

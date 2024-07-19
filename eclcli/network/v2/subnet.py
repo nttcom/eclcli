@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListSubnet(command.Lister):
+    _description = _("List subnets")
     def get_parser(self, prog_name):
         parser = super(ListSubnet, self).get_parser(prog_name)
 
@@ -99,6 +101,7 @@ class ListSubnet(command.Lister):
 
 
 class ShowSubnet(command.ShowOne):
+    _description = _("Show subnet")
     def get_parser(self, prog_name):
         parser = super(ShowSubnet, self).get_parser(prog_name)
         parser.add_argument(
@@ -123,6 +126,7 @@ class ShowSubnet(command.ShowOne):
 
 
 class CreateSubnet(command.ShowOne):
+    _description = _("Create new subnet")
     def get_parser(self, prog_name):
         parser = super(CreateSubnet, self).get_parser(prog_name)
         parser.add_argument(
@@ -248,6 +252,7 @@ class CreateSubnet(command.ShowOne):
 
 
 class SetSubnet(command.ShowOne):
+    _description = _("Update subnet")
     def get_parser(self, prog_name):
         parser = super(SetSubnet, self).get_parser(prog_name)
         parser.add_argument(
@@ -351,6 +356,7 @@ class SetSubnet(command.ShowOne):
 
 
 class DeleteSubnet(command.Command):
+    _description = _("Delete subnet")
     def get_parser(self, prog_name):
         parser = super(DeleteSubnet, self).get_parser(prog_name)
         parser.add_argument(

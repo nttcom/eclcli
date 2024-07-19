@@ -2,9 +2,11 @@
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class CreateDevice(command.ShowOne):
+    _description = _("Create new ha-device")
     def get_parser(self, prog_name):
         parser = super(CreateDevice, self).get_parser(prog_name)
         parser.add_argument(
@@ -124,6 +126,7 @@ class CreateDevice(command.ShowOne):
 
 
 class UpdateDevice(command.ShowOne):
+    _description = _("Update ha-device")
     def get_parser(self, prog_name):
         parser = super(UpdateDevice, self).get_parser(prog_name)
         parser.add_argument(
@@ -185,6 +188,7 @@ class UpdateDevice(command.ShowOne):
 
 
 class DeleteDevice(command.ShowOne):
+    _description = _("Delete ha-device")
     def get_parser(self, prog_name):
         parser = super(DeleteDevice, self).get_parser(prog_name)
         parser.add_argument(
@@ -230,6 +234,7 @@ class DeleteDevice(command.ShowOne):
 
 
 class ShowStatus(command.ShowOne):
+    _description = _("Status ha-device show")
     def get_parser(self, prog_name):
         parser = super(ShowStatus, self).get_parser(prog_name)
         parser.add_argument(
@@ -270,6 +275,7 @@ class ShowStatus(command.ShowOne):
 
 
 class ListDevices(command.Lister):
+    _description = _("List ha-devices")
     def get_parser(self, prog_name):
         parser = super(ListDevices, self).get_parser(prog_name)
         parser.add_argument(

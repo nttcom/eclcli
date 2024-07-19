@@ -33,6 +33,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListTargetGroup(command.Lister):
+    _description = _("List target-groups of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListTargetGroup, self).get_parser(prog_name)
@@ -62,6 +63,7 @@ class ListTargetGroup(command.Lister):
 
 
 class ShowTargetGroup(command.ShowOne):
+    _description = _("Show target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowTargetGroup, self).\
@@ -97,6 +99,7 @@ class ShowTargetGroup(command.ShowOne):
 
 
 class CreateTargetGroup(command.ShowOne):
+    _description = _("Create new target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateTargetGroup, self). \
@@ -194,6 +197,7 @@ class CreateTargetGroup(command.ShowOne):
 
 
 class DeleteTargetGroup(command.Command):
+    _description = _("Delete target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteTargetGroup, self). \
@@ -213,6 +217,7 @@ class DeleteTargetGroup(command.Command):
 
 
 class UpdateTargetGroup(command.ShowOne):
+    _description = _("Update target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateTargetGroup, self). \
@@ -293,6 +298,7 @@ class UpdateTargetGroup(command.ShowOne):
 
 
 class CreateStagedTargetGroupConfiguration(command.ShowOne):
+    _description = _("Create new staged target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedTargetGroupConfiguration, self). \
@@ -359,6 +365,7 @@ class CreateStagedTargetGroupConfiguration(command.ShowOne):
 
 
 class CancelStagedTargetGroupConfiguration(command.Command):
+    _description = _("Cancel staged target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedTargetGroupConfiguration, self). \
@@ -377,6 +384,7 @@ class CancelStagedTargetGroupConfiguration(command.Command):
 
 
 class ShowStagedTargetGroupConfiguration(command.ShowOne):
+    _description = _("Show staged target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedTargetGroupConfiguration, self).\
@@ -401,6 +409,7 @@ class ShowStagedTargetGroupConfiguration(command.ShowOne):
 
 
 class UpdateStagedTargetGroupConfiguration(command.ShowOne):
+    _description = _("Update staged target-group of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedTargetGroupConfiguration, self). \

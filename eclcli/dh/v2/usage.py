@@ -1,8 +1,10 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListUsage(command.Lister):
+    _description = _("List usages of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(ListUsage, self).get_parser(prog_name)
@@ -53,6 +55,7 @@ class ListUsage(command.Lister):
 
 
 class ShowUsageHistory(command.ShowOne):
+    _description = _("Show usage-history of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(ShowUsageHistory, self).get_parser(prog_name)

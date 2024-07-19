@@ -34,6 +34,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListRoute(command.Lister):
+    _description = _("List routes of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListRoute, self).get_parser(prog_name)
@@ -65,6 +66,7 @@ class ListRoute(command.Lister):
 
 
 class ShowRoute(command.ShowOne):
+    _description = _("Show route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowRoute, self).\
@@ -98,6 +100,7 @@ class ShowRoute(command.ShowOne):
 
 
 class CreateRoute(command.ShowOne):
+    _description = _("Create new route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateRoute, self). \
@@ -170,6 +173,7 @@ class CreateRoute(command.ShowOne):
 
 
 class DeleteRoute(command.Command):
+    _description = _("Delete route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteRoute, self). \
@@ -189,6 +193,7 @@ class DeleteRoute(command.Command):
 
 
 class UpdateRoute(command.ShowOne):
+    _description = _("Update route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateRoute, self). \
@@ -267,6 +272,7 @@ class UpdateRoute(command.ShowOne):
 
 
 class CreateStagedRouteConfiguration(command.ShowOne):
+    _description = _("Create new staged route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedRouteConfiguration, self). \
@@ -300,6 +306,7 @@ class CreateStagedRouteConfiguration(command.ShowOne):
 
 
 class CancelStagedRouteConfiguration(command.Command):
+    _description = _("Cancel staged route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedRouteConfiguration, self). \
@@ -318,6 +325,7 @@ class CancelStagedRouteConfiguration(command.Command):
 
 
 class ShowStagedRouteConfiguration(command.ShowOne):
+    _description = _("Show staged route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedRouteConfiguration, self).\
@@ -340,6 +348,7 @@ class ShowStagedRouteConfiguration(command.ShowOne):
 
 
 class UpdateStagedRouteConfiguration(command.ShowOne):
+    _description = _("Update staged route of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedRouteConfiguration, self). \
