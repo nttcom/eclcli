@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListNetwork(command.Lister):
+    _description = _("List logical-networks")
     def get_parser(self, prog_name):
         parser = super(ListNetwork, self).get_parser(prog_name)
 
@@ -68,6 +70,7 @@ class ListNetwork(command.Lister):
 
 
 class ShowNetwork(command.ShowOne):
+    _description = _("Show logical-network")
     def get_parser(self, prog_name):
         parser = super(ShowNetwork, self).get_parser(prog_name)
         parser.add_argument(
@@ -91,6 +94,7 @@ class ShowNetwork(command.ShowOne):
 
 
 class CreateNetwork(command.ShowOne):
+    _description = _("Create new logical-network")
     def get_parser(self, prog_name):
         parser = super(CreateNetwork, self).get_parser(prog_name)
         parser.add_argument(
@@ -153,6 +157,7 @@ class CreateNetwork(command.ShowOne):
 
 
 class SetNetwork(command.ShowOne):
+    _description = _("Update logical-network")
     def get_parser(self, prog_name):
         parser = super(SetNetwork, self).get_parser(prog_name)
         parser.add_argument(
@@ -214,6 +219,7 @@ class SetNetwork(command.ShowOne):
 
 
 class DeleteNetwork(command.Command):
+    _description = _("Delete logical-network")
     def get_parser(self, prog_name):
         parser = super(DeleteNetwork, self).get_parser(prog_name)
         parser.add_argument(

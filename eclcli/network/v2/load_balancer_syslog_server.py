@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListLoadBalancerSyslogServer(command.Lister):
+    _description = _("List load-balancer-syslog-servers")
     def get_parser(self, prog_name):
         parser = super(ListLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(
@@ -92,6 +94,7 @@ class ListLoadBalancerSyslogServer(command.Lister):
 
 
 class ShowLoadBalancerSyslogServer(command.ShowOne):
+    _description = _("Show load-balancer-syslog-server")
     def get_parser(self, prog_name):
         parser = super(ShowLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(
@@ -116,6 +119,7 @@ class ShowLoadBalancerSyslogServer(command.ShowOne):
 
 
 class CreateLoadBalancerSyslogServer(command.ShowOne):
+    _description = _("Create new load-balancer-syslog-server")
     def get_parser(self, prog_name):
         parser = super(CreateLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(
@@ -209,6 +213,7 @@ class CreateLoadBalancerSyslogServer(command.ShowOne):
 
 
 class DeleteLoadBalancerSyslogServer(command.Command):
+    _description = _("Delete load-balancer-syslog-server")
     def get_parser(self, prog_name):
         parser = super(DeleteLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(
@@ -227,6 +232,7 @@ class DeleteLoadBalancerSyslogServer(command.Command):
 
 
 class SetLoadBalancerSyslogServer(command.ShowOne):
+    _description = _("Update load-balancer-syslog-server")
     def get_parser(self, prog_name):
         parser = super(SetLoadBalancerSyslogServer, self).get_parser(prog_name)
         parser.add_argument(

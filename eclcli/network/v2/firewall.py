@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListFirewall(command.Lister):
+    _description = _("List firewalls")
     def get_parser(self, prog_name):
         parser = super(ListFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -76,6 +78,7 @@ class ListFirewall(command.Lister):
 
 
 class ShowFirewall(command.ShowOne):
+    _description = _("Show firewall")
     def get_parser(self, prog_name):
         parser = super(ShowFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -99,6 +102,7 @@ class ShowFirewall(command.ShowOne):
 
 
 class CreateFirewall(command.ShowOne):
+    _description = _("Create new firewall")
     def get_parser(self, prog_name):
         parser = super(CreateFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -142,6 +146,7 @@ class CreateFirewall(command.ShowOne):
 
 
 class SetFirewall(command.ShowOne):
+    _description = _("Update firewall")
     def get_parser(self, prog_name):
         parser = super(SetFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -187,6 +192,7 @@ class SetFirewall(command.ShowOne):
 
 
 class DeleteFirewall(command.Command):
+    _description = _("Delete firewall")
     def get_parser(self, prog_name):
         parser = super(DeleteFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -205,6 +211,7 @@ class DeleteFirewall(command.Command):
 
 
 class RebootFirewall(command.ShowOne):
+    _description = _("Reboot firewall")
     def get_parser(self, prog_name):
         parser = super(RebootFirewall, self).get_parser(prog_name)
         parser.add_argument(
@@ -238,6 +245,7 @@ class RebootFirewall(command.ShowOne):
 
 
 class ResetPasswordFirewall(command.ShowOne):
+    _description = _("Reset password of firewall")
     def get_parser(self, prog_name):
         parser = super(ResetPasswordFirewall, self).get_parser(prog_name)
         parser.add_argument(

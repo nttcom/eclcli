@@ -38,6 +38,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListRule(command.Lister):
+    _description = _("List rules of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListRule, self).get_parser(prog_name)
@@ -70,6 +71,7 @@ class ListRule(command.Lister):
 
 
 class ShowRule(command.ShowOne):
+    _description = _("Show rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowRule, self).\
@@ -105,6 +107,7 @@ class ShowRule(command.ShowOne):
 
 
 class CreateRule(command.ShowOne):
+    _description = _("Create new rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateRule, self). \
@@ -195,6 +198,7 @@ class CreateRule(command.ShowOne):
 
 
 class DeleteRule(command.Command):
+    _description = _("Delete rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteRule, self). \
@@ -214,6 +218,7 @@ class DeleteRule(command.Command):
 
 
 class UpdateRule(command.ShowOne):
+    _description = _("Update rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateRule, self). \
@@ -294,6 +299,7 @@ class UpdateRule(command.ShowOne):
 
 
 class CreateStagedRuleConfiguration(command.ShowOne):
+    _description = _("Create new staged rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedRuleConfiguration, self). \
@@ -352,6 +358,7 @@ class CreateStagedRuleConfiguration(command.ShowOne):
 
 
 class CancelStagedRuleConfiguration(command.Command):
+    _description = _("Cancel staged rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedRuleConfiguration, self). \
@@ -370,6 +377,7 @@ class CancelStagedRuleConfiguration(command.Command):
 
 
 class ShowStagedRuleConfiguration(command.ShowOne):
+    _description = _("Show staged rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedRuleConfiguration, self).\
@@ -394,6 +402,7 @@ class ShowStagedRuleConfiguration(command.ShowOne):
 
 
 class UpdateStagedRuleConfiguration(command.ShowOne):
+    _description = _("Update staged rule of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedRuleConfiguration, self). \

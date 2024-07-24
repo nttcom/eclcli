@@ -7,9 +7,11 @@ except ImportError:
 
 import copy
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 
 
 class ListPlan(command.Lister):
+    _description = _("List plans of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListPlan, self).get_parser(prog_name)
@@ -44,6 +46,7 @@ class ListPlan(command.Lister):
 
 
 class ShowPlan(command.ShowOne):
+    _description = _("Show plan of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowPlan, self).\

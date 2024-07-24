@@ -4,12 +4,14 @@ import six
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from eclcli.storage.storageclient import exceptions
 from eclcli.storage.storageclient.utils import _set_request_body, \
     format_ip_addr_pool, format_host_routes
 
 
 class ListStorage(command.Lister):
+    _description = _("List storages")
     def get_parser(self, prog_name):
         parser = super(ListStorage, self).get_parser(prog_name)
         parser.add_argument(
@@ -48,6 +50,7 @@ class ListStorage(command.Lister):
 
 
 class ShowStorage(command.ShowOne):
+    _description = _("Show storage")
     def get_parser(self, prog_name):
         parser = super(ShowStorage, self).get_parser(prog_name)
         parser.add_argument(
@@ -69,6 +72,7 @@ class ShowStorage(command.ShowOne):
 
 
 class CreateStorage(command.ShowOne):
+    _description = _("Create new storage")
     def get_parser(self, prog_name):
         parser = super(CreateStorage, self).get_parser(prog_name)
         parser.add_argument(
@@ -135,6 +139,7 @@ class CreateStorage(command.ShowOne):
 
 
 class UpdateStorage(command.ShowOne):
+    _description = _("Update storage")
     def get_parser(self, prog_name):
         parser = super(UpdateStorage, self).get_parser(prog_name)
 
@@ -195,6 +200,7 @@ class UpdateStorage(command.ShowOne):
 
 
 class DeleteStorage(command.ShowOne):
+    _description = _("Delete storage")
     def get_parser(self, prog_name):
         parser = super(DeleteStorage, self).get_parser(prog_name)
 

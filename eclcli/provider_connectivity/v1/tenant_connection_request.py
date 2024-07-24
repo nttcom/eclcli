@@ -4,9 +4,11 @@ import copy
 import six
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListTenantConnecionRequest(command.Lister):
+    _description = _("List tenant-connection-requests")
 
     def get_parser(self, prog_name):
         parser = super(ListTenantConnecionRequest,
@@ -35,6 +37,7 @@ class ListTenantConnecionRequest(command.Lister):
 
 
 class ShowTenantConnectionRequest(command.ShowOne):
+    _description = _("Show tenant-connection-request")
     """Display details"""
 
     def get_parser(self, prog_name):
@@ -62,6 +65,7 @@ class ShowTenantConnectionRequest(command.ShowOne):
 
 
 class CreateTenantConnectionRequest(command.ShowOne):
+    _description = _("Create new tenant-connection-request")
 
     def get_parser(self, prog_name):
         parser = super(CreateTenantConnectionRequest,
@@ -147,6 +151,7 @@ class CreateTenantConnectionRequest(command.ShowOne):
 
 
 class UpdateTenantConnectionRequest(command.ShowOne):
+    _description = _("Update tenant-connection-request")
 
     def get_parser(self, prog_name):
         parser = super(UpdateTenantConnectionRequest,
@@ -236,6 +241,7 @@ class UpdateTenantConnectionRequest(command.ShowOne):
 
 
 class DeleteTenantConnectionRequest(command.Command):
+    _description = _("Delete tenant-connection-request")
     """Delete"""
 
     def get_parser(self, prog_name):

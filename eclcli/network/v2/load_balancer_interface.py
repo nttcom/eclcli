@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListLoadBalancerInterface(command.Lister):
+    _description = _("List load-balancer-interfaces")
     def get_parser(self, prog_name):
         parser = super(ListLoadBalancerInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -89,6 +91,7 @@ class ListLoadBalancerInterface(command.Lister):
 
 
 class ShowLoadBalancerInterface(command.ShowOne):
+    _description = _("Show load-balancer-interface")
     def get_parser(self, prog_name):
         parser = super(ShowLoadBalancerInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -112,6 +115,7 @@ class ShowLoadBalancerInterface(command.ShowOne):
 
 
 class SetLoadBalancerInterface(command.ShowOne):
+    _description = _("Update load-balancer-interface")
     def get_parser(self, prog_name):
         parser = super(SetLoadBalancerInterface, self).get_parser(prog_name)
         parser.add_argument(

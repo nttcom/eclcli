@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListInternetGateway(command.Lister):
+    _description = _("List inet-gws")
     def get_parser(self, prog_name):
         parser = super(ListInternetGateway, self).get_parser(prog_name)
 
@@ -74,6 +76,7 @@ class ListInternetGateway(command.Lister):
 
 
 class ShowInternetGateway(command.ShowOne):
+    _description = _("Show inet-gw")
     def get_parser(self, prog_name):
         parser = super(ShowInternetGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -97,6 +100,7 @@ class ShowInternetGateway(command.ShowOne):
 
 
 class CreateInternetGateway(command.ShowOne):
+    _description = _("Create new inet-gw")
     def get_parser(self, prog_name):
         parser = super(CreateInternetGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -137,6 +141,7 @@ class CreateInternetGateway(command.ShowOne):
 
 
 class SetInternetGateway(command.ShowOne):
+    _description = _("Update inet-gw")
     def get_parser(self, prog_name):
         parser = super(SetInternetGateway, self).get_parser(prog_name)
         parser.add_argument(
@@ -179,6 +184,7 @@ class SetInternetGateway(command.ShowOne):
 
 
 class DeleteInternetGateway(command.Command):
+    _description = _("Delete inet-gw")
     def get_parser(self, prog_name):
         parser = super(DeleteInternetGateway, self).get_parser(prog_name)
         parser.add_argument(

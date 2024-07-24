@@ -1786,7 +1786,7 @@ class UnshelveServer(command.Command):
 
 
 class AddFixedIP(command.Command):
-    _description = _("Add fixed IP address to server")
+    _description = _("Attach interface to server by fixed IP address")
 
     def get_parser(self, prog_name):
         parser = super(AddFixedIP, self).get_parser(prog_name)
@@ -1825,7 +1825,7 @@ class AddFixedIP(command.Command):
 
 
 class RemoveFixedIP(command.Command):
-    _description = _("Remove fixed IP address from server")
+    _description = _("Detach interface from server by fixed IP address")
 
     def get_parser(self, prog_name):
         parser = super(RemoveFixedIP, self).get_parser(prog_name)
@@ -1901,7 +1901,7 @@ class ListPort(command.Lister):
 
 
 class AddPort(command.Command):
-    _description = _("Add port to server")
+    _description = _("Attach interface to server by port")
 
     def get_parser(self, prog_name):
         parser = super(AddPort, self).get_parser(prog_name)
@@ -1934,7 +1934,7 @@ class AddPort(command.Command):
 
 
 class RemovePort(command.Command):
-    _description = _("Remove port from server")
+    _description = _("Detach interface from server by port")
 
     def get_parser(self, prog_name):
         parser = super(RemovePort, self).get_parser(prog_name)

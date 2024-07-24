@@ -4,11 +4,13 @@ import six
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from eclcli.storage.storageclient import exceptions
 from eclcli.storage.storageclient.utils import _set_request_body
 
 
 class ListVolume(command.Lister):
+    _description = _("List volumes of storage")
     def get_parser(self, prog_name):
         parser = super(ListVolume, self).get_parser(prog_name)
         parser.add_argument(
@@ -54,6 +56,7 @@ class ListVolume(command.Lister):
 
 
 class ShowVolume(command.ShowOne):
+    _description = _("Show volume of storage")
     def get_parser(self, prog_name):
         parser = super(ShowVolume, self).get_parser(prog_name)
         parser.add_argument(
@@ -75,6 +78,7 @@ class ShowVolume(command.ShowOne):
 
 
 class CreateVolume(command.ShowOne):
+    _description = _("Create new volume of storage")
     def get_parser(self, prog_name):
         parser = super(CreateVolume, self).get_parser(prog_name)
 
@@ -150,6 +154,7 @@ class CreateVolume(command.ShowOne):
 
 
 class UpdateVolume(command.ShowOne):
+    _description = _("Update volume of storage")
     def get_parser(self, prog_name):
         parser = super(UpdateVolume, self).get_parser(prog_name)
 
@@ -195,6 +200,7 @@ class UpdateVolume(command.ShowOne):
 
 
 class DeleteVolume(command.ShowOne):
+    _description = _("Delete volume of storage")
     def get_parser(self, prog_name):
         parser = super(DeleteVolume, self).get_parser(prog_name)
 

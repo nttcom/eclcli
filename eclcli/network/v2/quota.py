@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ShowQuota(command.ShowOne):
+    _description = _("Show quota")
     def get_parser(self, prog_name):
         parser = super(ShowQuota, self).get_parser(prog_name)
         return parser

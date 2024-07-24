@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListInterDCInterface(command.Lister):
+    _description = _("List interdc-interfaces")
     def get_parser(self, prog_name):
         parser = super(ListInterDCInterface, self).get_parser(prog_name)
 
@@ -115,6 +117,7 @@ class ListInterDCInterface(command.Lister):
 
 
 class ShowInterDCInterface(command.ShowOne):
+    _description = _("Show interdc-interface")
     def get_parser(self, prog_name):
         parser = super(ShowInterDCInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -138,6 +141,7 @@ class ShowInterDCInterface(command.ShowOne):
 
 
 class CreateInterDCInterface(command.ShowOne):
+    _description = _("Create new interdc-interface")
     def get_parser(self, prog_name):
         parser = super(CreateInterDCInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -215,6 +219,7 @@ class CreateInterDCInterface(command.ShowOne):
 
 
 class SetInterDCInterface(command.ShowOne):
+    _description = _("Update interdc-interface")
     def get_parser(self, prog_name):
         parser = super(SetInterDCInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -251,6 +256,7 @@ class SetInterDCInterface(command.ShowOne):
 
 
 class DeleteInterDCInterface(command.Command):
+    _description = _("Delete interdc-interface")
     def get_parser(self, prog_name):
         parser = super(DeleteInterDCInterface, self).get_parser(prog_name)
         parser.add_argument(

@@ -7,9 +7,11 @@ except ImportError:
 
 import copy
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 
 
 class ListSystemUpdate(command.Lister):
+    _description = _("List system-updates of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListSystemUpdate, self).get_parser(prog_name)
@@ -40,6 +42,7 @@ class ListSystemUpdate(command.Lister):
 
 
 class ShowSystemUpdate(command.ShowOne):
+    _description = _("Show system-update of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowSystemUpdate, self).\

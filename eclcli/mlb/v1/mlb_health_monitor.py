@@ -45,6 +45,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListHealthMonitor(command.Lister):
+    _description = _("List health-monitors of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListHealthMonitor, self).get_parser(prog_name)
@@ -81,6 +82,7 @@ class ListHealthMonitor(command.Lister):
 
 
 class ShowHealthMonitor(command.ShowOne):
+    _description = _("Show health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowHealthMonitor, self).\
@@ -114,6 +116,7 @@ class ShowHealthMonitor(command.ShowOne):
 
 
 class CreateHealthMonitor(command.ShowOne):
+    _description = _("Create new health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateHealthMonitor, self). \
@@ -226,6 +229,7 @@ class CreateHealthMonitor(command.ShowOne):
 
 
 class DeleteHealthMonitor(command.Command):
+    _description = _("Delete health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteHealthMonitor, self). \
@@ -245,6 +249,7 @@ class DeleteHealthMonitor(command.Command):
 
 
 class UpdateHealthMonitor(command.ShowOne):
+    _description = _("Update health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateHealthMonitor, self). \
@@ -323,6 +328,7 @@ class UpdateHealthMonitor(command.ShowOne):
 
 
 class CreateStagedHealthMonitorConfiguration(command.ShowOne):
+    _description = _("Create new staged health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedHealthMonitorConfiguration, self). \
@@ -402,6 +408,7 @@ class CreateStagedHealthMonitorConfiguration(command.ShowOne):
 
 
 class CancelStagedHealthMonitorConfiguration(command.Command):
+    _description = _("Cancel staged health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedHealthMonitorConfiguration, self). \
@@ -420,6 +427,7 @@ class CancelStagedHealthMonitorConfiguration(command.Command):
 
 
 class ShowStagedHealthMonitorConfiguration(command.ShowOne):
+    _description = _("Show staged health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedHealthMonitorConfiguration, self).\
@@ -442,6 +450,7 @@ class ShowStagedHealthMonitorConfiguration(command.ShowOne):
 
 
 class UpdateStagedHealthMonitorConfiguration(command.ShowOne):
+    _description = _("Update staged health-monitor of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedHealthMonitorConfiguration, self). \

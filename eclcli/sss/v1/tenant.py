@@ -3,11 +3,13 @@
 from eclcli.common import command
 from eclcli.common import exceptions
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from eclcli.identity import common as identity_common
 from ..sssclient.common.utils import objectify
 
 
 class ListTenant(command.Lister):
+    _description = _("List tenants")
     def get_parser(self, prog_name):
         parser = super(ListTenant, self).get_parser(prog_name)
         return parser
@@ -40,6 +42,7 @@ class ListTenant(command.Lister):
 
 
 class ShowTenant(command.ShowOne):
+    _description = _("Show tenant")
     def get_parser(self, prog_name):
         parser = super(ShowTenant, self).get_parser(prog_name)
         parser.add_argument(
@@ -60,6 +63,7 @@ class ShowTenant(command.ShowOne):
 
 
 class CreateTenant(command.ShowOne):
+    _description = _("Create new tenant")
     def get_parser(self, prog_name):
         parser = super(CreateTenant, self).get_parser(prog_name)
         parser.add_argument(
@@ -106,6 +110,7 @@ class CreateTenant(command.ShowOne):
 
 
 class DeleteTenant(command.Command):
+    _description = _("Delete tenant")
     def get_parser(self, prog_name):
         parser = super(DeleteTenant, self).get_parser(prog_name)
         parser.add_argument(

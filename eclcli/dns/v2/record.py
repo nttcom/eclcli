@@ -105,6 +105,7 @@ class CreateRecordSet(command.Lister):
 
 
 class DeleteRecordSet(command.Command):
+    _description = _("Delete recordset of DNS")
 
     def get_parser(self, prog_name):
         parser = super(DeleteRecordSet, self).get_parser(prog_name)
@@ -126,6 +127,7 @@ class DeleteRecordSet(command.Command):
 
 
 class DeleteMultipleRecordSets(command.Command):
+    _description = _("Delete recordset multi of DNS")
 
     def get_parser(self, prog_name):
         parser = super(DeleteMultipleRecordSets, self).get_parser(prog_name)
@@ -148,6 +150,7 @@ class DeleteMultipleRecordSets(command.Command):
 
 
 class ShowRecordSet(command.ShowOne):
+    _description = _("Show recordset of DNS")
 
     def get_parser(self, prog_name):
         parser = super(ShowRecordSet, self).get_parser(prog_name)
@@ -186,6 +189,7 @@ class ShowRecordSet(command.ShowOne):
 
 
 class ListRecordSet(command.Lister):
+    _description = _("List recordsets of DNS")
 
     def get_parser(self, prog_name):
         parser = super(ListRecordSet, self).get_parser(prog_name)
@@ -241,6 +245,7 @@ class ListRecordSet(command.Lister):
 
 
 class UpdateRecordSet(command.ShowOne):
+    _description = _("Update recordset of DNS")
 
     def get_parser(self, prog_name):
         parser = super(UpdateRecordSet, self).get_parser(prog_name)

@@ -2,9 +2,11 @@
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class OrderApp(command.ShowOne):
+    _description = _("Order host-based-security")
     def get_parser(self, prog_name):
         parser = super(OrderApp, self).get_parser(prog_name)
         parser.add_argument(
@@ -84,6 +86,7 @@ class OrderApp(command.ShowOne):
 
 
 class ChangeAppMenu(command.ShowOne):
+    _description = _("Change menu of host-based-security")
     def get_parser(self, prog_name):
         parser = super(ChangeAppMenu, self).get_parser(prog_name)
         parser.add_argument(
@@ -138,6 +141,7 @@ class ChangeAppMenu(command.ShowOne):
 
 
 class ChangeAppQuantity(command.ShowOne):
+    _description = _("Change quantity of host-based-security")
     def get_parser(self, prog_name):
         parser = super(ChangeAppQuantity, self).get_parser(prog_name)
         parser.add_argument(
@@ -186,6 +190,7 @@ class ChangeAppQuantity(command.ShowOne):
 
 
 class CancelApp(command.ShowOne):
+    _description = _("Cancel host-based-security")
     def get_parser(self, prog_name):
         parser = super(CancelApp, self).get_parser(prog_name)
         parser.add_argument(
@@ -226,6 +231,7 @@ class CancelApp(command.ShowOne):
 
 
 class ShowStatus(command.ShowOne):
+    _description = _("Show status of security host-based-security")
     def get_parser(self, prog_name):
         parser = super(ShowStatus, self).get_parser(prog_name)
         parser.add_argument(
@@ -267,6 +273,7 @@ class ShowStatus(command.ShowOne):
 
 
 class ShowInfo(command.ShowOne):
+    _description = _("Show info of security host-based-security")
     def get_parser(self, prog_name):
         parser = super(ShowInfo, self).get_parser(prog_name)
         parser.add_argument(

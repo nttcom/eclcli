@@ -24,6 +24,7 @@ ROWS_FOR_SHOW = [
 
 
 class ListCertificate(command.Lister):
+    _description = _("List certificates of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListCertificate, self).get_parser(prog_name)
@@ -57,6 +58,7 @@ class ListCertificate(command.Lister):
 
 
 class ShowCertificate(command.ShowOne):
+    _description = _("Show certificate of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowCertificate, self).\
@@ -80,6 +82,7 @@ class ShowCertificate(command.ShowOne):
 
 
 class CreateCertificate(command.ShowOne):
+    _description = _("Create new certificate of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateCertificate, self). \
@@ -130,6 +133,7 @@ class CreateCertificate(command.ShowOne):
 
 
 class DeleteCertificate(command.Command):
+    _description = _("Delete certificate of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteCertificate, self). \
@@ -149,6 +153,7 @@ class DeleteCertificate(command.Command):
 
 
 class UpdateCertificate(command.ShowOne):
+    _description = _("Update certificate of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateCertificate, self). \
@@ -229,6 +234,7 @@ class UpdateCertificate(command.ShowOne):
 
 
 class UploadCertificate(command.Command):
+    _description = _("Upload certificate of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UploadCertificate, self). \

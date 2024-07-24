@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListColoPhysicalLink(command.Lister):
+    _description = _("List colocation-physical-links")
     def get_parser(self, prog_name):
         parser = super(ListColoPhysicalLink, self).get_parser(prog_name)
 
@@ -101,6 +103,7 @@ class ListColoPhysicalLink(command.Lister):
 
 
 class ShowColoPhysicalLink(command.ShowOne):
+    _description = _("Show colocation-physical-link")
     def get_parser(self, prog_name):
         parser = super(ShowColoPhysicalLink, self).get_parser(prog_name)
         parser.add_argument(

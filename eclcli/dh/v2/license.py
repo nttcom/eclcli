@@ -1,8 +1,10 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
  
  
 class ListLicense(command.Lister):
+    _description = _("List licenses of dedicated hypervisor")
  
     def get_parser(self, prog_name):
         parser = super(ListLicense, self).get_parser(prog_name)
@@ -40,6 +42,7 @@ class ListLicense(command.Lister):
 
 
 class ListLicenseType(command.Lister):
+    _description = _("List license-types of dedicated hypervisor")
  
     def get_parser(self, prog_name):
         parser = super(ListLicenseType, self).get_parser(prog_name)
@@ -64,6 +67,7 @@ class ListLicenseType(command.Lister):
 
 
 class CreateLicense(command.ShowOne):
+    _description = _("Create new license of dedicated hypervisor")
  
     def get_parser(self, prog_name):
         parser = super(CreateLicense, self).get_parser(prog_name)
@@ -98,6 +102,7 @@ class CreateLicense(command.ShowOne):
 
 
 class DeleteLicense(command.Command):
+    _description = _("Delete license of dedicated hypervisor")
  
     def get_parser(self, prog_name):
         parser = super(DeleteLicense, self).get_parser(prog_name)

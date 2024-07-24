@@ -37,6 +37,7 @@ ROWS_FOR_SHOW_STAGED = [
 
 
 class ListListener(command.Lister):
+    _description = _("List listeners of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ListListener, self).get_parser(prog_name)
@@ -69,6 +70,7 @@ class ListListener(command.Lister):
 
 
 class ShowListener(command.ShowOne):
+    _description = _("Show listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowListener, self).\
@@ -102,6 +104,7 @@ class ShowListener(command.ShowOne):
 
 
 class CreateListener(command.ShowOne):
+    _description = _("Create new listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateListener, self). \
@@ -184,6 +187,7 @@ class CreateListener(command.ShowOne):
 
 
 class DeleteListener(command.Command):
+    _description = _("Delete listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(DeleteListener, self). \
@@ -203,6 +207,7 @@ class DeleteListener(command.Command):
 
 
 class UpdateListener(command.ShowOne):
+    _description = _("Update listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateListener, self). \
@@ -281,6 +286,7 @@ class UpdateListener(command.ShowOne):
 
 
 class CreateStagedListenerConfiguration(command.ShowOne):
+    _description = _("Create new staged listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CreateStagedListenerConfiguration, self). \
@@ -329,6 +335,7 @@ class CreateStagedListenerConfiguration(command.ShowOne):
 
 
 class CancelStagedListenerConfiguration(command.Command):
+    _description = _("Cancel staged listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(CancelStagedListenerConfiguration, self). \
@@ -347,6 +354,7 @@ class CancelStagedListenerConfiguration(command.Command):
 
 
 class ShowStagedListenerConfiguration(command.ShowOne):
+    _description = _("Show staged listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(ShowStagedListenerConfiguration, self).\
@@ -369,6 +377,7 @@ class ShowStagedListenerConfiguration(command.ShowOne):
 
 
 class UpdateStagedListenerConfiguration(command.ShowOne):
+    _description = _("Update staged listener of managed load balancer")
 
     def get_parser(self, prog_name):
         parser = super(UpdateStagedListenerConfiguration, self). \

@@ -4,10 +4,12 @@ import six
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from eclcli.storage.storageclient import exceptions
 
 
 class ListVolumeType(command.Lister):
+    _description = _("List volume-types of storage")
 
     def get_parser(self, prog_name):
         parser = super(ListVolumeType, self).get_parser(prog_name)
@@ -45,6 +47,7 @@ class ListVolumeType(command.Lister):
 
 
 class ShowVolumeType(command.ShowOne):
+    _description = _("Show volume-type of storage")
 
     def get_parser(self, prog_name):
         parser = super(ShowVolumeType, self).get_parser(prog_name)

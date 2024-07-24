@@ -32,6 +32,7 @@ UUID_PATTERN = '^[a-f0-9]{8}-?[a-f0-9]{4}-?4[a-f0-9]{3}-?[89ab][a-f0-9]{3}-' \
 
 
 class ListVirtualNetworkAppliance(command.Lister):
+    _description = _("List virtual network appliances")
 
     def get_parser(self, prog_name):
         parser = super(ListVirtualNetworkAppliance, self).get_parser(prog_name)
@@ -71,6 +72,7 @@ class ListVirtualNetworkAppliance(command.Lister):
 
 
 class ShowVirtualNetworkAppliance(command.ShowOne):
+    _description = _("Show virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ShowVirtualNetworkAppliance, self).get_parser(prog_name)
@@ -100,6 +102,7 @@ class ShowVirtualNetworkAppliance(command.ShowOne):
 
 
 class CreateVirtualNetworkAppliance(command.ShowOne):
+    _description = _("Create new virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(CreateVirtualNetworkAppliance, self). \
@@ -303,6 +306,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
 
 class DeleteVirtualNetworkAppliance(command.Command):
+    _description = _("Delete virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(DeleteVirtualNetworkAppliance, self). \
@@ -324,6 +328,7 @@ class DeleteVirtualNetworkAppliance(command.Command):
 
 
 class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
+    _description = _("Update meta of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(UpdateVirtualNetworkApplianceMetaData, self). \
@@ -406,6 +411,7 @@ class UpdateVirtualNetworkApplianceMetaData(command.ShowOne):
 
 
 class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
+    _description = _("Update interface of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(UpdateVirtualNetworkApplianceInterfaces, self). \
@@ -569,6 +575,7 @@ class UpdateVirtualNetworkApplianceInterfaces(command.ShowOne):
 
 
 class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
+    _description = _("Update appliance address pair of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(UpdateVirtualNetworkApplianceAAPs, self). \
@@ -729,6 +736,7 @@ class UpdateVirtualNetworkApplianceAAPs(command.ShowOne):
 
 
 class StartVirtualNetworkAppliance(command.Command):
+    _description = _("Start virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(StartVirtualNetworkAppliance, self). \
@@ -750,6 +758,7 @@ class StartVirtualNetworkAppliance(command.Command):
 
 
 class StopVirtualNetworkAppliance(command.Command):
+    _description = _("Stop virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(StopVirtualNetworkAppliance, self). \
@@ -771,6 +780,7 @@ class StopVirtualNetworkAppliance(command.Command):
 
 
 class RestartVirtualNetworkAppliance(command.Command):
+    _description = _("Restart virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(RestartVirtualNetworkAppliance, self). \
@@ -792,6 +802,7 @@ class RestartVirtualNetworkAppliance(command.Command):
 
 
 class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
+    _description = _("Reset password of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ResetPasswordVirtualNetworkAppliance, self). \
@@ -821,6 +832,7 @@ class ResetPasswordVirtualNetworkAppliance(command.ShowOne):
 
 
 class ShowVirtualNetworkApplianceConsole(command.ShowOne):
+    _description = _("Show console-url of virtual network appliance")
 
     def get_parser(self, prog_name):
         parser = super(ShowVirtualNetworkApplianceConsole, self). \

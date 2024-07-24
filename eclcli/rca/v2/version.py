@@ -4,9 +4,11 @@ import six
 
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 
 
 class ListVersion(command.Lister):
+    _description = _("List versions of remote console access")
     def get_parser(self, prog_name):
         parser = super(ListVersion, self).get_parser(prog_name)
         return parser
@@ -33,6 +35,7 @@ class ListVersion(command.Lister):
 
 
 class ShowVersion(command.ShowOne):
+    _description = _("Show version of remote console access")
     def get_parser(self, prog_name):
         parser = super(ShowVersion, self).get_parser(prog_name)
         return parser

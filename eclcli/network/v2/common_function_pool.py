@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListCommonFunctionPool(command.Lister):
+    _description = _("List common-function-pools")
     def get_parser(self, prog_name):
         parser = super(ListCommonFunctionPool, self).get_parser(prog_name)
         parser.add_argument(
@@ -52,6 +54,7 @@ class ListCommonFunctionPool(command.Lister):
 
 
 class ShowCommonFunctionPool(command.ShowOne):
+    _description = _("Show common-function-pool")
     def get_parser(self, prog_name):
         parser = super(ShowCommonFunctionPool, self).get_parser(prog_name)
         parser.add_argument(

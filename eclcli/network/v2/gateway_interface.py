@@ -1,9 +1,11 @@
 from eclcli.common import command
 from eclcli.common import utils
+from eclcli.i18n import _  # noqa
 from ..networkclient.common import utils as to_obj
 
 
 class ListGwInterface(command.Lister):
+    _description = _("List gw-interfaces")
     def get_parser(self, prog_name):
         parser = super(ListGwInterface, self).get_parser(prog_name)
 
@@ -148,6 +150,7 @@ class ListGwInterface(command.Lister):
 
 
 class ShowGwInterface(command.ShowOne):
+    _description = _("Show gw-interface")
     def get_parser(self, prog_name):
         parser = super(ShowGwInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -170,6 +173,7 @@ class ShowGwInterface(command.ShowOne):
 
 
 class CreateGwInterface(command.ShowOne):
+    _description = _("Create new gw-interface")
     def get_parser(self, prog_name):
         parser = super(CreateGwInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -271,6 +275,7 @@ class CreateGwInterface(command.ShowOne):
 
 
 class SetGwInterface(command.ShowOne):
+    _description = _("Update gw-interface")
     def get_parser(self, prog_name):
         parser = super(SetGwInterface, self).get_parser(prog_name)
         parser.add_argument(
@@ -307,6 +312,7 @@ class SetGwInterface(command.ShowOne):
 
 
 class DeleteGwInterface(command.Command):
+    _description = _("Delete gw-interface")
     def get_parser(self, prog_name):
         parser = super(DeleteGwInterface, self).get_parser(prog_name)
         parser.add_argument(

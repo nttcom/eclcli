@@ -1,7 +1,9 @@
 from eclcli.common import command, utils
+from eclcli.i18n import _  # noqa
 
 
 class ListServer(command.Lister):
+    _description = _("List servers of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(ListServer, self).get_parser(prog_name)
@@ -94,6 +96,7 @@ class ListServer(command.Lister):
 
 
 class ShowServer(command.ShowOne):
+    _description = _("Show server of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(ShowServer, self).get_parser(prog_name)
@@ -132,6 +135,7 @@ class ShowServer(command.ShowOne):
 
 
 class CreateServer(command.ShowOne):
+    _description = _("Create new server of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(CreateServer, self).get_parser(prog_name)
@@ -225,6 +229,7 @@ class CreateServer(command.ShowOne):
 
 
 class DeleteServer(command.Command):
+    _description = _("Delete server of dedicated hypervisor")
 
     def get_parser(self, prog_name):
         parser = super(DeleteServer, self).get_parser(prog_name)
