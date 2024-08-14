@@ -19,6 +19,7 @@ class ListUser(command.Lister):
             'mail_address',
             'user_id',
             'contract_owner',
+            'super_user',
             'contract_id'
         )
         column_headers = (
@@ -26,6 +27,7 @@ class ListUser(command.Lister):
             'Address',
             'User ID',
             'Contract Owner',
+            'Superuser',
             'Contract ID',
         )
 

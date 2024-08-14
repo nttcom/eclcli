@@ -1,21 +1,19 @@
 import logging
 
-from eclcli.common import utils
-
 
 LOG = logging.getLogger(__name__)
 
-DEFAULT_API_VERSION = '1'
+DEFAULT_API_VERSION = '2'
 API_VERSION_OPTION = 'os_sss_api_version'
 API_NAME = "sss"
 API_VERSIONS = {
-    "1": "sssclient.v1.client.Client",
+    "2": "sssclient.v2.client.Client",
 }
 
 
 def make_client(instance):
     """Returns a network proxy"""
-    from .sssclient.v1 import client as sss_client
+    from .sssclient.v2 import client as sss_client
     c = sss_client.Client(session=instance.session)
     return c
 

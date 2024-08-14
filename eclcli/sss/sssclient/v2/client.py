@@ -17,8 +17,8 @@ from ..i18n import _
 _logger = logging.getLogger(__name__)
 
 
-def exception_handler_v10(status_code, error_content):
-    """Exception handler for API v1.0 client.
+def exception_handler_v2(status_code, error_content):
+    """Exception handler for API v2 client.
 
     This routine generates the appropriate SSS exception according to
     the contents of the response body.
@@ -90,7 +90,7 @@ class APIParamsCall(object):
 
 
 class ClientBase(object):
-    """Client for the OpenStack SSS v1.0 API.
+    """Client for the OpenStack SSS v2 API.
 
     :param string username: Username for authentication. (optional)
     :param string user_id: User ID for authentication. (optional)
@@ -129,7 +129,7 @@ class ClientBase(object):
 
     Example::
 
-        from sssclient.v1_0 import client
+        from sssclient.v2 import client
         sss = client.Client(username=USER,
                                 password=PASS,
                                 tenant_name=TENANT_NAME,
@@ -145,7 +145,7 @@ class ClientBase(object):
     EXTED_PLURALS = {}
 
     def __init__(self, **kwargs):
-        """Initialize a new client for the SSS v1.0 API."""
+        """Initialize a new client for the SSS v2 API."""
         super(ClientBase, self).__init__()
         self.retries = kwargs.pop('retries', 0)
         self.raise_errors = kwargs.pop('raise_errors', True)
@@ -166,7 +166,7 @@ class ClientBase(object):
             # SSS error
             des_error_body = {'message': response_body}
         # Raise the appropriate exception
-        exception_handler_v10(status_code, des_error_body)
+        exception_handler_v2(status_code, des_error_body)
 
     def do_request(self, method, action, body=None, headers=None, params=None):
         # Add format and tenant_id
@@ -347,7 +347,7 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_user(self, body=None, *args, **_params):
-        """Creates a certain user in SSS.."""
+        """Creates a certain user in SSS."""
         return self.post(self.user_create_path, body=body)
 
     #
@@ -374,24 +374,8 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_tenant(self, body=None, *args, **_params):
-        """Creates a certain tenant in SSS.."""
+        """Creates a certain tenant in SSS."""
         return self.post(self.tenant_create_path, body=body)
-
-    #
-    # Roles
-    #
-    role_create_path = "/roles"  # for Create
-    role_delete_path = "/roles/tenants/%s/users/%s"  # {tenant_id}, {user_id} for Delete
-
-    @APIParamsCall
-    def delete_role(self, tenant_id, user_id, **params):
-        """Deletes a certain role in SSS."""
-        return self.delete(self.role_delete_path % (tenant_id, user_id))
-
-    @APIParamsCall
-    def create_role(self, body=None, *args, **_params):
-        """Creates a certain role in SSS.."""
-        return self.post(self.role_create_path, body=body)
 
     #
     # API Keypair
@@ -419,7 +403,6 @@ class Client(ClientBase):
     contract_show_path = "/contracts/%s"  # {contract_id} for Show, Delete
     contract_list_path = "/contracts?channel_id=%s"  # {channel_id}  for List
     contract_create_path = "/contracts"  # for Create
-    billing_show_path = "/contracts/%s/billing/%s"  # for Show
     with_target_contract = "%s/target_contract/%s"  # for Show billing of each contract
 
     @APIParamsCall
@@ -439,14 +422,55 @@ class Client(ClientBase):
 
     @APIParamsCall
     def create_contract(self, body=None, *args, **_params):
-        """Creates a certain contract in SSS.."""
+        """Creates a certain contract in SSS."""
         return self.post(self.contract_create_path, body=body)
 
+    #
+    # Workspace Endpoints
+    #
+    workspace_singular_path = "/workspaces/%s"  # {workspace_id} for Show, Update and Delete
+    workspace_list_path = "/workspaces"  # for List
+    workspace_create_path = "/workspaces"  # for Create
+    workspace_role_assignment_add_path = "/workspace-roles"  # for Create
+    workspace_role_assignment_delete_path = "/workspace-roles/workspaces/%s/users/%s"  # for Delete
+
     @APIParamsCall
-    def show_billing(self, contract_id, target_month, **_params):
-        """Fetches information of a certain contract_id in SSS."""
-        billing_action = self.billing_show_path % (contract_id, target_month)
-        return self.get(billing_action, params=_params)
+    def list_workspaces(self, contract_id, **_params):
+        """Fetches a list of all workspace in SSS."""
+        url = self.workspace_list_path
+        if contract_id:
+            url += "?contract_id=" + contract_id
+        return self.get(url, params=_params)
+
+    @APIParamsCall
+    def show_workspace(self, workspace_id, **_params):
+        """Fetche information of a certain workspace_id in SSS."""
+        return self.get(self.workspace_singular_path % workspace_id, params=_params)
+
+    @APIParamsCall
+    def delete_workspace(self, workspace_id, **_params):
+        """Deletes a certain workspace in SSS."""
+        return self.delete(self.workspace_singular_path % workspace_id, params=_params)
+
+    @APIParamsCall
+    def create_workspace(self, body=None, *args, **_params):
+        """Creates a certain workspace in SSS."""
+        return self.post(self.workspace_create_path, body=body)
+
+    @APIParamsCall
+    def set_workspace(self, workspace_id, body=None, *args, **_params):
+        """Sets a certain workspace in SSS."""
+        return self.put(self.workspace_singular_path % workspace_id, body=body)
+
+    @APIParamsCall
+    def delete_workspace_role_assignment(self, workspace_id, user_id, **_params):
+        """Deletes a certain workspace-role in SSS."""
+        return self.delete(self.workspace_role_assignment_delete_path % (workspace_id, user_id), params=_params)
+
+    @APIParamsCall
+    def add_workspace_role_assignment(self, body=None, *args, **_params):
+        """Adds a certain workspace-role in SSS."""
+        return self.post(self.workspace_role_assignment_add_path, body=body)
 
     #
     # IAM Endpoints
