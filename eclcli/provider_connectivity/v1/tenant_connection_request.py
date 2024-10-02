@@ -72,24 +72,10 @@ class CreateTenantConnectionRequest(command.ShowOne):
                        self).get_parser(prog_name)
 
         parser.add_argument(
-            '--keystone-user-id',
-            metavar='<KEYSTONE USER ID>',
-            help='Keystone user ID of tenant connection request',
-            required=False,
-        )
-
-        parser.add_argument(
             '--network-id',
             metavar='<NETWORK ID>',
             help='Network ID of tenant connection request',
             required=True,
-        )
-
-        parser.add_argument(
-            '--tenant-id',
-            metavar='<TENANT ID>',
-            help='Tenant ID of owner of tenant connection request',
-            required=False,
         )
 
         parser.add_argument(
@@ -125,10 +111,8 @@ class CreateTenantConnectionRequest(command.ShowOne):
         client = self.app.eclsdk.conn.provider_connectivity
 
         body = {
-            'keystone_user_id': parsed_args.keystone_user_id,
             'network_id': parsed_args.network_id,
             'tenant_id_other': parsed_args.tenant_id_other,
-            'tenant_id': parsed_args.tenant_id,
         }
         if parsed_args.name:
             body['name'] = parsed_args.name
