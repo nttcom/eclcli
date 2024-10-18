@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 
 try:
     import json
@@ -164,6 +165,13 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             help=_('Availability zone that virtual network appliance '
                    'will be created'),
         )
+        parser.add_argument(
+            '--initial-config',
+            metavar="<format=enum{set,text},data=file>",
+            help=_("Initial configuration for virtual network appliance "
+                   "format: format of initial configuration data. (set/text)"
+                   "data: file path of initial configuration data."),
+        )
 
         return parser
 
@@ -271,6 +279,36 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
 
                 interface_object.update(tmp)
 
+        initial_config_object = None
+        if parsed_args.initial_config:
+            config_dict = {"format": None, "data": None}
+            for item in parsed_args.initial_config.split(","):
+                parts = item.split('=')
+                if len(parts) == 2:
+                    config_dict[parts[0].strip()] = parts[1].strip()
+
+            config_format = config_dict.get('format')
+            config_path = config_dict.get('data')
+            if not config_format or not config_path:
+                msg = _("You must specify both initial_config.format and initial_config.data (e.g., --initial-config format=set,data=/path/to/config)")
+                raise exceptions.CommandError(msg)
+            if config_format not in ['set', 'text']:
+                msg = _("initial_config.format must be 'set' or 'text'")
+                raise exceptions.CommandError(msg)
+
+            config_data = None
+            try:
+                with open(config_path, 'rb') as f:
+                    config_data = base64.b64encode(f.read()).decode()
+            except IOError as e:
+                msg = "config file %s not found: %s"
+                raise exceptions.CommandError(msg % (config_path, e))
+
+            initial_config_object = {
+                'format': config_format,
+                'data': config_data,
+            }
+
         plan_id = \
             parsed_args.virtual_network_appliance_plan_id
 
@@ -293,6 +331,7 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             default_gateway=default_gateway,
             availability_zone=zone,
             tags=tags,
+            initial_config=initial_config_object,
         )
 
         # Set plan name
