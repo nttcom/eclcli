@@ -300,8 +300,8 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             try:
                 with open(config_path, 'rb') as f:
                     config_data = base64.b64encode(f.read()).decode()
-            except IOError as e:
-                msg = "config file %s not found: %s"
+            except OSError as e:
+                msg = "Failed to open/read config file %s: %s"
                 raise exceptions.CommandError(msg % (config_path, e))
 
             initial_config_object = {

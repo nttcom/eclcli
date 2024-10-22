@@ -273,8 +273,8 @@ class UploadCertificate(command.Command):
             try:
                 with open(content_path, 'rb') as f:
                     certificate_content = base64.b64encode(f.read()).decode()
-            except IOError as e:
-                msg = "content file %s not found: %s"
+            except OSError as e:
+                msg = "Failed to open/read content file %s: %s"
                 raise exceptions.CommandError(msg % (content_path, e))
 
         client.upload_certificate(
