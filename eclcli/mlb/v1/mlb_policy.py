@@ -21,13 +21,16 @@ ROWS_FOR_SHOW = [
     'Tenant ID',
     'Algorithm',
     'Persistence',
+    'Persistence timeout',
     'Idle timeout',
     'Sorry page url',
     'Source NAT',
+    'Server name indications',
     'Certificate ID',
     'Health Monitor ID',
     'Listener ID',
     'Default Target Group ID',
+    'Backup Target Group ID',
     'TLS Policy ID',
 ]
 
@@ -39,13 +42,16 @@ ROWS_FOR_CHANGES = [
 ROWS_FOR_SHOW_STAGED = [
     'Algorithm',
     'Persistence',
+    'Persistence timeout',
     'Idle timeout',
     'Sorry page url',
     'Source NAT',
+    'Server name indications',
     'Certificate ID',
     'Health Monitor ID',
     'Listener ID',
     'Default Target Group ID',
+    'Backup Target Group ID',
     'TLS Policy ID',
 ]
 
@@ -70,6 +76,7 @@ class ListPolicy(command.Lister):
             'Load Balancer ID',
             'Algorithm',
             'Persistence',
+            'Persistence timeout',
             'Idle timeout',
             'Sorry page url',
             'Source NAT',
@@ -77,6 +84,7 @@ class ListPolicy(command.Lister):
             'Health Monitor ID',
             'Listener ID',
             'Default Target Group ID',
+            'Backup Target Group ID',
             'TLS Policy ID',
         ]
         column_headers = copy.deepcopy(columns)
@@ -116,6 +124,7 @@ class ShowPolicy(command.ShowOne):
         row_headers = rows
 
         data = client.get_policy(parsed_args.policy, changes)
+        setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
 
         if changes:
             setattr(data, 'current', json.dumps(data.current, indent=2))
@@ -170,6 +179,13 @@ class CreatePolicy(command.ShowOne):
         )
 
         parser.add_argument(
+            '--persistence-timeout',
+            metavar='<persistence-timeout>',
+            type=int,
+            help=_('Persistence timeout (minutes) Setting of the Policy'),
+        )
+
+        parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
             type=int,
@@ -189,6 +205,22 @@ class CreatePolicy(command.ShowOne):
             choices=['disable',
                      'enable'],
             help=_('Source NAT setting of the policy'),
+        )
+
+        parser.add_argument(
+            '--server-name-indications',
+            metavar="<server-name=server-name,"
+                    "input-type=input-type,"
+                    "priority=priority,"
+                    "certificate-id=certificate-id>",
+            action='store',
+            nargs='+',
+            help=_("The list of Server Name Indications (SNIs) for the policy."
+                   "server-name: The server name of Server Name Indication (SNI),"
+                   "input-type: the input type of the server name,"
+                   "priority: Priority of Server Name Indication (SNI),"
+                   "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
+                   )
         )
 
         parser.add_argument(
@@ -216,6 +248,12 @@ class CreatePolicy(command.ShowOne):
             metavar='<default-target-group-id>',
             required=True,
             help=_('ID of the default target group that assigned to the policy'),
+        )
+
+        parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the policy'),
         )
 
         parser.add_argument(
@@ -252,16 +290,21 @@ class CreatePolicy(command.ShowOne):
             tags=tags,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            persistence_timeout=parsed_args.persistence_timeout,
             idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
+            server_name_indications=parsed_args.server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             tls_policy_id=parsed_args.tls_policy_id,
             load_balancer_id=parsed_args.load_balancer_id,
         )
+        if data.server_name_indications:
+            setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
 
         return row_headers, utils.get_item_properties(data, rows)
 
@@ -362,6 +405,9 @@ class UpdatePolicy(command.ShowOne):
         data = client.update_policy(
             parsed_args.policy, **patch)
 
+        if data.server_name_indications:
+            setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
+
         return row_headers, utils.get_item_properties(data, rows)
 
 
@@ -398,6 +444,13 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--persistence-timeout',
+            metavar='<persistence-timeout>',
+            type=int,
+            help=_('Persistence timeout (minutes) Setting of the Policy'),
+        )
+
+        parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
             type=int,
@@ -417,6 +470,22 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
             choices=['disable',
                      'enable'],
             help=_('Source NAT setting of the policy'),
+        )
+
+        parser.add_argument(
+            '--server-name-indications',
+            metavar="<server-name=server-name,"
+                    "input-type=input-type,"
+                    "priority=priority,"
+                    "certificate-id=certificate-id>",
+            action='store',
+            nargs='+',
+            help=_("The list of Server Name Indications (SNIs) for the policy."
+                   "server-name: The server name of Server Name Indication (SNI),"
+                   "input-type: the input type of the server name,"
+                   "priority: Priority of Server Name Indication (SNI),"
+                   "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
+                   )
         )
 
         parser.add_argument(
@@ -444,6 +513,12 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the policy'),
+        )
+
+        parser.add_argument(
             '--tls-policy-id',
             metavar='<tls-policy-id>',
             help=_('ID of the TLS policy that assigned to the policy'),
@@ -461,15 +536,20 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            persistence_timeout=parsed_args.persistence_timeout,
             idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
+            server_name_indications=parsed_args.server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             tls_policy_id=parsed_args.tls_policy_id,
         )
+        if data.server_name_indications:
+            setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
 
         return row_headers, utils.get_item_properties(data, rows)
 
@@ -512,6 +592,8 @@ class ShowStagedPolicyConfiguration(command.ShowOne):
         row_headers = rows
 
         data = client.get_staged_policy_configuration(parsed_args.policy)
+        if data.server_name_indications:
+            setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
 
         return row_headers, (utils.get_item_properties(data, rows))
 
@@ -549,6 +631,13 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--persistence-timeout',
+            metavar='<persistence-timeout>',
+            type=int,
+            help=_('Persistence timeout (minutes) Setting of the Policy'),
+        )
+
+        parser.add_argument(
             '--idle-timeout',
             metavar='<idle-timeout>',
             type=int,
@@ -568,6 +657,22 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
             choices=['disable',
                      'enable'],
             help=_('Source NAT setting of the policy'),
+        )
+
+        parser.add_argument(
+            '--server-name-indications',
+            metavar="<server-name=server-name,"
+                    "input-type=input-type,"
+                    "priority=priority,"
+                    "certificate-id=certificate-id>",
+            action='store',
+            nargs='+',
+            help=_("The list of Server Name Indications (SNIs) for the policy."
+                   "server-name: The server name of Server Name Indication (SNI),"
+                   "input-type: the input type of the server name,"
+                   "priority: Priority of Server Name Indication (SNI),"
+                   "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
+                   )
         )
 
         parser.add_argument(
@@ -595,6 +700,12 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the policy'),
+        )
+
+        parser.add_argument(
             '--tls-policy-id',
             metavar='<tls-policy-id>',
             help=_('ID of the TLS policy that assigned to the policy'),
@@ -612,14 +723,19 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
             persistence=parsed_args.persistence,
+            persistence_timeout=parsed_args.persistence_timeout,
             idle_timeout=parsed_args.idle_timeout,
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
+            server_name_indications=parsed_args.server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             tls_policy_id=parsed_args.tls_policy_id,
         )
+        if data.server_name_indications:
+            setattr(data, 'server_name_indications', json.dumps(data.server_name_indications, indent=2))
 
         return row_headers, utils.get_item_properties(data, rows)

@@ -30,6 +30,9 @@ class ListPlan(command.Lister):
             'Max Number of Health monitors',
             'Max Number of Listeners',
             'Max Number of Policies',
+            'Max Number of Server name indications',
+            'Max Number of Rules',
+            'Max Number of Conditions',
             'Max Number of Routes',
             'Max Number of Target groups',
             'Max Number of Members',
@@ -70,6 +73,9 @@ class ShowPlan(command.ShowOne):
             'Max Number of Health monitors',
             'Max Number of Listeners',
             'Max Number of Policies',
+            'Max Number of Server name indications',
+            'Max Number of Rules',
+            'Max Number of Conditions',
             'Max Number of Routes',
             'Max Number of Target groups',
             'Max Number of Members',
@@ -78,5 +84,5 @@ class ShowPlan(command.ShowOne):
 
         data = client.get_plan(
             parsed_args.plan_id)
-
+        
         return row_headers, (utils.get_item_properties(data, rows))
