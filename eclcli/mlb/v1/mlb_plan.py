@@ -84,5 +84,5 @@ class ShowPlan(command.ShowOne):
 
         data = client.get_plan(
             parsed_args.plan_id)
-        
+
         return row_headers, (utils.get_item_properties(data, rows))
