@@ -310,10 +310,10 @@ def _set_statuses_for_display(data):
 
 def _set_infomations_for_display(data):
     ca_cert = data.ca_cert["info"]
-    setattr(data, 'ca_cert_info', json.dumps(ca_cert, indent=2))
+    setattr(data, 'ca_cert_info', json.dumps(ca_cert, indent=2, ensure_ascii=False))
 
     ssl_cert = data.ssl_cert["info"]
-    setattr(data, 'ssl_cert_info', json.dumps(ssl_cert, indent=2))
+    setattr(data, 'ssl_cert_info', json.dumps(ssl_cert, indent=2, ensure_ascii=False))
 
     ssl_key = data.ssl_key["info"]
-    setattr(data, 'ssl_key_info', json.dumps(ssl_key, indent=2))
+    setattr(data, 'ssl_key_info', json.dumps(ssl_key, indent=2, ensure_ascii=False))

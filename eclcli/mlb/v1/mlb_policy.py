@@ -217,7 +217,7 @@ class CreatePolicy(command.ShowOne):
             nargs='+',
             help=_("The list of Server Name Indications (SNIs) for the policy."
                    "server-name: The server name of Server Name Indication (SNI),"
-                   "input-type: the input type of the server name,"
+                   "input-type: The input type of the server name,"
                    "priority: Priority of Server Name Indication (SNI),"
                    "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
                    )
@@ -482,7 +482,7 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
             nargs='+',
             help=_("The list of Server Name Indications (SNIs) for the policy."
                    "server-name: The server name of Server Name Indication (SNI),"
-                   "input-type: the input type of the server name,"
+                   "input-type: The input type of the server name,"
                    "priority: Priority of Server Name Indication (SNI),"
                    "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
                    )
@@ -669,7 +669,7 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
             nargs='+',
             help=_("The list of Server Name Indications (SNIs) for the policy."
                    "server-name: The server name of Server Name Indication (SNI),"
-                   "input-type: the input type of the server name,"
+                   "input-type: The input type of the server name,"
                    "priority: Priority of Server Name Indication (SNI),"
                    "certificate-id: Certificate ID that assigned to Server Name Indication (SNI)."
                    )
