@@ -284,6 +284,27 @@ class CreatePolicy(command.ShowOne):
             msg = _("You must specify JSON object format to tags")
             raise exceptions.CommandError(msg)
 
+        server_name_indications = []
+        if parsed_args.server_name_indications:
+            if len(parsed_args.server_name_indications) > 51:
+                msg = _("You can specify up to 50 server-name-indications")
+                raise exceptions.CommandError(msg)
+
+            valid_keys = ['server-name', 'input-type', 'priority', 'certificate-id']
+            key_map = {'server-name': 'server_name',
+                    'input-type': 'input_type',
+                    'priority': 'priority',
+                    'certificate-id': 'certificate_id'}
+            for if_str in parsed_args.server_name_indications:
+                if_info = {}
+                if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
+                try:
+                    if_info["priority"] = int(if_info["priority"])
+                except ValueError:
+                    msg = _("You must specify integer to priority")
+                    raise exceptions.CommandError(msg)
+                server_name_indications.append(if_info)
+
         data = client.create_policy(
             name=parsed_args.name,
             description=parsed_args.description,
@@ -295,7 +316,7 @@ class CreatePolicy(command.ShowOne):
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
-            server_name_indications=parsed_args.server_name_indications,
+            server_name_indications=server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
@@ -532,6 +553,27 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
         rows = ROWS_FOR_SHOW_STAGED
         row_headers = rows
 
+        server_name_indications = []
+        if parsed_args.server_name_indications:
+            if len(parsed_args.server_name_indications) > 51:
+                msg = _("You can specify up to 50 server-name-indications")
+                raise exceptions.CommandError(msg)
+
+            valid_keys = ['server-name', 'input-type', 'priority', 'certificate-id']
+            key_map = {'server-name': 'server_name',
+                    'input-type': 'input_type',
+                    'priority': 'priority',
+                    'certificate-id': 'certificate_id'}
+            for if_str in parsed_args.server_name_indications:
+                if_info = {}
+                if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
+                try:
+                    if_info["priority"] = int(if_info["priority"])
+                except ValueError:
+                    msg = _("You must specify integer to priority")
+                    raise exceptions.CommandError(msg)
+                server_name_indications.append(if_info)
+
         data = client.create_staged_policy_configuration(
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
@@ -541,7 +583,7 @@ class CreateStagedPolicyConfiguration(command.ShowOne):
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
-            server_name_indications=parsed_args.server_name_indications,
+            server_name_indications=server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
@@ -719,6 +761,27 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
         rows = ROWS_FOR_SHOW_STAGED
         row_headers = rows
 
+        server_name_indications = []
+        if parsed_args.server_name_indications:
+            if len(parsed_args.server_name_indications) > 51:
+                msg = _("You can specify up to 50 server-name-indications")
+                raise exceptions.CommandError(msg)
+
+            valid_keys = ['server-name', 'input-type', 'priority', 'certificate-id']
+            key_map = {'server-name': 'server_name',
+                    'input-type': 'input_type',
+                    'priority': 'priority',
+                    'certificate-id': 'certificate_id'}
+            for if_str in parsed_args.server_name_indications:
+                if_info = {}
+                if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
+                try:
+                    if_info["priority"] = int(if_info["priority"])
+                except ValueError:
+                    msg = _("You must specify integer to priority")
+                    raise exceptions.CommandError(msg)
+                server_name_indications.append(if_info)
+
         data = client.update_staged_policy_configuration(
             parsed_args.policy,
             algorithm=parsed_args.algorithm,
@@ -728,7 +791,7 @@ class UpdateStagedPolicyConfiguration(command.ShowOne):
             sorry_page_url=parsed_args.sorry_page_url,
             certificate_id=parsed_args.certificate_id,
             source_nat=parsed_args.source_nat,
-            server_name_indications=parsed_args.server_name_indications,
+            server_name_indications=server_name_indications,
             health_monitor_id=parsed_args.health_monitor_id,
             listener_id=parsed_args.listener_id,
             default_target_group_id=parsed_args.default_target_group_id,
