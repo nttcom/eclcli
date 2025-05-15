@@ -171,7 +171,8 @@ class CreateLoadBalancer(command.ShowOne):
                    "virtual-ip: Virtual IP address of the interface within subnet, "
                    "reserved-fixed-ips: IPv4 fixed address for interface. "
                    "You can specify multiple ip address by using ':' "
-                   "(e.g: 1.1.1.1:2.2.2.2:...) "
+                   "(e.g: 1.1.1.1:2.2.2.2:...), "
+                   "If reserved-fixed-ips keywords are unspecified or less than 4 IP addresses are provided, they will be automatically assigned."
                    )
         )
 
@@ -202,8 +203,10 @@ class CreateLoadBalancer(command.ShowOne):
         for if_str in parsed_args.interface:
             if_info = {}
             if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
-            fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
-            if_info['reserved_fixed_ips'] = fixed_ips
+            # reserved_fixed_ips は任意項目のため if_str に含まれない場合がある
+            if if_info.get('reserved_fixed_ips'):
+                fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
+                if_info['reserved_fixed_ips'] = fixed_ips
             interfaces.append(if_info)
 
         syslog_servers = []
@@ -382,7 +385,8 @@ class CreateStagedLoadBalancerConfiguration(command.ShowOne):
                    "virtual-ip: Virtual IP address of the interface within subnet, "
                    "reserved-fixed-ips: IPv4 fixed address for interface. "
                    "You can specify multiple ip address by using ':' "
-                   "(e.g: 1.1.1.1:2.2.2.2:...) "
+                   "(e.g: 1.1.1.1:2.2.2.2:...), "
+                   "If reserved-fixed-ips keywords are unspecified or less than 4 IP addresses are provided, they will be automatically assigned."
                    )
         )
 
@@ -407,8 +411,10 @@ class CreateStagedLoadBalancerConfiguration(command.ShowOne):
             for if_str in parsed_args.interface:
                 if_info = {}
                 if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
-                fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
-                if_info['reserved_fixed_ips'] = fixed_ips
+                # reserved_fixed_ips は任意項目のため if_str に含まれない場合がある
+                if if_info.get('reserved_fixed_ips'):
+                    fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
+                    if_info['reserved_fixed_ips'] = fixed_ips
                 interfaces.append(if_info)
 
         syslog_servers = []
@@ -526,7 +532,8 @@ class UpdateStagedLoadBalancerConfiguration(command.ShowOne):
                    "virtual-ip: Virtual IP address of the interface within subnet, "
                    "reserved-fixed-ips: IPv4 fixed address for interface. "
                    "You can specify multiple ip address by using ':' "
-                   "(e.g: 1.1.1.1:2.2.2.2:...) "
+                   "(e.g: 1.1.1.1:2.2.2.2:...), "
+                   "If reserved-fixed-ips keywords are unspecified or less than 4 IP addresses are provided, they will be automatically assigned."
                    )
         )
 
@@ -551,8 +558,10 @@ class UpdateStagedLoadBalancerConfiguration(command.ShowOne):
             for if_str in parsed_args.interface:
                 if_info = {}
                 if_info.update(utils.parse_mlb_params(if_str, valid_keys, key_map))
-                fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
-                if_info['reserved_fixed_ips'] = fixed_ips
+                # reserved_fixed_ips は任意項目のため if_str に含まれない場合がある
+                if if_info.get('reserved_fixed_ips'):
+                    fixed_ips = [{'ip_address': ip} for ip in if_info.get('reserved_fixed_ips').split(':')]
+                    if_info['reserved_fixed_ips'] = fixed_ips
                 interfaces.append(if_info)
 
         syslog_servers = []

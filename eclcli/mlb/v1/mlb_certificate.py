@@ -18,8 +18,11 @@ ROWS_FOR_SHOW = [
     'Tags',
     'Tenant ID',
     'CA Cert Status',
+    'CA Cert Info',
     'SSL Cert Status',
+    'SSL Cert Info',
     'SSL Key Status',
+    'SSL Key Info',
 ]
 
 
@@ -77,6 +80,7 @@ class ShowCertificate(command.ShowOne):
 
         data = client.get_certificate(parsed_args.certificate)
         _set_statuses_for_display(data)
+        _set_infomations_for_display(data)
 
         return row_headers, (utils.get_item_properties(data, rows))
 
@@ -128,6 +132,7 @@ class CreateCertificate(command.ShowOne):
         )
 
         _set_statuses_for_display(data)
+        _set_infomations_for_display(data)
 
         return row_headers, utils.get_item_properties(data, rows)
 
@@ -229,6 +234,7 @@ class UpdateCertificate(command.ShowOne):
             parsed_args.certificate, **patch)
 
         _set_statuses_for_display(data)
+        _set_infomations_for_display(data)
 
         return row_headers, utils.get_item_properties(data, rows)
 
@@ -260,6 +266,12 @@ class UploadCertificate(command.Command):
             help=_('Content of the certificate file to be uploaded'),
         )
 
+        parser.add_argument(
+            '--passphrase',
+            metavar='<passphrase>',
+            help=_('The passphrase used to encrypt the SSL private key'),
+        )
+
         return parser
 
     def take_action(self, parsed_args):
@@ -281,6 +293,7 @@ class UploadCertificate(command.Command):
             parsed_args.certificate,
             certificate_type=parsed_args.type,
             certificate_content=certificate_content,
+            passphrase=parsed_args.passphrase
         )
 
 
@@ -293,3 +306,14 @@ def _set_statuses_for_display(data):
 
     ssl_key = data.ssl_key["status"]
     setattr(data, 'ssl_key_status', ssl_key)
+
+
+def _set_infomations_for_display(data):
+    ca_cert = data.ca_cert["info"]
+    setattr(data, 'ca_cert_info', json.dumps(ca_cert, indent=2, ensure_ascii=False))
+
+    ssl_cert = data.ssl_cert["info"]
+    setattr(data, 'ssl_cert_info', json.dumps(ssl_cert, indent=2, ensure_ascii=False))
+
+    ssl_key = data.ssl_key["info"]
+    setattr(data, 'ssl_key_info', json.dumps(ssl_key, indent=2, ensure_ascii=False))

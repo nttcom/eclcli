@@ -22,6 +22,7 @@ ROWS_FOR_SHOW = [
     'Tenant ID',
     'Priority',
     'Target Group ID',
+    'Backup Target Group ID',
     'Conditions',
 ]
 
@@ -33,6 +34,7 @@ ROWS_FOR_CHANGES = [
 ROWS_FOR_SHOW_STAGED = [
     'Priority',
     'Target Group ID',
+    'Backup Target Group ID',
     'Conditions',
 ]
 
@@ -58,6 +60,7 @@ class ListRule(command.Lister):
             'Load Balancer ID',
             'Priority',
             'Target Group ID',
+            'Backup Target Group ID',
         ]
         column_headers = copy.deepcopy(columns)
 
@@ -146,6 +149,12 @@ class CreateRule(command.ShowOne):
         )
 
         parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the rule'),
+        )
+
+        parser.add_argument(
             '--policy-id',
             metavar='<policy-id>',
             required=True,
@@ -188,6 +197,7 @@ class CreateRule(command.ShowOne):
             tags=tags,
             priority=parsed_args.priority,
             target_group_id=parsed_args.target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             policy_id=parsed_args.policy_id,
             conditions=conditions,
         )
@@ -324,6 +334,12 @@ class CreateStagedRuleConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the rule'),
+        )
+
+        parser.add_argument(
             '--conditions',
             metavar='<conditions>',
             help=_("Conditions of the rules to distribute accesses to the target groups "
@@ -349,6 +365,7 @@ class CreateStagedRuleConfiguration(command.ShowOne):
             parsed_args.rule,
             priority=parsed_args.priority,
             target_group_id=parsed_args.target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             conditions=conditions,
         )
 
@@ -427,6 +444,12 @@ class UpdateStagedRuleConfiguration(command.ShowOne):
         )
 
         parser.add_argument(
+            '--backup-target-group-id',
+            metavar='<backup-target-group-id>',
+            help=_('ID of the backup target group that assigned to the rule'),
+        )
+
+        parser.add_argument(
             '--conditions',
             metavar='<conditions>',
             help=_("Conditions of the rules to distribute accesses to the target groups "
@@ -452,6 +475,7 @@ class UpdateStagedRuleConfiguration(command.ShowOne):
             parsed_args.rule,
             priority=parsed_args.priority,
             target_group_id=parsed_args.target_group_id,
+            backup_target_group_id=parsed_args.backup_target_group_id,
             conditions=conditions,
         )
 
