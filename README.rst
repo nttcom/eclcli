@@ -1,7 +1,7 @@
 Enterprise Cloud CLI
 ======================
 
-Enterprise Cloud CLI (a.k.a eclcli) is an `OpenStackClient <https://github.com/openstack/python-openstackclient>`_ based command-line client for NTT Communications' Enterprise Cloud 2.0 that brings the command set for Baremetal, Compute, SSS, Image, Network, Block Storage and various other APIs together in a single shell with a uniform command structure.
+Enterprise Cloud CLI (a.k.a eclcli) is an `OpenStackClient <https://github.com/openstack/python-openstackclient>`_ based command-line client for NTT DOCOMO BUSINESS' Enterprise Cloud 2.0 that brings the command set for Baremetal, Compute, SSS, Image, Network, Block Storage and various other APIs together in a single shell with a uniform command structure.
 
 The primary goal is to provide a unified user experience for various services provide in ECL2.0 through a uniform command structure.
 
@@ -84,7 +84,7 @@ Please find more usage documentation on `official site <https://ecl.ntt.com/en/>
 
 Support
 -----------
-ECL2.0 users can raise requests via NTT Communications' ticket portal.
+ECL2.0 users can raise requests via NTT DOCOMO BUSINESS' ticket portal.
 
 Contributing
 -------------
