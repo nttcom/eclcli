@@ -30,7 +30,7 @@ class ListOperation(command.Lister):
             'Request Type',
             'Reception Datetime',
             'Commit Datetime',
-            'Status',
+            'Operation Status',
         ]
         column_headers = copy.deepcopy(columns)
 
@@ -71,7 +71,7 @@ class ShowOperation(command.ShowOne):
             'ID',
             'Resource ID',
             'Request Type',
-            'Status',
+            'Operation Status',
             'Reception Datetime',
             'Commit Datetime',
             'Request Body',
@@ -86,5 +86,10 @@ class ShowOperation(command.ShowOne):
             req_body = data.request_body
             req_body_dict = json.loads(req_body) if type(req_body) is str else req_body
             setattr(data, 'request_body', json.dumps(req_body_dict, indent=2))
+
+        if data.error:
+            err = data.error
+            err_dict = json.loads(err) if type(err) is str else err
+            setattr(data, 'error', json.dumps(err_dict, indent=2))
 
         return row_headers, (utils.get_item_properties(data, rows))
