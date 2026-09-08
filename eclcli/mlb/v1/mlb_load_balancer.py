@@ -622,6 +622,23 @@ class ActionLoadBalancer(command.Command):
         )
 
         parser.add_argument(
+            '--rollback',
+            metavar='{true|false}',
+            type=utils.parse_bool,
+            choices=[True, False],
+            help=_('Rollback the load balancer to the version prior to the '
+                   'specified system update. Must be specified together '
+                   'with --system-update. The target system update must '
+                   'allow rollback (is_rollback_allowed: true).'),
+        )
+
+        parser.add_argument(
+            '--change-plan',
+            metavar='<plan-id>',
+            help=_('ID of the plan to change the load balancer to.'),
+        )
+
+        parser.add_argument(
             '--cancel-configurations',
             action='store_true',
             help=_('cancel configuration of load balancer'),
@@ -632,13 +649,23 @@ class ActionLoadBalancer(command.Command):
     def take_action(self, parsed_args):
         client = self.app.eclsdk.conn.mvna
 
+        if parsed_args.rollback is not None and not parsed_args.system_update:
+            msg = _("You must specify --system-update when --rollback is specified.")
+            raise exceptions.CommandError(msg)
+
         request_body = {}
 
         if parsed_args.apply_configurations:
             request_body["apply-configurations"] = None
 
         if parsed_args.system_update:
-            request_body["system-update"] = {"system_update_id": parsed_args.system_update}
+            system_update_body = {"system_update_id": parsed_args.system_update}
+            if parsed_args.rollback is not None:
+                system_update_body["rollback"] = parsed_args.rollback
+            request_body["system-update"] = system_update_body
+
+        if parsed_args.change_plan:
+            request_body["change-plan"] = {"plan_id": parsed_args.change_plan}
 
         if parsed_args.cancel_configurations:
             if not request_body:

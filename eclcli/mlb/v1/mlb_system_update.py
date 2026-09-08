@@ -29,6 +29,7 @@ class ListSystemUpdate(command.Lister):
             'Current Revision',
             'Next Revision',
             'Applicable',
+            'Is Rollback Allowed',
         ]
         column_headers = copy.deepcopy(columns)
 
@@ -65,6 +66,7 @@ class ShowSystemUpdate(command.ShowOne):
             'Current Revision',
             'Next Revision',
             'Applicable',
+            'Is Rollback Allowed',
         ]
         row_headers = rows
 
