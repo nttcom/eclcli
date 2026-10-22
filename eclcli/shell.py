@@ -318,7 +318,7 @@ class ECLClient(app.App):
         if not self.options.debug:
             self.options.debug = None
         self.cloud = cc.get_one_cloud(
-            cloud=self.options.cloud,
+            cloud=self.options.cloud or None,
             argparse=self.options,
         )
 
