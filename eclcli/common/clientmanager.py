@@ -17,13 +17,13 @@
 
 import copy
 import logging
-import pkg_resources
 import sys
 
 from oslo_utils import strutils
 import requests
 
 from eclcli.api import auth
+from eclcli.common import entrypoints
 from eclcli.common import session as osc_session
 from eclcli.identity import client as identity_client
 
@@ -259,11 +259,12 @@ class ClientManager(object):
 def get_plugin_modules(group):
     """Find plugin entry points"""
     mod_list = []
-    for ep in pkg_resources.iter_entry_points(group):
+    for ep in entrypoints.iter_entry_points(group):
         LOG.debug('Found plugin %r', ep.name)
 
-        __import__(ep.module_name)
-        module = sys.modules[ep.module_name]
+        module_name = entrypoints.module_name(ep)
+        __import__(module_name)
+        module = sys.modules[module_name]
         mod_list.append(module)
         init_func = getattr(module, 'Initialize', None)
         if init_func:
@@ -274,7 +275,7 @@ def get_plugin_modules(group):
             ClientManager,
             module.API_NAME,
             ClientCache(
-                getattr(sys.modules[ep.module_name], 'make_client', None)
+                getattr(module, 'make_client', None)
             ),
         )
     return mod_list
