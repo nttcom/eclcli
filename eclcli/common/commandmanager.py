@@ -15,9 +15,9 @@
 
 """Modify cliff.CommandManager"""
 
-import pkg_resources
-
 import cliff.commandmanager
+
+from eclcli.common import entrypoints
 
 
 class CommandManager(cliff.commandmanager.CommandManager):
@@ -48,7 +48,7 @@ class CommandManager(cliff.commandmanager.CommandManager):
         """Returns a list of commands loaded for the specified group"""
         group_list = []
         if group is not None:
-            for ep in pkg_resources.iter_entry_points(group):
+            for ep in entrypoints.iter_entry_points(group):
                 cmd_name = (
                     ep.name.replace('_', ' ')
                     if self.convert_underscores

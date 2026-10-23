@@ -1,5 +1,5 @@
 pbr>=1.6 # Apache-2.0
-# CLI plugins and older clients still import pkg_resources.
+# Python 3.7 entry point discovery and older clients still need pkg_resources.
 setuptools<81 # MIT
 six>=1.9.0 # MIT
 

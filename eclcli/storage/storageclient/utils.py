@@ -4,9 +4,10 @@ import os
 import sys
 import uuid
 
-import pkg_resources
 import prettytable
 import six
+
+from eclcli.common import entrypoints
 
 from . import exceptions
 from .common import strutils
@@ -273,8 +274,8 @@ def safe_issubclass(*args):
 
 def _load_entry_point(ep_name, name=None):
     """Try to load the entry point ep_name that matches name."""
-    for ep in pkg_resources.iter_entry_points(ep_name, name=name):
+    for ep in entrypoints.iter_entry_points(ep_name, name=name):
         try:
             return ep.load()
-        except (ImportError, pkg_resources.UnknownExtra, AttributeError):
+        except entrypoints.LOAD_EXCEPTIONS:
             continue
