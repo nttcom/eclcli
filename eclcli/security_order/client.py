@@ -15,13 +15,18 @@
 
 """Security order client"""
 
+import logging
+
 from eclcli.api import eclsdk
 
-DEFAULT_API_VERSION = '3'
-API_VERSION_OPTION = ''
+LOG = logging.getLogger(__name__)
+
+DEFAULT_API_VERSION = '4'
+API_VERSION_OPTION = 'os_security_order_api_version'
 API_NAME = 'security_order'
 API_VERSIONS = {
     '3': 'eclcli.security_order.v3',
+    '4': 'eclcli.security_order.v4',
 }
 
 
@@ -34,3 +39,10 @@ def make_client(instance):
 def build_option_parser(parser):
     """Hook to add global options"""
     return parser
+
+
+def check_api_version(check_version):
+    if check_version == '3':
+        LOG.warning(
+            'Security order API v3 is deprecated. Please use v4 instead.')
+    return True
