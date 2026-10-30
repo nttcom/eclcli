@@ -95,7 +95,7 @@ class CreateDevice(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'operatingmode': parsed_args.operatingmode,
@@ -165,7 +165,7 @@ class UpdateDevice(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'hostname1': parsed_args.hostname1,
@@ -213,7 +213,7 @@ class DeleteDevice(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'hostname1': parsed_args.hostname1,
@@ -255,7 +255,7 @@ class ShowStatus(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'soid': parsed_args.soId,
@@ -290,7 +290,7 @@ class ListDevices(command.Lister):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         columns = [
             'hostname',

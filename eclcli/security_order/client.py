@@ -18,6 +18,7 @@
 import logging
 
 from eclcli.api import eclsdk
+from eclcli.common import utils
 
 LOG = logging.getLogger(__name__)
 
@@ -38,6 +39,13 @@ def make_client(instance):
 
 def build_option_parser(parser):
     """Hook to add global options"""
+    parser.add_argument(
+        '--os-security-order-api-version',
+        metavar='<security-order-api-version>',
+        default=utils.env('OS_SECURITY_ORDER_API_VERSION'),
+        help='Security order API version, default=' +
+             DEFAULT_API_VERSION +
+             ' (Env: OS_SECURITY_ORDER_API_VERSION)')
     return parser
 
 
