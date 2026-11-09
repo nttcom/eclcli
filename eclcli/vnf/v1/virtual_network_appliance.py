@@ -885,21 +885,13 @@ class ShowVirtualNetworkApplianceConsole(command.ShowOne):
             metavar='<virtual-network-appliance-id>',
             help=_('Virtual Network Appliance ID to show console url'),
         )
-        type_group = parser.add_mutually_exclusive_group()
-        type_group.add_argument(
+        parser.add_argument(
             '--novnc',
             dest='url_type',
             action='store_const',
             const='novnc',
             default='novnc',
             help='Show noVNC console URL (default)',
-        )
-        type_group.add_argument(
-            '--xvpvnc',
-            dest='url_type',
-            action='store_const',
-            const='xvpvnc',
-            help='Show xpvnc console URL',
         )
         return parser
 
