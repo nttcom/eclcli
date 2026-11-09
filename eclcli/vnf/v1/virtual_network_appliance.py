@@ -167,9 +167,11 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
         )
         parser.add_argument(
             '--initial-config',
-            metavar="<format=enum{set,text},data=file>",
-            help=_("Initial configuration for virtual network appliance "
-                   "format: format of initial configuration data. (set/text)"
+            metavar="<format=enum{set,text,a10-json},data=file>",
+            help=_("Initial configuration for virtual network appliance. "
+                   "format: format of initial configuration data. "
+                   "Firewall (vSRX): set / text, "
+                   "Load Balancer (vThunder ADC): a10-json. "
                    "data: file path of initial configuration data."),
         )
 
@@ -292,8 +294,10 @@ class CreateVirtualNetworkAppliance(command.ShowOne):
             if not config_format or not config_path:
                 msg = _("You must specify both initial_config.format and initial_config.data (e.g., --initial-config format=set,data=/path/to/config)")
                 raise exceptions.CommandError(msg)
-            if config_format not in ['set', 'text']:
-                msg = _("initial_config.format must be 'set' or 'text'")
+            if config_format not in ['set', 'text', 'a10-json']:
+                msg = _("initial_config.format must be 'set' or 'text' "
+                        "for Firewall (vSRX), "
+                        "'a10-json' for Load Balancer (vThunder ADC)")
                 raise exceptions.CommandError(msg)
 
             config_data = None
