@@ -908,6 +908,63 @@ class ShowVirtualNetworkApplianceConsole(command.ShowOne):
         return zip(*sorted(six.iteritems(data)))
 
 
+class ExportConfigurationVirtualNetworkAppliance(command.ShowOne):
+    _description = _("Export configuration of virtual network appliance")
+
+    def get_parser(self, prog_name):
+        parser = super(ExportConfigurationVirtualNetworkAppliance, self). \
+            get_parser(prog_name)
+        parser.add_argument(
+            'virtual_network_appliance',
+            metavar='<virtual-network-appliance-id>',
+            help=_('Virtual Network Appliance ID to export configuration'),
+        )
+        parser.add_argument(
+            '--config-format',
+            metavar='<config-format>',
+            required=True,
+            choices=['set', 'text', 'a10-json'],
+            help=_("Export format of configuration. "
+                   "Firewall (vSRX): set / text, "
+                   "Load Balancer (vThunder ADC): a10-json"),
+        )
+        parser.add_argument(
+            '--file',
+            metavar='<file>',
+            help=_("File path to save exported configuration. "
+                   "If not specified, configuration is displayed."),
+        )
+        return parser
+
+    def take_action(self, parsed_args):
+        vnf_client = self.app.eclsdk.conn.virtual_network_appliance
+        vna = parsed_args.virtual_network_appliance
+        configuration = vnf_client.\
+            export_configuration_virtual_network_appliance(
+                vna, parsed_args.config_format)
+
+        config_data = base64.b64decode(configuration.get('data', ''))
+
+        if parsed_args.file:
+            try:
+                with open(parsed_args.file, 'wb') as f:
+                    f.write(config_data)
+            except (OSError, IOError) as e:
+                msg = "Failed to write config file %s: %s"
+                raise exceptions.CommandError(msg % (parsed_args.file, e))
+            data = {
+                'format': configuration.get('format'),
+                'file': parsed_args.file,
+            }
+        else:
+            data = {
+                'format': configuration.get('format'),
+                'data': config_data.decode('utf-8', 'replace'),
+            }
+
+        return zip(*sorted(six.iteritems(data)))
+
+
 def _set_interfaces_for_display(data):
     ifs = data.interfaces
     interfaces_json = json.dumps(ifs, indent=2)
