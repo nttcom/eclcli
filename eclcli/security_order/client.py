@@ -53,4 +53,7 @@ def check_api_version(check_version):
     if check_version == '3':
         LOG.warning(
             'Security order API v3 is deprecated. Please use v4 instead.')
-    return True
+        return True
+    if check_version == '4':
+        return True
+    return False
