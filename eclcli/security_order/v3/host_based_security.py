@@ -62,7 +62,7 @@ class OrderApp(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'service_order_service': parsed_args.service_order_service,
@@ -120,7 +120,7 @@ class ChangeAppMenu(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'service_order_service': parsed_args.service_order_service,
@@ -169,7 +169,7 @@ class ChangeAppQuantity(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'max_agent_value': parsed_args.max_agent_value,
@@ -211,7 +211,7 @@ class CancelApp(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'mailaddress': parsed_args.mailaddress,
@@ -253,7 +253,7 @@ class ShowStatus(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         kwargs = {
             'soid': parsed_args.soId,
@@ -288,7 +288,7 @@ class ShowInfo(command.ShowOne):
         return parser
 
     def take_action(self, parsed_args):
-        security_order_client = self.app.eclsdk.conn.security_order
+        security_order_client = self.app.eclsdk.conn.security_order_v3
 
         columns = [
             'code',
