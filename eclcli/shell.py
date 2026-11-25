@@ -1,10 +1,21 @@
 """Command-line interface to the Enterprise Cloud 2.0 APIs"""
 
+import collections
 import getpass
 import logging
 import sys
 import traceback
 import os
+
+# The pinned openstacksdk and eclsdk releases still use these old aliases.
+# Python 3.10 and later keep the ABCs only in collections.abc.
+if sys.version_info >= (3, 10):
+    from collections import abc as collections_abc
+
+    for name in ('Mapping', 'MutableMapping'):
+        if not hasattr(collections, name):
+            setattr(collections, name, getattr(collections_abc, name))
+
 import appdirs
 
 from cliff import app
